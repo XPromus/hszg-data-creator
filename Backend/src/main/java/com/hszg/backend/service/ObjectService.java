@@ -6,6 +6,7 @@ import com.hszg.backend.data.model.Object;
 import com.hszg.backend.data.model.Year;
 import com.hszg.backend.repos.ObjectRepository;
 import com.hszg.backend.repos.YearRepository;
+import com.hszg.backend.service.check.CheckExistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,30 +36,19 @@ public class ObjectService {
     }
 
     public Object getObjectById(Long objectId) {
-
-        Optional<Object> object = objectRepository.findById(objectId);
-        if (object.isEmpty()) {
-            throw new ResourceNotFoundException(ErrorText.getObjectString(objectId));
-        }
-
-        return object.get();
-
+        return CheckExistence.checkObjectExistence(objectRepository, objectId);
     }
 
     public void deleteObject(Long objectId) {
 
-        Optional<Object> object = objectRepository.findById(objectId);
-        if (object.isEmpty()) {
-            throw new ResourceNotFoundException(ErrorText.getObjectString(objectId));
-        }
-
+        var object = CheckExistence.checkObjectExistence(objectRepository, objectId);
         var years = yearRepository.findYearsByObjectId(objectId);
 
         for (Year year : years) {
-            yearRepository.deleteById(year.getId());
+            yearRepository.delete(CheckExistence.checkYearExistence(yearRepository, year.getId()));
         }
 
-        objectRepository.deleteById(objectId);
+        objectRepository.delete(object);
 
     }
 
