@@ -1,11 +1,9 @@
 package com.hszg.backend.service;
 
-import com.hszg.backend.api.error.ErrorText;
-import com.hszg.backend.api.error.ResourceNotFoundException;
-import com.hszg.backend.data.model.Object;
 import com.hszg.backend.data.model.Year;
 import com.hszg.backend.repos.ObjectRepository;
 import com.hszg.backend.repos.YearRepository;
+import com.hszg.backend.service.check.CheckExistence;
 import com.hszg.backend.service.edit.YearPropertiesEdit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class YearService {
@@ -30,50 +27,27 @@ public class YearService {
     @Transactional
     public Year createYear(Long objectId, LocalDate year) {
 
-        Optional<Object> object = objectRepository.findById(objectId);
-        if (object.isEmpty()) {
-            throw new ResourceNotFoundException(ErrorText.getObjectString(objectId));
-        }
+        var object = CheckExistence.checkObjectExistence(objectRepository, objectId);
 
         Year ret = new Year();
         ret.setYear(year);
-        ret.setObject(object.get());
+        ret.setObject(object);
 
         return yearRepository.save(ret);
 
     }
 
     public Year getYearById(Long yearId) {
-
-        Optional<Year> year = yearRepository.findById(yearId);
-        if (year.isEmpty()) {
-            throw new ResourceNotFoundException(ErrorText.getYearString(yearId));
-        }
-
-        return year.get();
-
+        return CheckExistence.checkYearExistence(yearRepository, yearId);
     }
 
     public List<Year> getYearsFromObjectById(Long objectId) {
-
-        Optional<Object> object = objectRepository.findById(objectId);
-        if (object.isEmpty()) {
-            throw new ResourceNotFoundException(ErrorText.getObjectString(objectId));
-        }
-
+        CheckExistence.checkObjectExistence(objectRepository, objectId);
         return yearRepository.findYearsByObjectId(objectId);
-
     }
 
     public void deleteYearById(Long yearId) {
-
-        Optional<Year> year = yearRepository.findById(yearId);
-        if (year.isEmpty()) {
-            throw new ResourceNotFoundException(ErrorText.getYearString(yearId));
-        }
-
-        yearRepository.deleteById(yearId);
-
+        yearRepository.delete(CheckExistence.checkYearExistence(yearRepository, yearId));
     }
 
     @Transactional
