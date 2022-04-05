@@ -2,6 +2,10 @@ package com.hszg.backend.api.error;
 
 public class ErrorText {
 
+    private ErrorText() {
+
+    }
+
     public static String getObjectString(Long id) {
         return "Object with id " + id + " does not exist.";
     }

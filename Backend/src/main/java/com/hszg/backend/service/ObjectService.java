@@ -1,7 +1,5 @@
 package com.hszg.backend.service;
 
-import com.hszg.backend.api.error.ErrorText;
-import com.hszg.backend.api.error.ResourceNotFoundException;
 import com.hszg.backend.data.model.Object;
 import com.hszg.backend.data.model.Year;
 import com.hszg.backend.repos.ObjectRepository;
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ObjectService {

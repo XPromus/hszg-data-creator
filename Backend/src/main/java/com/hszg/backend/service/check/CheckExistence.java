@@ -12,6 +12,10 @@ import java.util.Optional;
 
 public class CheckExistence {
 
+    private CheckExistence() {
+
+    }
+
     public static Object checkObjectExistence(ObjectRepository objectRepository, Long id) {
 
         Optional<Object> optionalObject = objectRepository.findById(id);
