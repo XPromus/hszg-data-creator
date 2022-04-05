@@ -13,7 +13,7 @@
 
 <div class="accordion" id="{accordionId}">
     {#each Array(numberOfObjects) as _, i}
-        <Object listID="{getIdElement("yearList_", i)}" objectName="{getIdElement("Object ", i)}" headerId="{getIdElement("header_", i)}" collapseId="{getIdElement("collapse_", i)}" accordionId="{accordionId}"/>
+        <Object numberOfYears={5} listID="{getIdElement("yearList_", i)}" objectName="{getIdElement("Object ", i)}" headerId="{getIdElement("header_", i)}" collapseId="{getIdElement("collapse_", i)}" accordionId="{accordionId}"/>
     {/each}
 </div>
 

@@ -3,8 +3,9 @@
     import AddButton from './AddButton.svelte';
     import YearList from './YearList.svelte'
 
-    export let listID: string;
+    export let numberOfYears: number;
 
+    export let listID: string;
     export let objectName: string = "Object";
     export let headerId: string;
     export let collapseId: string;
@@ -22,7 +23,7 @@
         <div class="accordion-body">
             <ul class="card card-body">
                 <AddButton text="Jahr hinzufügen"/>
-                <YearList yearListId="{listID}"/>
+                <YearList yearListId="{listID}" numberOfYears={numberOfYears} />
             </ul>
         </div>
     </div>
