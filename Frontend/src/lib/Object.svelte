@@ -2,7 +2,7 @@
 
     import AddButton from './AddButton.svelte';
     import YearList from './YearList.svelte'
-
+    
     export let numberOfYears: number;
 
     export let listID: string;
@@ -10,6 +10,18 @@
     export let headerId: string;
     export let collapseId: string;
     export let accordionId: string;
+    
+    function toJSON(): string {
+        return "";
+    }
+
+    function addYear(): void  {
+        
+    }
+
+    function deleteYear(): void {
+
+    }
 
 </script>
 
