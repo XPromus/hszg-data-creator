@@ -5,22 +5,16 @@
     export let yearListId: string;
 
     let years = [];
-    let yearIDList = []
-
+    let yearIDList = [];
     let lastID = 0;
 
     export function getYears() {
         return years;
     }
 
-    export function createYear(): void {
+    export const handleAdd = () => {
         yearIDList = [...yearIDList, {id: lastID++}];
-    }
-
-    function deleteYear(event) {
-        years.splice(Number(event.detail.text), 1);
-        years = years;
-    }
+    };
 
     const handleRemove = (i: number) => {
         yearIDList = [
@@ -35,7 +29,7 @@
 
 <div class="accordion" id="{yearListId}">
     {#each yearIDList as year, i (year.id)}
-        <Year bind:this={years[i]} on:message={deleteYear} removeFunction={() => handleRemove(i)} yearId={year.id} accordionId={yearListId}/>
+        <Year bind:this={years[i]} removeFunction={() => handleRemove(i)} yearId={year.id} accordionId={yearListId}/>
     {/each}
 </div>
 

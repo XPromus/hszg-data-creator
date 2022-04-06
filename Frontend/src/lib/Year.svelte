@@ -40,12 +40,16 @@
 
     }
 
+    function debugPrint() {
+        alert(toJSON());
+    }
+
 </script>
 
 <div class="accordion-item">
     <h2 class="accordion-header" id="{headerId}">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{collapseId}" aria-expanded="false" aria-controls="#{collapseId}">
-            {objectName} ({year})
+            Name: {objectName} (Jahr: {year})
         </button>
     </h2>
     <div id="{collapseId}" class="accordion-collapse collapse" aria-labelledby="{headerId}" data-bs-parent="#{accordionId}">
@@ -117,7 +121,7 @@
                     <button on:click="{removeFunction}" id="deleteButton" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Jahr löschen">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
-                    <button on:click="{toJSON}" id="saveButton" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Debug: Speichern">
+                    <button on:click="{debugPrint}" id="saveButton" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Debug: Speichern">
                         <i class="fa-solid fa-floppy-disk"></i>
                     </button>
                 </div>

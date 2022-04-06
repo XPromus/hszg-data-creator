@@ -6,6 +6,8 @@
     export let objectID: number;
     export let accordionId: string;
 
+    export let removeFunction;
+
     const listID: string = "yearList_" + objectID;
     const objectName: string = "Object " + objectID;
     const headerId: string = "header_" + objectID;
@@ -26,13 +28,8 @@
 
         ret += ']}';
 
-        alert(ret);
         return ret;
 
-    }
-
-    function addYear(): void  {
-        yearList.createYear();
     }
 
 </script>
@@ -41,19 +38,24 @@
     <h2 class="accordion-header" id="{headerId}">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{collapseId}" aria-expanded="false" aria-controls="#{collapseId}">
             {objectName}
-        </button>
+        </button>    
     </h2>
     <div id="{collapseId}" class="accordion-collapse collapse" aria-labelledby="{headerId}" data-bs-parent="#{accordionId}">
         <div class="accordion-body">
-            <ul class="card card-body">
-                <p>
-                    Jahre
-                </p>
-                <button on:click="{addYear}" type="button" class="btn btn-success" style="margin-bottom: 10px;" data-toggle="tooltip" data-placement="bottom" title="Jahr erstellen">
-                    <i class="fa-solid fa-plus"></i>
+            <div>
+                <button on:click="{removeFunction}" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen" style="margin-bottom: 10px;">
+                    <i class="fa-solid fa-trash-can"></i>
                 </button>
-                <YearList bind:this={yearList} yearListId="{listID}" />
-            </ul>
+                <ul class="card card-body">
+                    <p>
+                        Jahre
+                    </p>
+                    <button on:click="{yearList.handleAdd}" type="button" class="btn btn-success" style="margin-bottom: 10px;" data-toggle="tooltip" data-placement="bottom" title="Jahr erstellen">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                    <YearList bind:this={yearList} yearListId="{listID}" />
+                </ul>
+            </div>
         </div>
     </div>
 </div>
