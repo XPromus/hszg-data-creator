@@ -13,13 +13,14 @@ import Object from "./Object.svelte";
     export let headerId: string;
     export let collapseId: string;
     export let accordionId: string;
+    let existCheckId: string = headerId + accordionId;
 
     let showContent: boolean = true;
     let existButtonMargin: number = 10;
 
     function validate(): void {
         //@ts-ignore
-        if (document.getElementById("flexCheckDefault").checked) {
+        if (document.getElementById(existCheckId).checked) {
             showContent = true;
             existButtonMargin = 10;
         } else {
@@ -29,7 +30,7 @@ import Object from "./Object.svelte";
     }
 
     function toJSON() {
-        
+
     }
 
 </script>
@@ -46,8 +47,8 @@ import Object from "./Object.svelte";
 
                 <div class="col-12" style="margin-bottom: {existButtonMargin}px;">
                     <div class="form-check">
-                        <input on:click={validate} class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
-                        <label class="form-check-label" for="flexCheckDefault">
+                        <input on:click={validate} class="form-check-input" type="checkbox" value="" id="{existCheckId}" checked>
+                        <label class="form-check-label" for="{existCheckId}">
                             Objekt existiert
                         </label>
                     </div>
