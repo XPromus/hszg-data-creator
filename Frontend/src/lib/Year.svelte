@@ -1,35 +1,42 @@
 <script lang="ts">
-import Object from "./Object.svelte";
+
+    import { createEventDispatcher } from "svelte";
+
+    export let yearId: number;
+    export let accordionId: string;
+    export let removeFunction;
+
+    const headerId: string = "year_header_" + yearId;
+    const collapseId: string = "year_collapse_" + yearId;
+    const existCheckId: string = headerId + accordionId;
 
     let year: string;
     let objectName: string;
+    let exist: boolean = true;
     let modelId: string;
     let textureId: string;
     let streetName: string;
-    let houseNumber: number;
+    let streetNumber: number;
     let latitude: number;
     let longitude: number;
 
-    export let headerId: string;
-    export let collapseId: string;
-    export let accordionId: string;
-    let existCheckId: string = headerId + accordionId;
-
-    let showContent: boolean = true;
     let existButtonMargin: number = 10;
 
-    function validate(): void {
-        //@ts-ignore
-        if (document.getElementById(existCheckId).checked) {
-            showContent = true;
-            existButtonMargin = 10;
-        } else {
-            showContent = false;
-            existButtonMargin = 0;
-        }
-    }
+    export function toJSON(): string {
 
-    function toJSON() {
+        const ret: string = '{'
+            + '"year" : ' + year + ','
+            + '"objectName" : ' + objectName + ','
+            + '"exists" : ' + exist + ','
+            + '"modelId" : ' + modelId + ','
+            + '"textureId" : ' + textureId + ','
+            + '"streetName" : ' + streetName + ','
+            + '"sreetNumber" : ' + streetNumber + ','
+            + '"latitude" : ' + latitude + ','
+            + '"longitude" : ' + longitude
+            + '}';
+
+        return ret;
 
     }
 
@@ -47,20 +54,21 @@ import Object from "./Object.svelte";
 
                 <div class="col-12" style="margin-bottom: {existButtonMargin}px;">
                     <div class="form-check">
-                        <input on:click={validate} class="form-check-input" type="checkbox" value="" id="{existCheckId}" checked>
+                        <input bind:checked="{exist}" value="" class="form-check-input" type="checkbox" id="{existCheckId}">
                         <label class="form-check-label" for="{existCheckId}">
                             Objekt existiert
                         </label>
                     </div>
                 </div>
 
-                {#if showContent == true}
-                    <div class="col-12">
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">Jahr</span>
-                            <input bind:value={year} type="text" class="form-control" placeholder="yyyy" aria-label="Jahr">
-                        </div>
+                <div class="col-12">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Jahr</span>
+                        <input bind:value={year} type="text" class="form-control" placeholder="yyyy" aria-label="Jahr">
                     </div>
+                </div>
+
+                {#if exist == true}
                     <div class="col-12">
                         <div class="input-group mb-3">
                             <span class="input-group-text">Name des Objekts</span>
@@ -88,7 +96,7 @@ import Object from "./Object.svelte";
                     <div class="col-md-6">
                         <div class="input-group mb-3">
                             <span class="input-group-text">Hausnummer</span>
-                            <input bind:value={houseNumber} type="text" class="form-control" placeholder="" aria-label="house-number">
+                            <input bind:value={streetNumber} type="text" class="form-control" placeholder="" aria-label="house-number">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -106,8 +114,11 @@ import Object from "./Object.svelte";
                 {/if}
 
                 <div class="col-12">
-                    <button id="deleteButton" type="button" class="btn btn-danger">
+                    <button on:click="{removeFunction}" id="deleteButton" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Jahr löschen">
                         <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                    <button on:click="{toJSON}" id="saveButton" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Debug: Speichern">
+                        <i class="fa-solid fa-floppy-disk"></i>
                     </button>
                 </div>
 

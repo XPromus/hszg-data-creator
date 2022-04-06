@@ -1,26 +1,38 @@
 <script lang="ts">
 
-    import AddButton from './AddButton.svelte';
+    import type Year from './Year.svelte';
     import YearList from './YearList.svelte'
     
-    export let numberOfYears: number;
-
-    export let listID: string;
-    export let objectName: string = "Object";
-    export let headerId: string;
-    export let collapseId: string;
+    export let objectID: number;
     export let accordionId: string;
+
+    const listID: string = "yearList_" + objectID;
+    const objectName: string = "Object " + objectID;
+    const headerId: string = "header_" + objectID;
+    const collapseId: string = "collapse_" + objectID;
     
-    function toJSON(): string {
-        return "";
+    let yearList: YearList;
+    
+    export function toJSON(): string {
+        
+        let ret = '{'
+            + '"objectName" : ' + objectName + ','
+            + '"years" : [';
+
+        const years: Year[] = yearList.getYears();
+        for (let i = 0; i < years.length; i++) {
+             ret += years[i].toJSON() + ',';
+        }
+
+        ret += ']}';
+
+        alert(ret);
+        return ret;
+
     }
 
     function addYear(): void  {
-        
-    }
-
-    function deleteYear(): void {
-
+        yearList.createYear();
     }
 
 </script>
@@ -34,8 +46,13 @@
     <div id="{collapseId}" class="accordion-collapse collapse" aria-labelledby="{headerId}" data-bs-parent="#{accordionId}">
         <div class="accordion-body">
             <ul class="card card-body">
-                <AddButton text="Jahr hinzufügen"/>
-                <YearList yearListId="{listID}" numberOfYears={numberOfYears} />
+                <p>
+                    Jahre
+                </p>
+                <button on:click="{addYear}" type="button" class="btn btn-success" style="margin-bottom: 10px;" data-toggle="tooltip" data-placement="bottom" title="Jahr erstellen">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+                <YearList bind:this={yearList} yearListId="{listID}" />
             </ul>
         </div>
     </div>
