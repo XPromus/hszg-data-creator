@@ -1,6 +1,7 @@
 <script lang="ts">
 
     export let addObjectFunction;
+    export let uploadDataFunction;
 
 </script>
 
@@ -12,7 +13,7 @@
             <button on:click="{addObjectFunction}" type="button" class="btn btn-success me-2" data-toggle="tooltip" data-placement="bottom" title="Neues Objekt erstellen">
                 <i class="fa-solid fa-plus"></i>
             </button>
-            <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Daten Speichern">
+            <button on:click="{uploadDataFunction}" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Daten Speichern">
                 <i class="fa-solid fa-cloud-arrow-up"></i>
             </button>
         </form>

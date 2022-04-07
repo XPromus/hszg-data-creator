@@ -1,7 +1,8 @@
 <script lang="ts">
 
-    import { createEventDispatcher } from "svelte";
+    import { onMount } from 'svelte';
 
+    //TODO: ID given by Backend
     export let yearId: number;
     export let accordionId: string;
     export let removeFunction;
@@ -10,30 +11,71 @@
     const collapseId: string = "year_collapse_" + yearId;
     const existCheckId: string = headerId + accordionId;
 
+    const yearIdKey: string = "id";
+
     let year: string;
+    const yearKey: string = "year";
+
     let objectName: string;
+    const objectNameKey: string = "objectName";
+
     let exist: boolean = true;
+    const existKey: string = "exists";
+
     let modelId: string;
+    const modelIdKey: string = "modelId"
+
     let textureId: string;
+    const textureIdKey: string = "textureId";
+
     let streetName: string;
+    const streetNameKey: string = "streetName";
+
     let streetNumber: number;
+    const streetNumberKey: string = "streetNumber";
+
     let latitude: number;
+    const latitudeKey: string = "latitude";
+
     let longitude: number;
+    const longitudeKey: string = "longitude";
 
     let existButtonMargin: number = 10;
+
+    onMount(async ()=> {
+        //TODO: Fetch year data
+    })
+
+    export function fromJSONObj(obj): void {
+        year = obj.year;
+        objectName = obj.objectName;
+        exist = obj.exist;
+        modelId = obj.modelId;
+        textureId = obj.textureId;
+        streetName = obj.streetName;
+        streetNumber = obj.streetNumber;
+        latitude = obj.latitude;
+        longitude = obj.longitude;
+    }
+
+    export function fromJSON(data: string): void {
+        const obj = JSON.parse(data);
+        fromJSONObj(obj);
+    }
 
     export function toJSON(): string {
 
         const ret: string = '{'
-            + '"year" : ' + year + ','
-            + '"objectName" : ' + objectName + ','
-            + '"exists" : ' + exist + ','
-            + '"modelId" : ' + modelId + ','
-            + '"textureId" : ' + textureId + ','
-            + '"streetName" : ' + streetName + ','
-            + '"sreetNumber" : ' + streetNumber + ','
-            + '"latitude" : ' + latitude + ','
-            + '"longitude" : ' + longitude
+            + '"' + yearIdKey       + '" : '  + yearId       + ','
+            + '"' + yearKey         + '" : "' + year         + '",'
+            + '"' + objectNameKey   + '" : "' + objectName   + '",'
+            + '"' + existKey        + '" : '  + exist        + ','
+            + '"' + modelIdKey      + '" : '  + modelId      + ','
+            + '"' + textureIdKey    + '" : '  + textureId    + ','
+            + '"' + streetNameKey   + '" : "' + streetName   + '",'
+            + '"' + streetNumberKey + '" : '  + streetNumber + ','
+            + '"' + latitudeKey     + '" : '  + latitude     + ','
+            + '"' + longitudeKey    + '" : '  + longitude
             + '}';
 
         return ret;
@@ -120,9 +162,6 @@
                 <div class="col-12">
                     <button on:click="{removeFunction}" id="deleteButton" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Jahr löschen">
                         <i class="fa-solid fa-trash-can"></i>
-                    </button>
-                    <button on:click="{debugPrint}" id="saveButton" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Debug: Speichern">
-                        <i class="fa-solid fa-floppy-disk"></i>
                     </button>
                 </div>
 

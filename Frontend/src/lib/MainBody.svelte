@@ -2,16 +2,20 @@
 
     import Object from './Object.svelte';
 
-    let numberOfObjects: number = 3;
     let accordionId: string = "objectAccordion";
 
     let objects = [];
     let objectIDList = [];
     let lastID = 0;
 
-    export function getObjects(): Object[] {
+    export function getObjects() {
         return objects;
     }
+
+    export const handleAdd = () => {
+        objectIDList = [...objectIDList, {id: lastID++}];
+    }
+
 
     const handleRemove = (i: number) => {
         objectIDList = [
@@ -20,10 +24,7 @@
         ];
     };
 
-    export function handleAdd() {
-        objectIDList = [...objectIDList, {id: lastID++}];
-    }
-
+    
     $: objects = objects.filter(el => el);
 
 </script>
