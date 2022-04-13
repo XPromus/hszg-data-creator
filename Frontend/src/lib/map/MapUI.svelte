@@ -1,6 +1,7 @@
 <script lang="ts">
     
     import EditWindow from "./EditWindow.svelte";
+    import HouseForm from "./HouseForm.svelte";
 
     const house = {
         name: "Neue Gasse 3, Dittelsdorf"
@@ -16,7 +17,5 @@
 </div>
 
 <style>
-
-    
 
 </style>

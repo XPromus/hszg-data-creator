@@ -15,7 +15,7 @@
 
 </script>
 
-<div class="card" style="width: 35rem;">
+<div id="editWindow" class="card" style="width: 35rem;">
     <div class="card-body">
 
         <div class="container" style="margin-bottom: 10px;">
@@ -41,15 +41,25 @@
         <div id="yearList">
             <YearList bind:this={yearList} yearListId="{listID}" />
         </div>
-        
+
     </div>
 </div>
 
 <style>
 
-    .card {
-        transform: translateY(-900px);
-        margin-left: 11px;
+    #editWindow {
+
+        width: 33%;
+        height: 75%;
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        margin-top: 85px;
+        margin-left: 10px;
+
+        z-index: 500;
+
     }
 
 </style>
