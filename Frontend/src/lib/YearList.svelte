@@ -27,12 +27,16 @@
 
 </script>
 
-<div class="accordion" id="{yearListId}">
+<div class="accordion overflow-auto" id="{yearListId}">
     {#each yearIDList as year, i (year.id)}
         <Year bind:this={years[i]} removeFunction={() => handleRemove(i)} yearId={year.id} accordionId={yearListId}/>
     {/each}
 </div>
 
 <style>
+
+    .accordion {
+        max-height: 650px;
+    }
 
 </style>

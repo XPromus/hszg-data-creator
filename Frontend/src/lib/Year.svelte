@@ -145,6 +145,7 @@
                             <input bind:value={streetNumber} type="text" class="form-control" placeholder="" aria-label="house-number">
                         </div>
                     </div>
+                    <!--
                     <div class="col-md-6">
                         <div class="input-group mb-3">
                             <span class="input-group-text">Latitude</span>
@@ -157,6 +158,7 @@
                             <input bind:value={longitude} type="text" class="form-control" placeholder="" aria-label="longitude">
                         </div>
                     </div>
+                    -->
                 {/if}
 
                 <div class="col-12">
