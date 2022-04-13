@@ -1,7 +1,7 @@
 <script lang="ts">
 
     import YearList from "../YearList.svelte";
-    
+
     export let house;
 
     let houseName: string = house.name;
@@ -29,18 +29,13 @@
                     </button>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-1">
-                    <button on:click="{yearList.handleAdd}" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Jahr erstellen">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
-                </div>
-                <div class="col-1">
-                    <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
-                </div>
-            </div>
+            <button on:click="{yearList.handleAdd}" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Jahr erstellen">
+                <!--<i class="fa-solid fa-plus"></i>-->
+                <span>Jahr erstellen</span>
+            </button>
+            <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
         </div>
         
         <div id="yearList">
