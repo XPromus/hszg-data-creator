@@ -23,6 +23,9 @@ public class Object {
     @OneToMany(mappedBy = "object")
     private Set<Year> years;
 
+    @OneToMany(mappedBy = "object")
+    private Set<Image> images;
+
     //<editor-fold desc="Constructor">
     public Object() {
 
@@ -62,6 +65,15 @@ public class Object {
     public void setYears(Set<Year> years) {
         this.years = years;
     }
+
+    public Set<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<Image> images) {
+        this.images = images;
+    }
+
     //</editor-fold>
 
 }

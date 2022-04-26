@@ -14,4 +14,8 @@ public class ErrorText {
         return "Year with id " + id + " does not exist.";
     }
 
+    public static String getImageString(Long id) {
+        return "Image with id " + id + "does not exist.";
+    }
+
 }
