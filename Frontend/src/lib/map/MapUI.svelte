@@ -1,6 +1,6 @@
 <script lang="ts">
     
-    import EditWindow from "./EditWindow.svelte";
+    import EditWindow from "../editor/EditWindow.svelte";
     import HouseForm from "./HouseForm.svelte";
 
     const house = {

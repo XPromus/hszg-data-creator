@@ -2,7 +2,7 @@
 
     import * as L from 'leaflet';
     import 'leaflet/dist/leaflet.css';
-    import EditWindow from "./EditWindow.svelte";
+    import EditWindow from "../editor/EditWindow.svelte";
 
     let map;
 

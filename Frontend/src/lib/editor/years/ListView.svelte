@@ -1,8 +1,8 @@
 <script lang="ts">
 
-    import TopBar from './TopBar.svelte'
-    import MainBody from './MainBody.svelte'
-    import type Object from './Object.svelte';
+    import TopBar from '../../TopBar.svelte'
+    import MainBody from '../../MainBody.svelte'
+    import type Object from '../../Object.svelte';
 
     let mainBody;
 

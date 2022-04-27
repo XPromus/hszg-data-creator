@@ -1,8 +1,8 @@
 <script lang="ts">
     
     import { onMount } from 'svelte';
-    import type Year from './Year.svelte';
-    import YearList from './YearList.svelte'
+    import type Year from './editor/years/Year.svelte';
+    import YearList from './editor/years/YearList.svelte';
     
     export let objectID: number;
     const objectIDKey: string = "id";

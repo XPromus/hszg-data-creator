@@ -1,6 +1,6 @@
 <script lang="ts">
     
-    import Year from './Year.svelte'
+    import Year from '../years/Year.svelte';
 
     export let yearListId: string;
 
@@ -34,9 +34,5 @@
 </div>
 
 <style>
-
-    .accordion {
-        max-height: 650px;
-    }
 
 </style>
