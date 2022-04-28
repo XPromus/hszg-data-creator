@@ -3,6 +3,8 @@
     import { onMount } from 'svelte';
 
     //TODO: ID given by Backend
+    export let data;
+
     export let yearId: number;
     export let accordionId: string;
     export let removeFunction;
@@ -19,7 +21,7 @@
     let objectName: string;
     const objectNameKey: string = "objectName";
 
-    let exist: boolean = true;
+    let exists: boolean = true;
     const existKey: string = "exists";
 
     let modelId: string;
@@ -34,28 +36,16 @@
     let streetNumber: number;
     const streetNumberKey: string = "streetNumber";
 
-    let latitude: number;
-    const latitudeKey: string = "latitude";
-
-    let longitude: number;
-    const longitudeKey: string = "longitude";
-
     let existButtonMargin: number = 10;
-
-    onMount(async ()=> {
-        //TODO: Fetch year data
-    })
 
     export function fromJSONObj(obj): void {
         year = obj.year;
         objectName = obj.objectName;
-        exist = obj.exist;
+        exists = obj.exists;
         modelId = obj.modelId;
         textureId = obj.textureId;
         streetName = obj.streetName;
         streetNumber = obj.streetNumber;
-        latitude = obj.latitude;
-        longitude = obj.longitude;
     }
 
     export function fromJSON(data: string): void {
@@ -63,28 +53,28 @@
         fromJSONObj(obj);
     }
 
-    export function toJSON(): string {
+    export function toJSON() { 
 
-        const ret: string = '{'
-            + '"' + yearIdKey       + '" : '  + yearId       + ','
-            + '"' + yearKey         + '" : "' + year         + '",'
-            + '"' + objectNameKey   + '" : "' + objectName   + '",'
-            + '"' + existKey        + '" : '  + exist        + ','
-            + '"' + modelIdKey      + '" : '  + modelId      + ','
-            + '"' + textureIdKey    + '" : '  + textureId    + ','
-            + '"' + streetNameKey   + '" : "' + streetName   + '",'
-            + '"' + streetNumberKey + '" : '  + streetNumber + ','
-            + '"' + latitudeKey     + '" : '  + latitude     + ','
-            + '"' + longitudeKey    + '" : '  + longitude
-            + '}';
+        const ret = {
+            yearIdKey: yearId,
+            yearKey: year,
+            objectNameKey: objectName,
+            existKey: exists,
+            modelIdKey: modelId,
+            textureIdKey: textureId,
+            streetNameKey: streetName,
+            streetNumberKey: streetNumber
+        };
 
         return ret;
 
     }
 
-    function debugPrint() {
-        alert(toJSON());
-    }
+    onMount(async () => {
+        if (data != undefined) {
+            fromJSONObj(data);
+        }
+    })
 
 </script>
 
@@ -100,7 +90,7 @@
 
                 <div class="col-12" style="margin-bottom: {existButtonMargin}px;">
                     <div class="form-check">
-                        <input bind:checked="{exist}" value="" class="form-check-input" type="checkbox" id="{existCheckId}">
+                        <input bind:checked="{exists}" class="form-check-input" type="checkbox" id="{existCheckId}">
                         <label class="form-check-label" for="{existCheckId}">
                             Objekt existiert
                         </label>
@@ -114,7 +104,7 @@
                     </div>
                 </div>
 
-                {#if exist == true}
+                {#if exists == true}
                     <div class="col-12">
                         <div class="input-group mb-3">
                             <span class="input-group-text">Name des Objekts</span>

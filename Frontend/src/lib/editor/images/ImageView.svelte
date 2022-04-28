@@ -39,21 +39,6 @@
                     Previous
                 </button>
             </div>
-
-            <!--
-            {#each images as image, i}
-                {#if i == images.length - 1}
-                    <button class=" col-1 btn btn-secondary" type="button" data-bs-target="#imageCarouselControls" data-bs-slide-to="{i}" aria-current="true" style="marginleft: 5px;">
-                        {i + 1}
-                    </button>
-                {:else}
-                    <button class=" col-1 btn btn-secondary" type="button" data-bs-target="#imageCarouselControls" data-bs-slide-to="{i}" style="margin-right: 5px;">
-                        {i + 1}
-                    </button>
-                {/if}
-            {/each}
-            -->
-
             <div class="col-6">
                 <button class="btn btn-secondary btn-carousel" type="button" data-bs-target="#imageCarouselControls" data-bs-slide="next">
                     Next
@@ -61,7 +46,6 @@
             </div>
         </div>
     </div>
-
     <div class="carousel-inner">
         {#each images as image, i}
             {#if i == 0}
@@ -75,7 +59,6 @@
             {/if}
         {/each}
     </div>
-    
 </div>
 
 <style>

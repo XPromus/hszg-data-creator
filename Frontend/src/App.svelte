@@ -1,22 +1,47 @@
 <script lang="ts">
 
-  import ListView from './lib/editor/years/ListView.svelte';
-  import LeafletTest from './lib/map/LeafletTest.svelte';
-  import MapUI from './lib/map/MapUI.svelte';
-  import EditWindow from "./lib/editor/EditWindow.svelte";
+  import Map from './lib/map/Map.svelte';
+  import Object from './lib/Object.svelte';
+
+  let showEditor: boolean = true;
+
+  const testData: object = {
+    "id":0,
+    "name":"Test Objekt",
+    "latitude": 1,
+    "longitude": 1,
+    "years":[
+      {
+        "id":0,
+        "year":"2000",
+        "objectName":"Nebenhaus",
+        "exists":true,
+        "modelId":"12345",
+        "textureId":"12345",
+        "streetName":"Straße",
+        "streetNumber":"1"
+      }
+    ],
+    "images":[
+
+    ]
+  };
 
   const house = {
         name: "Neue Gasse 3, Dittelsdorf"
   };
 
+  function openEditor() {
+
+  }
+
 </script>
 
 <main>
-  <EditWindow house="{house}"/>
-  <LeafletTest />
-  <!--<OpenLayersTest />-->
-  <!--<MapUI />-->
-  <!--<ListView />-->
+  {#if showEditor == true}
+    <Object data="{testData}"/>
+  {/if}
+  <Map />
 </main>
 
 <style>

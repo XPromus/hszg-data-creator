@@ -3,17 +3,47 @@
     import YearList from "./years/YearList.svelte";
     import ImageView from "./images/ImageView.svelte";
     import ImageUploadModal from "./images/ImageUpload.svelte";
+    import type Year from "./years/Year.svelte";
+    import { onMount } from "svelte";
 
-    export let house;
+    export let data;
+    let objectName: string = "Neues Haus";
 
-    let houseName: string = house.name;
-
-    const headerId = 0;
-    const objectName = "Test Haus";
-    const listID = "yearList_test";
-
+    const listID = "yearList";
     let yearList: YearList;
-    const yearListKey: string = "years";
+    
+
+    export function getData() {
+        return yearList;
+    }
+
+    export function getYearDataAsJSON() {
+
+        let years: Year[] = yearList.getYears();
+        let yearString: string = "";
+        
+        for (let i = 0; i < years.length; i++) {
+            
+            const year: Year = years[i];
+
+            if (i == years.length - 1) {
+                yearString += year.toJSON();
+            } else {
+                yearString += year.toJSON() + ",";
+            }
+
+        }
+
+    }
+
+    onMount(async () => {
+        
+        let name = data.name;
+        if (name != undefined) {
+            objectName = name;
+        }
+
+    })
 
 </script>
 
@@ -22,14 +52,17 @@
         <div class="container">
             <div class="row">
                 <div class="col-9" style="text-align: left;">
-                    <h5>{houseName}</h5>
+                    <input bind:value="{objectName}" type="text" class="form-control" id="objectIdentifierInput" placeholder="">
                 </div>
                 <div class="col-3" style="text-align: right;">
-                    <button type="button" class="btn btn-secondary">
-                        <span>X</span>
-                    </button>
                     <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen">
                         <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                    <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Daten speichern">
+                        <i class="fa-solid fa-check"></i>
+                    </button>
+                    <button type="button" class="btn btn-dark" data-toggle="tooltip" data-placement="bottom" title="Fenster schließen">
+                        <i class="fa-solid fa-x"></i>
                     </button>
                 </div>
             </div>
@@ -46,13 +79,12 @@
                                 <div id="objectButtons" class="row">
                                     <div class="col-12">
                                         <button on:click="{yearList.handleAdd}" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Jahr erstellen" style="width: 100%;">
-                                            <!--<i class="fa-solid fa-plus"></i>-->
                                             <span>Jahr erstellen</span>
                                         </button>
                                     </div>
                                 </div>
                                 <div id="yearList">
-                                    <YearList bind:this={yearList} yearListId="{listID}" />
+                                    <YearList bind:this={yearList} data="{data.years}" yearListId="{listID}" />
                                 </div>
                             </div>
                         </div>
@@ -65,10 +97,13 @@
                         </h2>
                         <div id="imageCollapse" class="accordion-collapse collapse" aria-labelledby="imageHeading" data-bs-parent="#editWindowAccordion">
                             <div class="accordion-body">
+                                <p>In Entwicklung</p>
+                                <!--
                                 <ImageView />
                                 <div id="imageUploadModal" class="container-fluid">
                                     <ImageUploadModal />
                                 </div>
+                                -->
                             </div>
                         </div>
                     </div>
