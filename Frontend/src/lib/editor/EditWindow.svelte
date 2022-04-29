@@ -1,17 +1,18 @@
 <script lang="ts">
 
-    import YearList from "./years/YearList.svelte";
-    import ImageView from "./images/ImageView.svelte";
-    import ImageUploadModal from "./images/ImageUpload.svelte";
-    import type Year from "./years/Year.svelte";
     import { onMount } from "svelte";
-
+    import type Year from "./years/Year.svelte";
+    import YearList from "./years/YearList.svelte";
+    
     export let data;
     let objectName: string = "Neues Haus";
 
     const listID = "yearList";
     let yearList: YearList;
     
+    function saveData() {
+        alert("Save Data");
+    }
 
     export function getData() {
         return yearList;
@@ -45,6 +46,8 @@
 
     })
 
+    export let closeFunction;
+
 </script>
 
 <div id="editWindow" class="card" style="width: 40rem;">
@@ -58,10 +61,10 @@
                     <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
-                    <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Daten speichern">
+                    <button on:click="{saveData}" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Daten speichern">
                         <i class="fa-solid fa-check"></i>
                     </button>
-                    <button type="button" class="btn btn-dark" data-toggle="tooltip" data-placement="bottom" title="Fenster schließen">
+                    <button on:click="{closeFunction}" type="button" class="btn btn-dark" data-toggle="tooltip" data-placement="bottom" title="Fenster schließen">
                         <i class="fa-solid fa-x"></i>
                     </button>
                 </div>

@@ -59,11 +59,11 @@
         }
     });
 
+    export let closeFunction;
+
 </script>
 
-<div>
-    <EditWindow bind:this={editorWindow} data="{data}"/>
-</div>
+<EditWindow bind:this={editorWindow} closeFunction={closeFunction} data="{data}"/>
 
 <style>
 

@@ -1,18 +1,16 @@
-<script>
+<script lang="ts">
 
     import * as L from 'leaflet';
     import 'leaflet/dist/leaflet.css';
-    import EditWindow from "../editor/EditWindow.svelte";
+    import { onMount } from 'svelte';
+    import Object from '../Object.svelte';
 
-    let map;
-
-    const house = {
-        name: "Neue Gasse 3, Dittelsdorf"
-    };
+    let map; 
+    let markers = [];
 
     const coords = {
-        lati: 50.953,
-        long: 14.873
+        lati: 50.95308,
+        long: 14.87294
     }
 
     function createMap(container) {
@@ -26,15 +24,6 @@
                 maxZoom: 25,
             }
         ).addTo(m);
-        
-        let marker = L.marker([50.95308, 14.87294]).addTo(m);
-        let polygon = L.polygon([
-            [50.9531561, 14.8728262],
-            [50.9531383, 14.873073],
-            [50.9530285, 14.8730528],
-            [50.9530505, 14.8728047],
-            [50.9531536, 14.8728248]
-        ]).addTo(m);
 
         return m;
 
@@ -55,15 +44,55 @@
         }
     }
 
+    function createMarker(loc) {
+        let marker = L.marker(loc, {draggable:true});
+        markers.push(marker);
+
+        const id = markers[markers.length - 1];
+
+        marker.on('dragend', function(e) {
+            let pos = marker.getLatLng();
+        });
+
+        marker.on('click', function(e) {
+            for(let i = 0; i < markers.length; i++) {
+                if (markers[i] === marker) {
+                    openEditorWindow();
+                }
+            }
+        });
+
+        marker.addTo(map);
+    }
+
+    onMount(async () => {
+        map.on('click', function(e) {
+            const pos = e.latlng;
+            createMarker(pos);
+        });
+    })
+
+    function changeEditorWindow(index) {
+
+    }
+
+    let editorWindowState: boolean = false;
+    function openEditorWindow() {
+        editorWindowState = true;
+    }
+
+    function closeEditorWindow() {
+        editorWindowState = false;
+    }
+
 </script>
 
 <svelte:window on:resize="{resizeMap}"></svelte:window>
 
-<div>
-    <div id="map" style="" use:mapAction />
-</div>
-
-
+<div id="map" style="" use:mapAction />
+{#if editorWindowState}
+    <Object closeFunction="{closeEditorWindow}" data="" />
+{/if}
 
 <style>
 

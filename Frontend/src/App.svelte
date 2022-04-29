@@ -1,9 +1,6 @@
 <script lang="ts">
 
   import Map from './lib/map/Map.svelte';
-  import Object from './lib/Object.svelte';
-
-  let showEditor: boolean = true;
 
   const testData: object = {
     "id":0,
@@ -27,20 +24,9 @@
     ]
   };
 
-  const house = {
-        name: "Neue Gasse 3, Dittelsdorf"
-  };
-
-  function openEditor() {
-
-  }
-
 </script>
 
 <main>
-  {#if showEditor == true}
-    <Object data="{testData}"/>
-  {/if}
   <Map />
 </main>
 
