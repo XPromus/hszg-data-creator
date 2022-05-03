@@ -32,16 +32,6 @@ public class YearPropertiesEdit {
             target.setExists(exists);
         }
 
-        var latitude = this.getNewLatitude();
-        if (latitude != null) {
-            target.setLatitude(latitude);
-        }
-
-        var longitude = this.getNewLongitude();
-        if (longitude != null) {
-            target.setLongitude(longitude);
-        }
-
     }
 
     @Nullable

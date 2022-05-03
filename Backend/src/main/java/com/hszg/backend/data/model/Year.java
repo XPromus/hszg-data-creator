@@ -37,10 +37,6 @@ public class Year implements YearProperties {
     private String streetName;
     private String streetNumber;
 
-    //TODO: Move to Object
-    private Float latitude;
-    private Float longitude;
-
     @ManyToOne
     @JoinColumn(name = "object_id", nullable = false)
     @JsonIgnore
@@ -121,22 +117,6 @@ public class Year implements YearProperties {
     public Object getObject() { return object; }
 
     public void setObject(Object object) { this.object = object; }
-
-    public Float getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Float latitude) {
-        this.latitude = latitude;
-    }
-
-    public Float getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Float longitude) {
-        this.longitude = longitude;
-    }
 
     public Boolean getExists() {
         return exists;

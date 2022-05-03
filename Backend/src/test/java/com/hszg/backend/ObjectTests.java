@@ -159,4 +159,41 @@ public class ObjectTests {
 
     }
 
+    @Test
+    public void editObjectTest() throws ParseException {
+
+        var object = createObject();
+        var changes = new JSONObject();
+        changes.put("newName", "Test House");
+        changes.put("newLatitude", 1);
+        changes.put("newLongitude", 1);
+
+        var postResponse = RestAssured.given()
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .body(changes)
+                .when()
+                .post("api/v1/object/edit/" + object);
+
+        postResponse.then().statusCode(200);
+
+    }
+
+    private Long createObject() throws ParseException {
+
+        var body = new JSONObject();
+        body.put("name", "House 1");
+
+        var response = RestAssured.given()
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .body(body)
+                .when()
+                .post("api/v1/object/create");
+
+        var jsonBody = (JSONObject) new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE).parse(response.body().asString());
+        return jsonBody.getAsNumber("id").longValue();
+
+    }
+
 }

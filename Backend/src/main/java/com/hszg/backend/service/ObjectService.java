@@ -5,6 +5,7 @@ import com.hszg.backend.data.model.Year;
 import com.hszg.backend.repos.ObjectRepository;
 import com.hszg.backend.repos.YearRepository;
 import com.hszg.backend.service.check.CheckExistence;
+import com.hszg.backend.service.edit.ObjectPropertiesEdit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +48,13 @@ public class ObjectService {
 
         objectRepository.delete(object);
 
+    }
+
+    @Transactional
+    public Object editObject(Long objectId, ObjectPropertiesEdit changes) {
+        var object = getObjectById(objectId);
+        changes.applyChanges(object);
+        return objectRepository.save(object);
     }
 
 }

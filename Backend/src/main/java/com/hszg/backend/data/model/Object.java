@@ -1,11 +1,13 @@
 package com.hszg.backend.data.model;
 
+import com.hszg.backend.data.properties.ObjectProperties;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "object")
-public class Object {
+public class Object implements ObjectProperties {
 
     @Id
     @SequenceGenerator(
@@ -19,6 +21,8 @@ public class Object {
     )
     private Long id;
     private String name;
+    private Float latitude;
+    private Float longitude;
 
     @OneToMany(mappedBy = "object")
     private Set<Year> years;
@@ -72,6 +76,22 @@ public class Object {
 
     public void setImages(Set<Image> images) {
         this.images = images;
+    }
+
+    public Float getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Float latitude) {
+        this.latitude = latitude;
+    }
+
+    public Float getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Float longitude) {
+        this.longitude = longitude;
     }
 
     //</editor-fold>

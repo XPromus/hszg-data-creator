@@ -17,12 +17,6 @@ public interface YearProperties {
     Boolean getExists();
     void setExists(@NotNull Boolean exists);
 
-    @NotNull
-    Float getLatitude();
-    void setLatitude(@NotNull Float latitude);
 
-    @NotNull
-    Float getLongitude();
-    void setLongitude(@NotNull Float longitude);
 
 }

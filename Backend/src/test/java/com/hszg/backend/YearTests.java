@@ -146,8 +146,6 @@ public class YearTests {
         changes.put("newYear", "2022-04-04");
         changes.put("newObjectName", "Changed Name");
         changes.put("newExists", "true");
-        changes.put("newLatitude", "1");
-        changes.put("newLongitude", "1");
 
         var postResponse = RestAssured.given()
                 .accept(ContentType.JSON)

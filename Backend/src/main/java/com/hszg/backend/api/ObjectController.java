@@ -2,11 +2,13 @@ package com.hszg.backend.api;
 
 import com.hszg.backend.data.model.Object;
 import com.hszg.backend.service.ObjectService;
+import com.hszg.backend.service.edit.ObjectPropertiesEdit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "api/v1/object")
 public class ObjectController {
@@ -49,6 +51,14 @@ public class ObjectController {
     @DeleteMapping("/delete/{objectId}")
     public void deleteObject(@PathVariable Long objectId) {
         objectService.deleteObject(objectId);
+    }
+
+    /**
+     * * Method was tested (✔)
+     */
+    @PostMapping("/edit/{objectId}")
+    public Object editObject(@PathVariable Long objectId, @RequestBody ObjectPropertiesEdit changes) {
+        return objectService.editObject(objectId, changes);
     }
 
 }
