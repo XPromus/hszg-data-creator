@@ -15,7 +15,7 @@
 
     const yearIdKey: string = "id";
 
-    let year: string;
+    let year: number = 0;
     const yearKey: string = "year";
 
     let objectName: string;
@@ -42,8 +42,8 @@
         year = obj.year;
         objectName = obj.objectName;
         exists = obj.exists;
-        modelId = obj.modelId;
-        textureId = obj.textureId;
+        modelId = obj.modelID;
+        textureId = obj.textureID;
         streetName = obj.streetName;
         streetNumber = obj.streetNumber;
     }
@@ -56,14 +56,14 @@
     export function toJSON() { 
 
         const ret = {
-            yearIdKey: yearId,
-            yearKey: year,
-            objectNameKey: objectName,
-            existKey: exists,
-            modelIdKey: modelId,
-            textureIdKey: textureId,
-            streetNameKey: streetName,
-            streetNumberKey: streetNumber
+            id: yearId,
+            year: year,
+            objectName: objectName,
+            exists: exists,
+            modelID: modelId,
+            textureID: textureId,
+            streetName: streetName,
+            streetNumber: streetNumber
         };
 
         return ret;

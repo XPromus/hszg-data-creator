@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
 
   import Map from './lib/map/Map.svelte';
 
@@ -23,6 +24,17 @@
 
     ]
   };
+
+  /*
+  onMount(async () => {
+    let response = await fetch("http://localhost:8080/test");
+    if (response.ok) {
+      response.text().then(function(text) {
+        alert(text);
+      })
+    }
+  });
+  */
 
 </script>
 

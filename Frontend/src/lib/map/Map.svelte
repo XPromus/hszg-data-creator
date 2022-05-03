@@ -5,8 +5,10 @@
     import { onMount } from 'svelte';
     import Object from '../Object.svelte';
 
+    import { dataMarkers, createDataMarker, getDataMarkerByObject, createDataMarkerFromSource, getDataMarkerByObjectID } from '../data/marker';
+    import { currentData, getCurrentDataByObjectID, getAllObjects, uploadObjectData, deleteObjectRequest } from '../data/objects';
+
     let map; 
-    let markers = [];
 
     const coords = {
         lati: 50.95308,
@@ -44,40 +46,70 @@
         }
     }
 
+    function createMarkerFromSource(id, lat, lng) {
+
+        let loc = L.latLng(lat, lng);
+        let newMarker = L.marker(loc, {draggable: true});
+        let dataMarker = createDataMarkerFromSource(id, newMarker)
+        dataMarkers.push(dataMarker);
+
+        newMarker.on('dragend', function(e) {
+            let dataMarker = getDataMarkerByObject(newMarker);
+            uploadObjectData(dataMarker, undefined);
+        });
+
+        newMarker.on('click', function(e) {
+            let selected = getDataMarkerByObject(newMarker);
+            openEditorWindow(selected);
+        });
+
+        newMarker.addTo(map);
+
+    }   
+
     function createMarker(loc) {
-        let marker = L.marker(loc, {draggable:true});
-        markers.push(marker);
 
-        const id = markers[markers.length - 1];
+        let newMarker = L.marker(loc, {draggable: true});
+        let dataMarker = createDataMarker(newMarker)
+        dataMarkers.push(dataMarker);
+        getCurrentDataByObjectID(dataMarker);
 
-        marker.on('dragend', function(e) {
-            let pos = marker.getLatLng();
+
+        newMarker.on('dragend', function(e) {
+            let dataMarker = getDataMarkerByObject(newMarker);
+            uploadObjectData(dataMarker, undefined);
         });
 
-        marker.on('click', function(e) {
-            for(let i = 0; i < markers.length; i++) {
-                if (markers[i] === marker) {
-                    openEditorWindow();
-                }
-            }
+        newMarker.on('click', function(e) {
+            let selected = getDataMarkerByObject(newMarker);
+            openEditorWindow(selected);
         });
 
-        marker.addTo(map);
+        newMarker.addTo(map);
+   
     }
 
+    let preDataPromise;
     onMount(async () => {
+
+        preDataPromise = await getAllObjects();
+        for (let i = 0; i < preDataPromise.length; i++) {
+            console.log("Create Marker");
+            let markerData = preDataPromise[i];
+            createMarkerFromSource(markerData.id, markerData.latitude, markerData.longitude);
+        }
+
+
         map.on('click', function(e) {
             const pos = e.latlng;
             createMarker(pos);
         });
     })
 
-    function changeEditorWindow(index) {
-
-    }
-
     let editorWindowState: boolean = false;
-    function openEditorWindow() {
+    let dataPromise;
+    function openEditorWindow(dataMarker) {
+        dataPromise = getCurrentDataByObjectID(dataMarker);
         editorWindowState = true;
     }
 
@@ -85,14 +117,25 @@
         editorWindowState = false;
     }
 
+    function deleteObject() {
+        const id = currentData.id;
+        map.removeLayer(getDataMarkerByObjectID(id).marker);
+        deleteObjectRequest(id);
+        closeEditorWindow();
+    }
+
 </script>
 
 <svelte:window on:resize="{resizeMap}"></svelte:window>
 
 <div id="map" style="" use:mapAction />
-{#if editorWindowState}
-    <Object closeFunction="{closeEditorWindow}" data="" />
-{/if}
+{#await dataPromise}
+    <p>Loading Data</p>
+{:then data} 
+    {#if editorWindowState}
+        <Object closeFunction="{closeEditorWindow}" data="{data}" deleteObject="{deleteObject}"/>
+    {/if}
+{/await}
 
 <style>
 

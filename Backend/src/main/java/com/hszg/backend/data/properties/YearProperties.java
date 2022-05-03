@@ -6,8 +6,8 @@ import java.time.LocalDate;
 public interface YearProperties {
 
     @NotNull
-    LocalDate getYear();
-    void setYear(@NotNull LocalDate year);
+    Integer getYear();
+    void setYear(@NotNull Integer year);
 
     @NotNull
     String getObjectName();
@@ -17,6 +17,20 @@ public interface YearProperties {
     Boolean getExists();
     void setExists(@NotNull Boolean exists);
 
+    @NotNull
+    Long getModelID();
+    void setModelID(@NotNull Long modelID);
 
+    @NotNull
+    Long getTextureID();
+    void setTextureID(@NotNull Long textureID);
+
+    @NotNull
+    String getStreetName();
+    void setStreetName(@NotNull String streetName);
+
+    @NotNull
+    Integer getStreetNumber();
+    void setStreetNumber(@NotNull Integer streetNumber);
 
 }

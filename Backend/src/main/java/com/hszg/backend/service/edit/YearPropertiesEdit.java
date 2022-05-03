@@ -8,12 +8,13 @@ import java.time.LocalDate;
 
 public class YearPropertiesEdit {
 
-    private LocalDate newYear = null;
+    private Integer newYear = null;
     private String newObjectName = null;
     private Boolean newExists = null;
-
-    private Float newLatitude = null;
-    private Float newLongitude = null;
+    private Long newModelID = null;
+    private Long newTextureID = null;
+    private String newStreetName = null;
+    private Integer newStreetNumber = null;
 
     public void applyChanges(@NotNull final YearProperties target) {
 
@@ -32,14 +33,34 @@ public class YearPropertiesEdit {
             target.setExists(exists);
         }
 
+        var modelID = this.getNewModelID();
+        if (modelID != null) {
+            target.setModelID(modelID);
+        }
+
+        var textureID = this.getNewTextureID();
+        if (textureID != null) {
+            target.setTextureID(textureID);
+        }
+
+        var streetName = this.getNewStreetName();
+        if (streetName != null) {
+            target.setStreetName(streetName);
+        }
+
+        var streetNumber = this.getNewStreetNumber();
+        if (streetNumber != null) {
+            target.setStreetNumber(streetNumber);
+        }
+
     }
 
     @Nullable
-    public LocalDate getNewYear() {
+    public Integer getNewYear() {
         return newYear;
     }
 
-    public void setNewYear(@Nullable LocalDate newYear) {
+    public void setNewYear(@Nullable Integer newYear) {
         this.newYear = newYear;
     }
 
@@ -62,21 +83,38 @@ public class YearPropertiesEdit {
     }
 
     @Nullable
-    public Float getNewLatitude() {
-        return newLatitude;
+    public Long getNewModelID() {
+        return newModelID;
     }
 
-    public void setNewLatitude(@Nullable Float newLatitude) {
-        this.newLatitude = newLatitude;
+    public void setNewModelID(@Nullable Long newModelID) {
+        this.newModelID = newModelID;
     }
 
     @Nullable
-    public Float getNewLongitude() {
-        return newLongitude;
+    public Long getNewTextureID() {
+        return newTextureID;
     }
 
-    public void setNewLongitude(@Nullable Float newLongitude) {
-        this.newLongitude = newLongitude;
+    public void setNewTextureID(@Nullable Long newTextureID) {
+        this.newTextureID = newTextureID;
     }
 
+    @Nullable
+    public String getNewStreetName() {
+        return newStreetName;
+    }
+
+    public void setNewStreetName(@Nullable String newStreetName) {
+        this.newStreetName = newStreetName;
+    }
+
+    @Nullable
+    public Integer getNewStreetNumber() {
+        return newStreetNumber;
+    }
+
+    public void setNewStreetNumber(@Nullable Integer newStreetNumber) {
+        this.newStreetNumber = newStreetNumber;
+    }
 }

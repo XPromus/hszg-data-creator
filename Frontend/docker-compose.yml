@@ -8,3 +8,6 @@ services:
       - ./:/app
     ports:
       - '3000:3000'  
+    image: app
+    environment:
+      - name=value

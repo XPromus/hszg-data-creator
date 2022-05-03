@@ -25,7 +25,7 @@ public class YearService {
     }
 
     @Transactional
-    public Year createYear(Long objectId, LocalDate year) {
+    public Year createYear(Long objectId, Integer year) {
 
         var object = CheckExistence.checkObjectExistence(objectRepository, objectId);
 

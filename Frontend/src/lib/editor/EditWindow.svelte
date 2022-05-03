@@ -1,17 +1,34 @@
 <script lang="ts">
 
     import { onMount } from "svelte";
+    import { getDataMarkerByObjectID } from '../data/marker'
+    import { createYear, editYearData } from '../data/years';
+    import { uploadObjectData } from '../data/objects';
+
     import type Year from "./years/Year.svelte";
     import YearList from "./years/YearList.svelte";
+    import ImageView from "./images/ImageView.svelte";
     
     export let data;
+
     let objectName: string = "Neues Haus";
 
     const listID = "yearList";
     let yearList: YearList;
     
-    function saveData() {
-        alert("Save Data");
+    async function saveData() {
+
+        const dataMarker = getDataMarkerByObjectID(data.id);
+        data.name = objectName;
+        console.log(data.name);
+        await uploadObjectData(dataMarker, data.name);
+
+        const years = yearList.getYears();
+        for (let i = 0; i < years.length; i++) {
+            const year = years[i].toJSON();
+            await editYearData(year.id, year);
+        }
+
     }
 
     export function getData() {
@@ -39,14 +56,14 @@
 
     onMount(async () => {
         
-        let name = data.name;
-        if (name != undefined) {
-            objectName = name;
+        if (data != undefined) {
+            objectName = data.name;
         }
 
-    })
+    });
 
     export let closeFunction;
+    export let deleteObject;
 
 </script>
 
@@ -58,7 +75,7 @@
                     <input bind:value="{objectName}" type="text" class="form-control" id="objectIdentifierInput" placeholder="">
                 </div>
                 <div class="col-3" style="text-align: right;">
-                    <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen">
+                    <button on:click="{deleteObject}" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
                     <button on:click="{saveData}" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Daten speichern">
@@ -81,13 +98,13 @@
                             <div class="accordion-body">
                                 <div id="objectButtons" class="row">
                                     <div class="col-12">
-                                        <button on:click="{yearList.handleAdd}" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Jahr erstellen" style="width: 100%;">
+                                        <button on:click="{yearList.handleNewAdd}" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Jahr erstellen" style="width: 100%;">
                                             <span>Jahr erstellen</span>
                                         </button>
                                     </div>
                                 </div>
                                 <div id="yearList">
-                                    <YearList bind:this={yearList} data="{data.years}" yearListId="{listID}" />
+                                    <YearList objectID="{data.id}" bind:this={yearList} data="{data.years}" yearListId="{listID}" />
                                 </div>
                             </div>
                         </div>
@@ -95,12 +112,12 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="imageHeader">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#imageCollapse" aria-expanded="false" aria-controls="imageCollapse">
-                                Bilder
+                                Bilder (In Entwicklung)
                             </button>
                         </h2>
                         <div id="imageCollapse" class="accordion-collapse collapse" aria-labelledby="imageHeading" data-bs-parent="#editWindowAccordion">
                             <div class="accordion-body">
-                                <p>In Entwicklung</p>
+                                <ImageView />
                                 <!--
                                 <ImageView />
                                 <div id="imageUploadModal" class="container-fluid">

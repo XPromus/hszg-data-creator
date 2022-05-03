@@ -1,30 +1,38 @@
 <script lang="ts">
-import { onMount } from 'svelte';
 
+    import { onMount } from 'svelte';
+    import { createNewYear, deleteYear } from '../../data/years';
     
     import Year from '../years/Year.svelte';
 
+    export let objectID;
     export let data = [];
     export let yearListId: string;
 
     let years = [];
     let yearIDList = [];
-    let lastID = 0;
 
     export function getYears() {
         return years;
     }
 
-    export const handleAdd = () => {
-        yearIDList = [...yearIDList, {id: lastID++}];
-    };
+    export async function handleNewAdd() {
+        const newYear = await createNewYear(objectID, 0);
+        yearIDList = [...yearIDList, newYear.id];
+    }
 
-    const handleRemove = (i: number) => {
+    function handleExistingAdd(id) {
+        yearIDList = [...yearIDList, id];
+    }
+
+    async function handleRemoveYear(i: number) {
+        const yearID = yearIDList[i];
+        deleteYear(yearID);
         yearIDList = [
             ...yearIDList.slice(0, i),
             ...yearIDList.slice(i + 1, yearIDList.length)
         ];
-    };
+    }
 
     $: years = years.filter(el => el);
 
@@ -33,7 +41,7 @@ import { onMount } from 'svelte';
         if (data != undefined) {
             const yearNum: number = data.length;
             for (let i = 0; i < yearNum; i++) {
-                handleAdd();   
+                handleExistingAdd(data[i].id);   
             }
         }
 
@@ -42,8 +50,8 @@ import { onMount } from 'svelte';
 </script>
 
 <div class="accordion overflow-auto" id="{yearListId}">
-    {#each yearIDList as year, i (year.id)}
-        <Year bind:this={years[i]} data="{data[i]}" removeFunction={() => handleRemove(i)} yearId={year.id} accordionId={yearListId}/>
+    {#each yearIDList as yearID, i}
+        <Year bind:this={years[i]} data="{data[i]}" removeFunction={() => handleRemoveYear(i)} yearId={yearID} accordionId={yearListId}/>
     {/each}
 </div>
 

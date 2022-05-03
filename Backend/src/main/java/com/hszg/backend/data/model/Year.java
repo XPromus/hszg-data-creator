@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hszg.backend.data.properties.YearProperties;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 @Entity
 @Table(name = "years")
@@ -25,17 +22,13 @@ public class Year implements YearProperties {
     @Column(name = "id")
     private Long id;
 
-    private LocalDate year;
+    private Integer year;
     private String objectName;
-    private Boolean exists;
-
-    //TODO: Extract the model and texture into a seperate table
+    private Boolean exists = true;
     private Long modelID;
     private Long textureID;
-
-    //TODO: Extract address into a separate table
     private String streetName;
-    private String streetNumber;
+    private Integer streetNumber;
 
     @ManyToOne
     @JoinColumn(name = "object_id", nullable = false)
@@ -46,7 +39,7 @@ public class Year implements YearProperties {
 
     }
 
-    public Year(String year) {
+    public Year(Integer year) {
         setYear(year);
     }
 
@@ -59,19 +52,12 @@ public class Year implements YearProperties {
         this.id = id;
     }
 
-    public LocalDate getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(LocalDate year) {
-        //Format: yyyy-mm-dd
+    public void setYear(Integer year) {
         this.year = year;
-    }
-
-    public void setYear(String year) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
-        formatter = formatter.withLocale(Locale.GERMANY);
-        this.year = LocalDate.parse(year, formatter);
     }
 
     public String getObjectName() {
@@ -106,11 +92,11 @@ public class Year implements YearProperties {
         this.streetName = streetName;
     }
 
-    public String getStreetNumber() {
+    public Integer getStreetNumber() {
         return streetNumber;
     }
 
-    public void setStreetNumber(String streetNumber) {
+    public void setStreetNumber(Integer streetNumber) {
         this.streetNumber = streetNumber;
     }
 

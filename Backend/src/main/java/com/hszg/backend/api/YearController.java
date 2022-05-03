@@ -6,7 +6,6 @@ import com.hszg.backend.service.edit.YearPropertiesEdit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @CrossOrigin
@@ -34,7 +33,7 @@ public class YearController {
      * * Method was tested (✔)
      */
     @PostMapping("/create/{objectId}/{year}")
-    public Year createYear(@PathVariable Long objectId, @PathVariable LocalDate year) {
+    public Year createYear(@PathVariable Long objectId, @PathVariable Integer year) {
         return yearService.createYear(objectId, year);
     }
 

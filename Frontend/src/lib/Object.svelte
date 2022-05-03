@@ -2,6 +2,8 @@
 
     import { onMount } from "svelte";
     import EditWindow from "./editor/EditWindow.svelte";
+    import { getDataMarkerByObjectID } from './data/marker';
+    import { uploadObjectData } from './data/objects';
 
     let editorWindow: EditWindow;
     
@@ -22,7 +24,8 @@
     let imageData;
 
     function saveData() {
-
+        let dataMarker = getDataMarkerByObjectID(objectID);
+        uploadObjectData(dataMarker, objectName);
     }
 
     export function toJSON() {
@@ -60,10 +63,11 @@
     });
 
     export let closeFunction;
+    export let deleteObject;
 
 </script>
 
-<EditWindow bind:this={editorWindow} closeFunction={closeFunction} data="{data}"/>
+<EditWindow bind:this={editorWindow} closeFunction={closeFunction} data="{data}" deleteObject="{deleteObject}"/>
 
 <style>
 

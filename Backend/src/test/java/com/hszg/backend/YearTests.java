@@ -143,7 +143,7 @@ public class YearTests {
         var year = createYear(object);
 
         var changes = new JSONObject();
-        changes.put("newYear", "2022-04-04");
+        changes.put("newYear", 2022);
         changes.put("newObjectName", "Changed Name");
         changes.put("newExists", "true");
 
