@@ -23,6 +23,7 @@ public class Image implements ImageProperties {
     private Long id;
 
     private String imagePath;
+    private String imageTitle;
     private String imageDescription;
 
     @ManyToOne
@@ -60,6 +61,14 @@ public class Image implements ImageProperties {
 
     public void setObject(Object object) {
         this.object = object;
+    }
+
+    public String getImageTitle() {
+        return imageTitle;
+    }
+
+    public void setImageTitle(String imageTitle) {
+        this.imageTitle = imageTitle;
     }
 
 }

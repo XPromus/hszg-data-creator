@@ -140,6 +140,7 @@ public class ImageTests {
 
         var changes = new JSONObject();
         changes.put("newImagePath", "testPath");
+        changes.put("newImageTitle", "testTitle");
         changes.put("newImageDescription", "This is a test description");
 
         var postResponse = RestAssured.given()
@@ -159,6 +160,7 @@ public class ImageTests {
 
         var getContent = (JSONObject) new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE).parse(getResponse.body().asString());
         Assertions.assertEquals(changes.get("newImagePath"), getContent.get("imagePath"));
+        Assertions.assertEquals(changes.get("newImageTitle"), getContent.get("imageTitle"));
         Assertions.assertEquals(changes.get("newImageDescription"), getContent.get("imageDescription"));
 
     }

@@ -9,6 +9,10 @@ public interface ImageProperties {
     void setImagePath(@NotNull String imagePath);
 
     @NotNull
+    String getImageTitle();
+    void setImageTitle(@NotNull String imageTitle);
+
+    @NotNull
     String getImageDescription();
     void setImageDescription(@NotNull String imageDescription);
 

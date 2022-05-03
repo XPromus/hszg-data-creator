@@ -2,12 +2,12 @@ package com.hszg.backend.service.edit;
 
 import com.hszg.backend.data.properties.ImageProperties;
 import org.springframework.lang.Nullable;
-
 import javax.validation.constraints.NotNull;
 
 public class ImagePropertiesEdit {
 
     private String newImagePath = null;
+    private String newImageTitle = null;
     private String newImageDescription = null;
 
     public void applyChanges(@NotNull final ImageProperties target) {
@@ -15,6 +15,11 @@ public class ImagePropertiesEdit {
         var imagePath = this.getNewImagePath();
         if (imagePath != null) {
             target.setImagePath(imagePath);
+        }
+
+        var imageTitle = this.getNewImageTitle();
+        if (imageTitle != null) {
+            target.setImageTitle(imageTitle);
         }
 
         var imageDescription = this.getNewImageDescription();
@@ -42,4 +47,12 @@ public class ImagePropertiesEdit {
         this.newImageDescription = newImageDescription;
     }
 
+    @Nullable
+    public String getNewImageTitle() {
+        return newImageTitle;
+    }
+
+    public void setNewImageTitle(@Nullable String newImageTitle) {
+        this.newImageTitle = newImageTitle;
+    }
 }

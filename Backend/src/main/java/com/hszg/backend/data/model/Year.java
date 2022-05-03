@@ -37,6 +37,7 @@ public class Year implements YearProperties {
     private String streetName;
     private String streetNumber;
 
+    //TODO: Move to Object
     private Float latitude;
     private Float longitude;
 
