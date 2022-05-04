@@ -12,7 +12,7 @@ public class ObjectPropertiesEdit {
     private Float newLongitude;
 
     public void applyChanges(@NotNull final ObjectProperties target) {
-    
+
         var name = this.getNewName();
         if (name != null) {
             target.setName(name);
