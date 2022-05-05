@@ -1,14 +1,8 @@
 
 <
 build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
-?
-Backend/HELP.md,f\9\f9329ecb6a6eda15a1182fe624d79b134e602093
 G
 Backend/settings.gradle,b\4\b4aacc2336ca7f052a46dd3201ccf290181f445d
-D
-Backend/build.gradle,1\0\10e2b4ae451bde161c5e69dd1e95258082a33e64
-n
->Backend/src/main/java/com/hszg/backend/BackendApplication.java,3\b\3b1d788f7447dba9d4f0a76c134176e5b5f41cf3
 C
 Frontend/.gitignore,6\6\663059bfd1b29d4d14f841241270ae94c4065a6b
 {
@@ -22,8 +16,6 @@ s
 CBackend/src/test/java/com/hszg/backend/BackendApplicationTests.java,3\4\3414ff3f296792930f1aa41dd702b1368ec758f1
 }
 MBackend/src/main/java/com/hszg/backend/api/error/ObjectNotFoundException.java,0\6\0651e02455c0e24d85a9cc23864159b5ff35480d
-x
-HBackend/src/main/java/com/hszg/backend/service/check/CheckExistence.java,2\6\261000cc2e6ccd1257f20469ce057317f63cd7e3
 o
 ?Backend/src/main/java/com/hszg/backend/api/error/ErrorText.java,4\b\4bdd13f8bfaabc5676af7237b0033f31ffa0eca8
 |
@@ -44,8 +36,6 @@ o
 ?Backend/src/main/java/com/hszg/backend/api/ImageController.java,e\4\e48784338eb691d35507c5f3a0e3754a41f0d13c
 |
 LBackend/src/main/java/com/hszg/backend/data/properties/ObjectProperties.java,8\2\824515e5495526be4637f36a7ca35970836f348c
-q
-ABackend/src/main/java/com/hszg/backend/service/ObjectService.java,8\0\80ef004a0fad0942c7a78b6ef2baf71383c6fca0
 g
 7Backend/src/test/java/com/hszg/backend/ObjectTests.java,2\9\299919ef0cde9d6c63d753e3cdf3304f74c16eec
 n
@@ -64,3 +54,19 @@ z
 JBackend/src/main/java/com/hszg/backend/data/properties/YearProperties.java,5\4\542d27c40ffbb542a34376833fc94e55a82529d5
 {
 KBackend/src/main/java/com/hszg/backend/service/edit/YearPropertiesEdit.java,9\c\9c45edb6abef100752a78c56c2b4b7b0bffb32b5
+E
+Frontend/build.gradle,8\f\8fe1af66b9095f54ad4c0621e5162bd622b59fa3
+D
+Backend/build.gradle,1\0\10e2b4ae451bde161c5e69dd1e95258082a33e64
+?
+settings.gradle,0\5\05efc8b1657769a27696d478ded1e95f38737233
+D
+META-INF/MANIFEST.MF,2\e\2e8cf92205ec303e7304888d382cb6a8cf5f56ba
+A
+docker/dockerfile,f\e\fe933bebf70e92227745cad05f6addcf613a23ed
+x
+HBackend/src/main/java/com/hszg/backend/service/check/CheckExistence.java,2\6\261000cc2e6ccd1257f20469ce057317f63cd7e3
+q
+ABackend/src/main/java/com/hszg/backend/service/ObjectService.java,8\0\80ef004a0fad0942c7a78b6ef2baf71383c6fca0
+n
+>Backend/src/main/java/com/hszg/backend/BackendApplication.java,3\b\3b1d788f7447dba9d4f0a76c134176e5b5f41cf3

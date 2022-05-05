@@ -117,7 +117,9 @@
                         </h2>
                         <div id="imageCollapse" class="accordion-collapse collapse" aria-labelledby="imageHeading" data-bs-parent="#editWindowAccordion">
                             <div class="accordion-body">
+                                <!--
                                 <ImageView />
+                                -->
                                 <!--
                                 <ImageView />
                                 <div id="imageUploadModal" class="container-fluid">
