@@ -5,7 +5,7 @@
     import { onMount } from 'svelte';
     import Object from '../Object.svelte';
 
-    import { dataMarkers, createDataMarker, getDataMarkerByObject, createDataMarkerFromSource, getDataMarkerByObjectID } from '../data/marker';
+    import { dataMarkers, createDataMarker, getDataMarkerByObject, createDataMarkerFromSource, getDataMarkerByObjectID } from '../data/dataMarker';
     import { currentData, getCurrentDataByObjectID, getAllObjects, uploadObjectData, deleteObjectRequest } from '../data/objects';
 
     let map; 

@@ -2,7 +2,7 @@
 
     import { onMount } from "svelte";
     import EditWindow from "./editor/EditWindow.svelte";
-    import { getDataMarkerByObjectID } from './data/marker';
+    import { getDataMarkerByObjectID } from './data/dataMarker';
     import { uploadObjectData } from './data/objects';
 
     let editorWindow: EditWindow;

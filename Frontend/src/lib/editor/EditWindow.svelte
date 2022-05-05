@@ -1,7 +1,7 @@
 <script lang="ts">
 
     import { onMount } from "svelte";
-    import { getDataMarkerByObjectID } from '../data/marker'
+    import { getDataMarkerByObjectID } from '../data/dataMarker';
     import { createYear, editYearData } from '../data/years';
     import { uploadObjectData } from '../data/objects';
 
@@ -71,15 +71,16 @@
     <div class="card-body">
         <div class="container">
             <div class="row">
-                <div class="col-9" style="text-align: left;">
+                <div class="col-7" style="text-align: left;">
                     <input bind:value="{objectName}" type="text" class="form-control" id="objectIdentifierInput" placeholder="">
                 </div>
-                <div class="col-3" style="text-align: right;">
+                <div class="col-5" style="text-align: right;">
                     <button on:click="{deleteObject}" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
                     <button on:click="{saveData}" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Daten speichern">
-                        <i class="fa-solid fa-check"></i>
+                        Speichern
+                        <!--<i class="fa-solid fa-check"></i>-->
                     </button>
                     <button on:click="{closeFunction}" type="button" class="btn btn-dark" data-toggle="tooltip" data-placement="bottom" title="Fenster schließen">
                         <i class="fa-solid fa-x"></i>
@@ -152,7 +153,7 @@
         margin-top: 85px;
         margin-left: 10px;
 
-        z-index: 500;
+        z-index: 400;
 
         overflow: auto;
 
