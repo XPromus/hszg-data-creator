@@ -1,4 +1,4 @@
 # Project exclude paths
 /.gradle/
 /.idea/
-./Frontend/docker
+/Frontend/docker
