@@ -1,7 +1,7 @@
 export async function createNewYear(objectID, year) {
-    let getObjectResponse = await fetch("http://localhost:8080/api/v1/object/id/" + objectID);
+    let getObjectResponse = await fetch("http://localhost:8089/api/v1/object/id/" + objectID);
     if (getObjectResponse.ok) {
-        let response = await fetch("http://localhost:8080/api/v1/year/create/" + objectID + "/" + year, {
+        let response = await fetch("http://localhost:8089/api/v1/year/create/" + objectID + "/" + year, {
             method: "POST",
             headers: {'Content-Type': 'application/json'},
         });
@@ -15,7 +15,7 @@ export async function createNewYear(objectID, year) {
 
 export async function createYear(objectID, year) {
     
-    let getObjectResponse = await fetch("http://localhost:8080/api/v1/object/id/" + objectID);
+    let getObjectResponse = await fetch("http://localhost:8089/api/v1/object/id/" + objectID);
     if (getObjectResponse.ok) {
 
         let json = await getObjectResponse.json();
@@ -33,7 +33,7 @@ export async function createYear(objectID, year) {
 
     }
 
-    let response = await fetch("http://localhost:8080/api/v1/year/create/" + objectID + "/" + year, {
+    let response = await fetch("http://localhost:8089/api/v1/year/create/" + objectID + "/" + year, {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
     });
@@ -87,7 +87,7 @@ export async function editYearData(id, data) {
         newData.newStreetNumber = newStreetNumber;
     }
 
-    let response = await fetch("http://localhost:8080/api/v1/year/edit/" + id, {
+    let response = await fetch("http://localhost:8089/api/v1/year/edit/" + id, {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(newData)
@@ -105,7 +105,7 @@ export async function editYearData(id, data) {
 
 export async function deleteYear(id) {
 
-    let response = await fetch("http://localhost:8080/api/v1/year/delete/" + id, {
+    let response = await fetch("http://localhost:8089/api/v1/year/delete/" + id, {
         method: "DELETE"
     });
 
