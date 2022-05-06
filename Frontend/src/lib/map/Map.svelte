@@ -9,6 +9,11 @@
     import { currentData, getCurrentDataByObjectID, getAllObjects, uploadObjectData, deleteObjectRequest } from '../data/objects';
 
     let map; 
+    let customMarker = L.icon({
+        iconUrl: 'marker-icon.png',
+        iconSize: [14, 14],
+        iconAnchor: [7, 7]
+    });
 
     const coords = {
         lati: 50.95308,
@@ -49,7 +54,7 @@
     function createMarkerFromSource(id, lat, lng) {
 
         let loc = L.latLng(lat, lng);
-        let newMarker = L.marker(loc, {draggable: true});
+        let newMarker = L.marker(loc, {draggable: true, icon:customMarker});
         let dataMarker = createDataMarkerFromSource(id, newMarker)
         dataMarkers.push(dataMarker);
 
@@ -69,7 +74,7 @@
 
     function createMarker(loc) {
 
-        let newMarker = L.marker(loc, {draggable: true});
+        let newMarker = L.marker(loc, {draggable: true, icon:customMarker});
         let dataMarker = createDataMarker(newMarker)
         dataMarkers.push(dataMarker);
         getCurrentDataByObjectID(dataMarker);
