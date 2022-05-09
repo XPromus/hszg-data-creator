@@ -49,9 +49,9 @@
 
 </script>
 
-<div class="accordion overflow-auto" id="{yearListId}">
+<div class="accordion overflow-auto" id="yearListAccordion">
     {#each yearIDList as yearID, i}
-        <Year bind:this={years[i]} data="{data[i]}" removeFunction={() => handleRemoveYear(i)} yearId={yearID} accordionId={yearListId}/>
+        <Year bind:this={years[i]} data="{data[i]}" removeFunction={() => handleRemoveYear(i)} yearId={yearID} accordionId="yearListAccordion"/>
     {/each}
 </div>
 
