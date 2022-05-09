@@ -4,11 +4,13 @@
     import 'leaflet/dist/leaflet.css';
     import { onMount } from 'svelte';
     import Object from '../Object.svelte';
+    import bootstrap from 'bootstrap/dist/js/bootstrap';
 
     import { dataMarkers, createDataMarker, getDataMarkerByObject, createDataMarkerFromSource, getDataMarkerByObjectID } from '../data/dataMarker';
     import { currentData, getCurrentDataByObjectID, getAllObjects, uploadObjectData, deleteObjectRequest } from '../data/objects';
 
     let map; 
+    let createMarkerModal;
     let customMarker = L.icon({
         iconUrl: 'marker-icon.png',
         iconSize: [14, 14],
@@ -72,13 +74,19 @@
 
     }   
 
+    let newMarkerLocation;
+
+    function openCreateMarkerModal() {
+        let modal = new bootstrap.Modal(createMarkerModal);
+        modal.toggle();
+    }
+
     function createMarker(loc) {
 
         let newMarker = L.marker(loc, {draggable: true, icon:customMarker});
         let dataMarker = createDataMarker(newMarker)
         dataMarkers.push(dataMarker);
         getCurrentDataByObjectID(dataMarker);
-
 
         newMarker.on('dragend', function(e) {
             let dataMarker = getDataMarkerByObject(newMarker);
@@ -105,8 +113,8 @@
         }
 
         map.on('click', function(e) {
-            const pos = e.latlng;
-            createMarker(pos);
+            newMarkerLocation = e.latlng;
+            openCreateMarkerModal();
         });
 
     })
@@ -132,6 +140,21 @@
 </script>
 
 <svelte:window on:resize="{resizeMap}"></svelte:window>
+
+<div bind:this="{createMarkerModal}" id="createMarkerModal" class="modal" tabindex="1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Objekt erstellen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                <button on:click="{() => createMarker(newMarkerLocation)}" type="button" class="btn btn-success" data-bs-dismiss="modal">Erstellen</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div id="map" style="" use:mapAction />
 {#await dataPromise}
