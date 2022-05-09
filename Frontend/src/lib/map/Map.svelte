@@ -11,11 +11,17 @@
 
     let map; 
     let createMarkerModal;
-    let customMarker = L.icon({
+    let currentMarker;
+    const customMarker = L.icon({
         iconUrl: 'marker-icon.png',
         iconSize: [14, 14],
         iconAnchor: [7, 7]
     });
+    const customMarkerActive = L.icon({
+        iconUrl: 'marker-icon-active.png',
+        iconSize: [14, 14],
+        iconAnchor: [7, 7]
+    })
 
     const coords = {
         lati: 50.95308,
@@ -122,11 +128,17 @@
     let editorWindowState: boolean = false;
     let dataPromise;
     function openEditorWindow(dataMarker) {
+        if (currentMarker != null) {
+            currentMarker.marker.setIcon(customMarker);
+        }
+        currentMarker = dataMarker;
         dataPromise = getCurrentDataByObjectID(dataMarker);
+        dataMarker.marker.setIcon(customMarkerActive);
         editorWindowState = true;
     }
 
     function closeEditorWindow() {
+        currentMarker.marker.setIcon(customMarker);
         editorWindowState = false;
     }
 
