@@ -1,7 +1,15 @@
+import { getServerData } from './serverConfig';
+
 export async function createNewYear(objectID, year) {
-    let getObjectResponse = await fetch("http://localhost:8089/api/v1/object/id/" + objectID);
+
+    const serverData = await getServerData();
+
+    // @ts-ignore
+    const url = serverData.serverUrl + serverData.port + "/api/v1/object/id/" + objectID;
+    let getObjectResponse = await fetch(url);
     if (getObjectResponse.ok) {
-        let response = await fetch("http://localhost:8089/api/v1/year/create/" + objectID + "/" + year, {
+        // @ts-ignore
+        let response = await fetch(serverData.serverUrl + serverData.port + "/api/v1/year/create/" + objectID + "/" + year, {
             method: "POST",
             headers: {'Content-Type': 'application/json'},
         });
@@ -15,7 +23,11 @@ export async function createNewYear(objectID, year) {
 
 export async function createYear(objectID, year) {
     
-    let getObjectResponse = await fetch("http://localhost:8089/api/v1/object/id/" + objectID);
+    const serverData = await getServerData();
+
+    // @ts-ignore
+    const url = serverData.serverUrl + serverData.port + "/api/v1/object/id/" + objectID
+    let getObjectResponse = await fetch(url);
     if (getObjectResponse.ok) {
 
         let json = await getObjectResponse.json();
@@ -33,7 +45,8 @@ export async function createYear(objectID, year) {
 
     }
 
-    let response = await fetch("http://localhost:8089/api/v1/year/create/" + objectID + "/" + year, {
+    // @ts-ignore
+    let response = await fetch(serverData.serverUrl + serverData.port + "/api/v1/year/create/" + objectID + "/" + year, {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
     });
@@ -49,6 +62,8 @@ export async function createYear(objectID, year) {
 }
 
 export async function editYearData(id, data) {
+
+    const serverData = await getServerData();
 
     let newData = {};
     
@@ -87,7 +102,9 @@ export async function editYearData(id, data) {
         newData.newStreetNumber = newStreetNumber;
     }
 
-    let response = await fetch("http://localhost:8089/api/v1/year/edit/" + id, {
+    // @ts-ignore
+    const url = serverData.serverUrl + serverData.port + "/api/v1/year/edit/" + id
+    let response = await fetch(url, {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(newData)
@@ -105,7 +122,11 @@ export async function editYearData(id, data) {
 
 export async function deleteYear(id) {
 
-    let response = await fetch("http://localhost:8089/api/v1/year/delete/" + id, {
+    const serverData = await getServerData();
+
+    // @ts-ignore
+    const url = serverData.serverUrl + serverData.port + "/api/v1/year/delete/" + id;
+    let response = await fetch(url + id, {
         method: "DELETE"
     });
 

@@ -104,11 +104,11 @@
             createMarkerFromSource(markerData.id, markerData.latitude, markerData.longitude);
         }
 
-
         map.on('click', function(e) {
             const pos = e.latlng;
             createMarker(pos);
         });
+
     })
 
     let editorWindowState: boolean = false;

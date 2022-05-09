@@ -1,8 +1,13 @@
+import { getServerData } from './serverConfig';
+
 export let currentData;
 
 export async function getAllObjects() {
 
-    let response = await fetch("http://localhost:8089/api/v1/object/all", {
+    const serverData = await getServerData();
+    // @ts-ignore
+    const url = serverData.serverUrl + serverData.port + "/api/v1/object/all";
+    let response = await fetch(url, {
         method: "GET",
         headers: {'Content-Type': 'application/json'}
     });
@@ -19,6 +24,7 @@ export async function getAllObjects() {
 
 export async function getCurrentDataByObjectID(marker) {
 
+    const serverData = await getServerData();
     const loc = marker.marker.getLatLng();
     const id = marker.objectID;
 
@@ -26,7 +32,9 @@ export async function getCurrentDataByObjectID(marker) {
         await dataForNewObject(loc);
         marker.objectID = currentData.id;
     } else {
-        let getResponse = await fetch("http://localhost:8089/api/v1/object/id/" + id, {
+        // @ts-ignore
+        const url = serverData.serverUrl + serverData.port + "/api/v1/object/id/" + id;
+        let getResponse = await fetch(url, {
             method: "GET",
             headers: {'Content-Type': 'application/json'}
         });
@@ -46,6 +54,8 @@ export async function getCurrentDataByObjectID(marker) {
 
 async function dataForNewObject(loc) {
 
+    const serverData = await getServerData();
+
     let data = {
         name: "Neues Objekt",
         latitude: loc.lat,
@@ -54,7 +64,9 @@ async function dataForNewObject(loc) {
         images: []
     };
 
-    let response = await fetch("http://localhost:8089/api/v1/object/create", {
+    // @ts-ignore
+    const url = serverData.serverUrl + serverData.port + "/api/v1/object/create";
+    let response = await fetch(url, {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data)
@@ -72,6 +84,8 @@ async function dataForNewObject(loc) {
 
 export async function uploadObjectData(marker, name) {
 
+    const serverData = await getServerData();
+
     let data = {
         newLatitude: marker.marker.getLatLng().lat,
         newLongitude: marker.marker.getLatLng().lng
@@ -81,7 +95,9 @@ export async function uploadObjectData(marker, name) {
         data.newName = name;
     }
 
-    let response = await fetch("http://localhost:8089/api/v1/object/edit/" + marker.objectID, {
+    // @ts-ignore
+    const url = serverData.serverUrl + serverData.port + "/api/v1/object/edit/" + marker.objectID
+    let response = await fetch(url, {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data)
@@ -90,7 +106,8 @@ export async function uploadObjectData(marker, name) {
     if (!response.ok) {
         alert(response.status);
     } else {
-        console.log("http://localhost:8089/api/v1/object/edit/" + marker.objectID);
+        // @ts-ignore
+        console.log(serverData.serverUrl + serverData.port + "/api/v1/object/edit/" + marker.objectID);
         console.log(await response.json());
     }
 
@@ -98,7 +115,11 @@ export async function uploadObjectData(marker, name) {
 
 export async function deleteObjectRequest(id) {
 
-    let response = await fetch("http://localhost:8089/api/v1/object/delete/" + id, {
+    const serverData = await getServerData();
+
+    // @ts-ignore
+    const url = serverData.serverUrl + serverData.port + "/api/v1/object/delete/" + id;
+    let response = await fetch(url, {
         method: "DELETE"
     });
 

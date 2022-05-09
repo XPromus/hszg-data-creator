@@ -67,6 +67,21 @@
 
 </script>
 
+<div id="deleteModal" class="modal" tabindex="1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Möchten Sie dieses Objekt wirklich löschen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                <button on:click="{deleteObject}" type="button" class="btn btn-danger" data-bs-dismiss="modal">Löschen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="editWindow" class="card" style="width: 40rem;">
     <div class="card-body">
         <div class="container">
@@ -75,7 +90,7 @@
                     <input bind:value="{objectName}" type="text" class="form-control" id="objectIdentifierInput" placeholder="">
                 </div>
                 <div class="col-5" style="text-align: right;">
-                    <button on:click="{deleteObject}" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen">
+                    <button data-bs-toggle="modal" data-bs-target="#deleteModal" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="Objekt löschen">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
                     <button on:click="{saveData}" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Daten speichern">
