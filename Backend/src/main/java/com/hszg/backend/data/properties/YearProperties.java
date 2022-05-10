@@ -18,19 +18,19 @@ public interface YearProperties {
     void setExists(@NotNull Boolean exists);
 
     @NotNull
-    Long getModelID();
-    void setModelID(@NotNull Long modelID);
+    String getModelID();
+    void setModelID(@NotNull String modelID);
 
     @NotNull
-    Long getTextureID();
-    void setTextureID(@NotNull Long textureID);
+    String getTextureID();
+    void setTextureID(@NotNull String textureID);
 
     @NotNull
     String getStreetName();
     void setStreetName(@NotNull String streetName);
 
     @NotNull
-    Integer getStreetNumber();
-    void setStreetNumber(@NotNull Integer streetNumber);
+    String getStreetNumber();
+    void setStreetNumber(@NotNull String streetNumber);
 
 }

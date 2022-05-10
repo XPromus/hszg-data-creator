@@ -40,6 +40,12 @@ public class Object implements ObjectProperties {
         this.name = name;
     }
 
+    public Object(String name, Float latitude, Float longitude) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     public Object(String name) {
         this.name = name;
     }

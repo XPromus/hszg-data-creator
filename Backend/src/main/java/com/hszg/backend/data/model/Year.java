@@ -25,10 +25,12 @@ public class Year implements YearProperties {
     private Integer year;
     private String objectName;
     private Boolean exists = true;
-    private Long modelID;
-    private Long textureID;
+
+    //TODO: to String
+    private String modelID;
+    private String textureID;
     private String streetName;
-    private Integer streetNumber;
+    private String streetNumber;
 
     @ManyToOne
     @JoinColumn(name = "object_id", nullable = false)
@@ -68,19 +70,19 @@ public class Year implements YearProperties {
         this.objectName = objectName;
     }
 
-    public Long getModelID() {
+    public String getModelID() {
         return modelID;
     }
 
-    public void setModelID(Long modelID) {
+    public void setModelID(String modelID) {
         this.modelID = modelID;
     }
 
-    public Long getTextureID() {
+    public String getTextureID() {
         return textureID;
     }
 
-    public void setTextureID(Long textureID) {
+    public void setTextureID(String textureID) {
         this.textureID = textureID;
     }
 
@@ -92,11 +94,11 @@ public class Year implements YearProperties {
         this.streetName = streetName;
     }
 
-    public Integer getStreetNumber() {
+    public String getStreetNumber() {
         return streetNumber;
     }
 
-    public void setStreetNumber(Integer streetNumber) {
+    public void setStreetNumber(String streetNumber) {
         this.streetNumber = streetNumber;
     }
 

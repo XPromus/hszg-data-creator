@@ -11,10 +11,10 @@ public class YearPropertiesEdit {
     private Integer newYear = null;
     private String newObjectName = null;
     private Boolean newExists = null;
-    private Long newModelID = null;
-    private Long newTextureID = null;
+    private String newModelID = null;
+    private String newTextureID = null;
     private String newStreetName = null;
-    private Integer newStreetNumber = null;
+    private String newStreetNumber = null;
 
     public void applyChanges(@NotNull final YearProperties target) {
 
@@ -83,20 +83,20 @@ public class YearPropertiesEdit {
     }
 
     @Nullable
-    public Long getNewModelID() {
+    public String getNewModelID() {
         return newModelID;
     }
 
-    public void setNewModelID(@Nullable Long newModelID) {
+    public void setNewModelID(@Nullable String newModelID) {
         this.newModelID = newModelID;
     }
 
     @Nullable
-    public Long getNewTextureID() {
+    public String getNewTextureID() {
         return newTextureID;
     }
 
-    public void setNewTextureID(@Nullable Long newTextureID) {
+    public void setNewTextureID(@Nullable String newTextureID) {
         this.newTextureID = newTextureID;
     }
 
@@ -110,11 +110,11 @@ public class YearPropertiesEdit {
     }
 
     @Nullable
-    public Integer getNewStreetNumber() {
+    public String getNewStreetNumber() {
         return newStreetNumber;
     }
 
-    public void setNewStreetNumber(@Nullable Integer newStreetNumber) {
+    public void setNewStreetNumber(@Nullable String newStreetNumber) {
         this.newStreetNumber = newStreetNumber;
     }
 }
