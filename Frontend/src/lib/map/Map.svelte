@@ -122,9 +122,15 @@
 
     let objectEditor;
     function closeEditor() {
-        closeYearEditor();
+
+        if (yearEditorState) {
+            alert("Schließe das Jahr Fenster zuerst");
+            return;
+        }
+
         editorState = false;
         disableAllMarkers();
+    
     }
 
     function deleteObject() {
