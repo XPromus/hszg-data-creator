@@ -69,7 +69,10 @@
             disableAllMarkers();
             marker.setIcon(customMarkerActive);
             currentObjectId = marker.options.objectId;
-            if (editorState) { objectEditor.reloadEditor(marker.options.objectId); }
+            if (editorState) { 
+                objectEditor.reloadEditor(marker.options.objectId); 
+                yearEditor.callCloseEditor();
+            }
             editorState = true;
         });
 
@@ -92,7 +95,10 @@
             disableAllMarkers();
             marker.setIcon(customMarkerActive);
             currentObjectId = marker.options.objectId;
-            if (editorState) { objectEditor.reloadEditor(marker.options.objectId); }
+            if (editorState) { 
+                objectEditor.reloadEditor(marker.options.objectId); 
+                yearEditor.callCloseEditor();
+            }
             editorState = true;
         });
 
