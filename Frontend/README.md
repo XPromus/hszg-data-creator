@@ -14,7 +14,7 @@ Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also pow
 
 **Why use this over SvelteKit?**
 
-- It brings its own routing solution which might not be preferable for some users.
+- It brings its own routing solution which might not be preferable for some editorUsers.
 - It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
   `vite dev` and `vite build` wouldn't work in a SvelteKit environment, for example.
 
@@ -28,7 +28,7 @@ Setting `compilerOptions.types` shuts out all other types not explicitly listed 
 
 **Why include `.vscode/extensions.json`?**
 
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
+Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the editorUser to install the recommended extension upon opening the project.
 
 **Why enable `allowJs` in the TS template?**
 

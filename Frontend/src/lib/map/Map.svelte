@@ -1,17 +1,19 @@
 <script lang="ts">
 
     import * as L from 'leaflet';
+    import * as Object from '../api/objects';
     import 'leaflet/dist/leaflet.css';
     import { onMount } from 'svelte';
-    import Object from '../Object.svelte';
-    import bootstrap from 'bootstrap/dist/js/bootstrap';
+    
+    import ObjectEditor from '../editor/ObjectEditor.svelte';
+    import YearEditor from '../editor/YearEditor.svelte';
 
-    import { dataMarkers, createDataMarker, getDataMarkerByObject, createDataMarkerFromSource, getDataMarkerByObjectID } from '../data/dataMarker';
-    import { currentData, getCurrentDataByObjectID, getAllObjects, uploadObjectData, deleteObjectRequest } from '../data/objects';
+    let map;
 
-    let map; 
-    let createMarkerModal;
-    let currentMarker;
+    const startCoords = {
+        lati: 50.95308,
+        long: 14.87294
+    }
     const customMarker = L.icon({
         iconUrl: 'marker-icon.png',
         iconSize: [14, 14],
@@ -23,14 +25,8 @@
         iconAnchor: [7, 7]
     })
 
-    const coords = {
-        lati: 50.95308,
-        long: 14.87294
-    }
-
     function createMap(container) {
-        
-        let m = L.map(container).setView([coords.lati, coords.long], 16);
+        let m = L.map(container).setView([startCoords.lati, startCoords.long], 16);
         L.tileLayer(
             'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
             {
@@ -41,7 +37,6 @@
         ).addTo(m);
 
         return m;
-
     }
 
     function mapAction(container) {
@@ -59,123 +54,118 @@
         }
     }
 
-    function createMarkerFromSource(id, lat, lng) {
+    function createMapMarkerFromSource(id, lat, lng) {
 
-        let loc = L.latLng(lat, lng);
-        let newMarker = L.marker(loc, {draggable: true, icon:customMarker});
-        let dataMarker = createDataMarkerFromSource(id, newMarker)
-        dataMarkers.push(dataMarker);
-
-        newMarker.on('dragend', function(e) {
-            let dataMarker = getDataMarkerByObject(newMarker);
-            uploadObjectData(dataMarker, undefined);
+        const loc = L.latLng(lat, lng);
+        let marker = L.marker(loc, {objectType: "marker", objectId: id, draggable: true, icon: customMarker});
+        
+        marker.on('dragend', function(e) {
+            const newPos = marker.getLatLng();
+            const data = { "newLatitude": newPos.lat, "newLongitude": newPos.lng };
+            Object.editObject(marker.options.objectId, data);
         });
 
-        newMarker.on('click', function(e) {
-            let selected = getDataMarkerByObject(newMarker);
-            openEditorWindow(selected);
+        marker.on('click', function(e) {
+            disableAllMarkers();
+            marker.setIcon(customMarkerActive);
+            currentObjectId = marker.options.objectId;
+            editorState = true;
         });
 
-        newMarker.addTo(map);
+        marker.addTo(map);
 
-    }   
-
-    let newMarkerLocation;
-
-    function openCreateMarkerModal() {
-        let modal = new bootstrap.Modal(createMarkerModal);
-        modal.toggle();
     }
 
-    function createMarker(loc) {
-
-        let newMarker = L.marker(loc, {draggable: true, icon:customMarker});
-        let dataMarker = createDataMarker(newMarker)
-        dataMarkers.push(dataMarker);
-        getCurrentDataByObjectID(dataMarker);
-
-        newMarker.on('dragend', function(e) {
-            let dataMarker = getDataMarkerByObject(newMarker);
-            uploadObjectData(dataMarker, undefined);
+    async function createMapMarker(loc) {
+        
+        let id = await Object.createObject(loc);
+        let marker = L.marker(loc, {objectType: "marker", objectId: id, draggable: true, icon: customMarker});
+        
+        marker.on('dragend', function(e) {
+            const newPos = marker.getLatLng();
+            const data = { "newLatitude": newPos.lat, "newLongitude": newPos.lng };
+            Object.editObject(marker.options.objectId, data);
         });
 
-        newMarker.on('click', function(e) {
-            let selected = getDataMarkerByObject(newMarker);
-            openEditorWindow(selected);
+        marker.on('click', function(e) {
+            disableAllMarkers();
+            marker.setIcon(customMarkerActive);
+            currentObjectId = marker.options.objectId;
+            editorState = true;
         });
 
-        newMarker.addTo(map);
-   
+        marker.addTo(map);
+
     }
 
-    let preDataPromise;
+    function disableAllMarkers() {
+        map.eachLayer(function(layer) {
+            if (layer.options.objectType == "marker") {
+                layer.setIcon(customMarker);
+            }
+        });
+    }
+
     onMount(async () => {
 
-        preDataPromise = await getAllObjects();
-        for (let i = 0; i < preDataPromise.length; i++) {
-            console.log("Create Marker");
-            let markerData = preDataPromise[i];
-            createMarkerFromSource(markerData.id, markerData.latitude, markerData.longitude);
+        let objects = await Object.getAllObjects();
+        for (let i = 0; i < objects.length; i++) {
+            let markerData = objects[i];
+            createMapMarkerFromSource(markerData.id, markerData.latitude, markerData.longitude);
         }
 
         map.on('click', function(e) {
-            newMarkerLocation = e.latlng;
-            openCreateMarkerModal();
+            createMapMarker(e.latlng);
         });
 
-    })
+    });
 
-    let editorWindowState: boolean = false;
-    let dataPromise;
-    function openEditorWindow(dataMarker) {
-        if (currentMarker != null) {
-            currentMarker.marker.setIcon(customMarker);
-        }
-        currentMarker = dataMarker;
-        dataPromise = getCurrentDataByObjectID(dataMarker);
-        dataMarker.marker.setIcon(customMarkerActive);
-        editorWindowState = true;
-    }
-
-    function closeEditorWindow() {
-        currentMarker.marker.setIcon(customMarker);
-        editorWindowState = false;
+    let objectEditor;
+    function closeEditor() {
+        editorState = false;
+        disableAllMarkers();
     }
 
     function deleteObject() {
-        const id = currentData.id;
-        map.removeLayer(getDataMarkerByObjectID(id).marker);
-        deleteObjectRequest(id);
-        closeEditorWindow();
+        map.eachLayer(function(layer) {
+            if (layer.options.objectId == currentObjectId) {
+                map.removeLayer(layer);
+            }
+        });
+        editorState = false;
     }
+
+    function openYearEditor() {
+        yearEditorState = true;
+    }
+
+    function closeYearEditor() {
+        objectEditor.reloadYearList();
+        yearEditorState = false;
+    }
+
+    let editorState: boolean = false;
+    let yearEditorState: boolean = false;
+    let currentObjectId: number;
 
 </script>
 
-<svelte:window on:resize="{resizeMap}"></svelte:window>
+<svelte:window on:resize="{resizeMap}" />
+<div id="map" use:mapAction />
 
-<div bind:this="{createMarkerModal}" id="createMarkerModal" class="modal" tabindex="1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Objekt erstellen</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-                <button on:click="{() => createMarker(newMarkerLocation)}" type="button" class="btn btn-success" data-bs-dismiss="modal">Erstellen</button>
-            </div>
+<div class="hero">
+    <div class="hero-body">
+        <div class="columns">
+            {#if editorState}
+                <ObjectEditor bind:this="{objectEditor}" objectId={currentObjectId} deleteFunction="{deleteObject}" closeFunction="{closeEditor}" openYearEditorFunction="{openYearEditor}"/>
+            {/if}
+            {#if yearEditorState}
+                <YearEditor closeFunction="{closeYearEditor}"/>
+            {/if}
         </div>
     </div>
 </div>
 
-<div id="map" style="" use:mapAction />
-{#await dataPromise}
-    <p>Loading Data</p>
-{:then data} 
-    {#if editorWindowState}
-        <Object closeFunction="{closeEditorWindow}" data="{data}" deleteObject="{deleteObject}"/>
-    {/if}
-{/await}
 
 <style>
 
@@ -184,6 +174,11 @@
         top: 0;
         bottom: 0;
         width: 100%;
+    }
+
+    .columns {
+        margin-top: 25px;
+        margin-left: -49px;
     }
 
 </style>

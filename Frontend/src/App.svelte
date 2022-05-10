@@ -1,20 +1,11 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-
-  import Map from './lib/map/Map.svelte';
-  import { getServerData } from './lib/data/serverConfig';
-
-  onMount(async () => {
-    console.log("JSON Data: ");
-    console.log(await getServerData());
-  });
-
+    import Map from './lib/map/Map.svelte';
 </script>
-
+  
 <main>
-  <Map />
+    <Map />
 </main>
-
+  
 <style>
-
+    @import 'bulma/css/bulma.css';
 </style>
