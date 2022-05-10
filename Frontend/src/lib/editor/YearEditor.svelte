@@ -18,6 +18,10 @@
     let modelId: string;
     let textureId: string;
     
+    export function callCloseEditor() {
+        closeEditor();
+    }
+
     async function closeEditor() {
 
         let data = {

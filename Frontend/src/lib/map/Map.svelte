@@ -69,6 +69,7 @@
             disableAllMarkers();
             marker.setIcon(customMarkerActive);
             currentObjectId = marker.options.objectId;
+            if (editorState) { objectEditor.reloadEditor(marker.options.objectId); }
             editorState = true;
         });
 
@@ -91,6 +92,7 @@
             disableAllMarkers();
             marker.setIcon(customMarkerActive);
             currentObjectId = marker.options.objectId;
+            if (editorState) { objectEditor.reloadEditor(marker.options.objectId); }
             editorState = true;
         });
 
@@ -121,11 +123,12 @@
     });
 
     let objectEditor;
+    let yearEditor;
+
     function closeEditor() {
 
         if (yearEditorState) {
-            alert("Schließe das Jahr Fenster zuerst");
-            return;
+            yearEditor.callCloseEditor();
         }
 
         editorState = false;
@@ -169,7 +172,7 @@
                 <ObjectEditor bind:this="{objectEditor}" objectId={currentObjectId} deleteFunction="{deleteObject}" closeFunction="{closeEditor}" openYearEditorFunction="{openYearEditor}"/>
             {/if}
             {#if yearEditorState}
-                <YearEditor closeFunction="{closeYearEditor}"/>
+                <YearEditor bind:this="{yearEditor}" closeFunction="{closeYearEditor}"/>
             {/if}
         </div>
     </div>

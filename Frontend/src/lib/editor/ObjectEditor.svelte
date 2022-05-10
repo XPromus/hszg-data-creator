@@ -82,12 +82,17 @@
         years = yearIdArray;
     }
 
-    onMount(async () => {
+    export async function reloadEditor(id: number) {
+        objectId = id;
         let dataPromise = Promise.resolve(Object.getObjectById(objectId));
         objectData = await dataPromise;
         objectName = objectData.name;
         await reloadYearList();
         console.log(objectData);
+    }
+
+    onMount(async () => {
+        await reloadEditor(objectId);
     });
 
 </script>
