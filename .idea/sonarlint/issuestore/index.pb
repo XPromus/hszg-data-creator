@@ -68,7 +68,3 @@ MBackend/src/main/java/com/hszg/backend/service/edit/ObjectPropertiesEdit.java,
 KBackend/src/main/java/com/hszg/backend/service/edit/YearPropertiesEdit.java,9\c\9c45edb6abef100752a78c56c2b4b7b0bffb32b5
 z
 JBackend/src/main/java/com/hszg/backend/data/properties/YearProperties.java,5\4\542d27c40ffbb542a34376833fc94e55a82529d5
-n
->Backend/src/main/java/com/hszg/backend/api/YearController.java,5\1\5126f9e9d5f67656ce5a7e2aabaa4d4b399e366a
-p
-@Backend/src/main/java/com/hszg/backend/api/ObjectController.java,9\4\94794f32df260783e055a90f5afc52b027126c68

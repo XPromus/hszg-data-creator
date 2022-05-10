@@ -8,12 +8,10 @@
     import ObjectEditor from '../editor/ObjectEditor.svelte';
     import YearEditor from '../editor/YearEditor.svelte';
 
-    let map;
-
     const startCoords = {
         lati: 50.95308,
         long: 14.87294
-    }
+    };
     const customMarker = L.icon({
         iconUrl: 'marker-icon.png',
         iconSize: [14, 14],
@@ -23,7 +21,18 @@
         iconUrl: 'marker-icon-active.png',
         iconSize: [14, 14],
         iconAnchor: [7, 7]
-    })
+    });
+
+    let map;
+    
+    let newObjectPosition;
+    let createObjectModal;
+    let objectEditor;
+    let objectEditorState: boolean = false;
+    let currentObjectId: number;
+    
+    let yearEditor;
+    let yearEditorState: boolean = false;
 
     function createMap(container) {
         let m = L.map(container).setView([startCoords.lati, startCoords.long], 16);
@@ -54,6 +63,12 @@
         }
     }
 
+    async function createMapMarker(loc) {
+        let id = await Object.createObject(loc);
+        createMapMarkerFromSource(id, loc.lat, loc.lng);
+        closeCreateObjectModal();
+    }
+
     function createMapMarkerFromSource(id, lat, lng) {
 
         const loc = L.latLng(lat, lng);
@@ -66,40 +81,18 @@
         });
 
         marker.on('click', function(e) {
+
             disableAllMarkers();
             marker.setIcon(customMarkerActive);
             currentObjectId = marker.options.objectId;
-            if (editorState) { 
+
+            if (objectEditorState) { 
                 objectEditor.reloadEditor(marker.options.objectId); 
                 yearEditor.callCloseEditor();
             }
-            editorState = true;
-        });
 
-        marker.addTo(map);
+            openObjectEditor();
 
-    }
-
-    async function createMapMarker(loc) {
-        
-        let id = await Object.createObject(loc);
-        let marker = L.marker(loc, {objectType: "marker", objectId: id, draggable: true, icon: customMarker});
-        
-        marker.on('dragend', function(e) {
-            const newPos = marker.getLatLng();
-            const data = { "newLatitude": newPos.lat, "newLongitude": newPos.lng };
-            Object.editObject(marker.options.objectId, data);
-        });
-
-        marker.on('click', function(e) {
-            disableAllMarkers();
-            marker.setIcon(customMarkerActive);
-            currentObjectId = marker.options.objectId;
-            if (editorState) { 
-                objectEditor.reloadEditor(marker.options.objectId); 
-                yearEditor.callCloseEditor();
-            }
-            editorState = true;
         });
 
         marker.addTo(map);
@@ -114,6 +107,42 @@
         });
     }
 
+    function deleteObject() {
+        map.eachLayer(function(layer) {
+            if (layer.options.objectId == currentObjectId) {
+                map.removeLayer(layer);
+            }
+        });
+        closeObjectEditor();
+    }
+
+    function openObjectEditor() {
+        objectEditorState = true;
+    }
+
+    function closeObjectEditor() {
+        if (yearEditorState) { yearEditor.callCloseEditor(); }
+        objectEditorState = false;
+        disableAllMarkers();
+    }
+
+    function openYearEditor() {
+        yearEditorState = true;
+    }
+
+    function closeYearEditor() {
+        if (objectEditorState) { objectEditor.reloadYearList(); }
+        yearEditorState = false;
+    }
+    
+    function openCreateObjectModal() {
+        createObjectModal.classList.add("is-active");
+    }
+
+    function closeCreateObjectModal() {
+        createObjectModal.classList.remove("is-active");
+    }
+
     onMount(async () => {
 
         let objects = await Object.getAllObjects();
@@ -123,59 +152,40 @@
         }
 
         map.on('click', function(e) {
-            createMapMarker(e.latlng);
+            newObjectPosition = e.latlng;
+            openCreateObjectModal();
+        });
+
+        map.on('contextmenu', (e) => {
+            map.openPopup("Objekt erstellen", e.latlng);
         });
 
     });
-
-    let objectEditor;
-    let yearEditor;
-
-    function closeEditor() {
-
-        if (yearEditorState) {
-            yearEditor.callCloseEditor();
-        }
-
-        editorState = false;
-        disableAllMarkers();
-    
-    }
-
-    function deleteObject() {
-        map.eachLayer(function(layer) {
-            if (layer.options.objectId == currentObjectId) {
-                map.removeLayer(layer);
-            }
-        });
-        editorState = false;
-    }
-
-    function openYearEditor() {
-        yearEditorState = true;
-    }
-
-    function closeYearEditor() {
-        if (editorState) {
-            objectEditor.reloadYearList();
-        }
-        yearEditorState = false;
-    }
-
-    let editorState: boolean = false;
-    let yearEditorState: boolean = false;
-    let currentObjectId: number;
 
 </script>
 
 <svelte:window on:resize="{resizeMap}" />
 <div id="map" use:mapAction />
 
+<div bind:this="{createObjectModal}" class="modal is-clipped">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Jahr Erstellen</p>
+            <button on:click="{closeCreateObjectModal}" class="delete" aria-label="close"></button>
+        </header>
+        <footer class="modal-card-foot">
+            <button on:click="{() => createMapMarker(newObjectPosition)}" class="button is-success">Objekt erstellen</button>
+            <button on:click="{closeCreateObjectModal}" class="button">Abbrechen</button>
+        </footer>
+    </div>
+</div>
+
 <div class="hero">
     <div class="hero-body">
         <div class="columns">
-            {#if editorState}
-                <ObjectEditor bind:this="{objectEditor}" objectId={currentObjectId} deleteFunction="{deleteObject}" closeFunction="{closeEditor}" openYearEditorFunction="{openYearEditor}"/>
+            {#if objectEditorState}
+                <ObjectEditor bind:this="{objectEditor}" objectId={currentObjectId} deleteFunction="{deleteObject}" closeFunction="{closeObjectEditor}" openYearEditorFunction="{openYearEditor}"/>
             {/if}
             {#if yearEditorState}
                 <YearEditor bind:this="{yearEditor}" closeFunction="{closeYearEditor}"/>
@@ -197,6 +207,10 @@
     .columns {
         margin-top: 25px;
         margin-left: -49px;
+    }
+
+    .modal {
+        z-index: 500;
     }
 
 </style>
