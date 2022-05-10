@@ -41,6 +41,7 @@ public class ObjectTests {
 
         var rawContent = response.body().asString();
         var jsonBody = (JSONObject) new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE).parse(rawContent);
+        System.err.println(jsonBody);
         var id = jsonBody.get("id");
 
         response.then().statusCode(200);
