@@ -122,6 +122,7 @@
 
     let objectEditor;
     function closeEditor() {
+        closeYearEditor();
         editorState = false;
         disableAllMarkers();
     }
@@ -140,7 +141,9 @@
     }
 
     function closeYearEditor() {
-        objectEditor.reloadYearList();
+        if (editorState) {
+            objectEditor.reloadYearList();
+        }
         yearEditorState = false;
     }
 

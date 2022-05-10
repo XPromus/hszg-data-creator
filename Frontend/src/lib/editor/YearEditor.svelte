@@ -197,5 +197,9 @@
         z-index: 500;
     }
 
+    .panel {
+        background-color: white;
+    }
+
 </style>
 
