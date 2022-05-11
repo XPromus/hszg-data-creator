@@ -50,12 +50,6 @@ p
 @Backend/src/main/java/com/hszg/backend/data/SetupDataLoader.java,5\f\5ff553b6ccefc67ffca83d8f5ec72e612b1356a9
 g
 7Backend/src/test/java/com/hszg/backend/ObjectTests.java,2\9\299919ef0cde9d6c63d753e3cdf3304f74c16eec
-p
-@Backend/src/main/java/com/hszg/backend/data/model/Privilege.java,3\7\375458243228470505954f2e12653b16d6f06f22
-t
-DBackend/src/main/java/com/hszg/backend/api/EditorUserController.java,5\2\529f610601e96985dc9a05ab695b2725f99ab0d7
-q
-ABackend/src/main/java/com/hszg/backend/data/model/EditorUser.java,2\e\2e75f534cc388917a13f1370df19b6a2098bf654
 m
 =Backend/src/main/java/com/hszg/backend/data/model/Object.java,3\d\3db61524cccb92c702f576a05b6b04c82b4fd603
 q

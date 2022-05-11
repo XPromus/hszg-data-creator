@@ -6,6 +6,8 @@ import com.hszg.backend.service.edit.UserPropertiesEdit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "api/v1/user")
@@ -16,6 +18,11 @@ public class EditorUserController {
     @Autowired
     public EditorUserController(EditorUserService editorUserService) {
         this.editorUserService = editorUserService;
+    }
+
+    @GetMapping("/all")
+    public List<EditorUser> getAllUsers() {
+        return editorUserService.getAllUsers();
     }
 
     /**
