@@ -13,6 +13,22 @@ export type EditUser = {
     newPassword: string
 };
 
+export async function getAllUsers(): Promise<User[]> {
+
+    const base: string = await getUrlBase();
+    const url: string = base + "all";
+
+    let response = await fetch(url, {
+        method: "GET"
+    });
+
+    if (response.ok) {
+        const userData: User[] = await response.json();
+        return userData;
+    }
+
+}
+
 export async function createUser(email: string, password: string): Promise<number> {
 
     const hash: string = await hashPassword(password);
