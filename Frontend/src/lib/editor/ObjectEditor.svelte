@@ -20,6 +20,9 @@
     let createYearModal;
     let createYearModalValue;
 
+    let tabs = new Array(4);
+    let menuState: number = 0;
+
     async function addYear() {
         let year = createYearModalValue;
         if (isNaN(year)) {
@@ -41,8 +44,6 @@
         closeFunction();
     }
 
-    let tabs = new Array(4);
-    let menuState: number = 0;
     function changeMenuState(state: number) {
         tabs[menuState].classList.remove("is-active");
         menuState = state;
