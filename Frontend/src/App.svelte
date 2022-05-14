@@ -1,9 +1,24 @@
 <script lang="ts">
     import Map from './lib/map/Map.svelte';
+    import LoginPanel from './lib/users/LoginPanel.svelte';
+    import AppLoginWindow from './lib/users/AppLoginWindow.svelte';
+
+    let loginState: boolean = false;
+
+    function openApp() {
+        loginState = true;
+    }
+
 </script>
   
 <main>
-    <Map />
+    {#if loginState}
+        <Map />
+        <!--<LoginPanel />-->
+    {:else}
+        <AppLoginWindow openApp="{openApp}" />
+    {/if}
+
 </main>
   
 <style>
