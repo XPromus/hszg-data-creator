@@ -37,7 +37,7 @@ public class EditorUserController {
     /**
      * * Method was tested (✔)
      */
-    @GetMapping("/get/email")
+    @PostMapping("/get/email")
     public EditorUser getUserByEmail(@RequestBody String email) {
         return editorUserService.getUserByEmail(email);
     }
@@ -53,7 +53,7 @@ public class EditorUserController {
     /**
      * * Method was tested (✔)
      */
-    @GetMapping("/permission/{userId}")
+    @PostMapping("/permission/{userId}")
     public boolean checkPermission(@PathVariable Long userId, @RequestBody String privilege) {
         return editorUserService.checkPermission(userId, privilege);
     }

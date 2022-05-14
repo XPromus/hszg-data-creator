@@ -24,7 +24,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     };
 
     private final String ADMIN_EMAIL = "admin";
-    private final String ADMIN_PASSWORD = "TynZZFb2bA432L3x";
+
+    //lC2QhlAvhc4nQ7JV
+    private final String ADMIN_PASSWORD = "$2a$10$OG2Wd67dTtfpCGiUW3RGa.58jJnbl.M8/LDYqlzhwKhnGpQ3q3r/e";
 
     @Autowired
     private PrivilegeRepository privilegeRepository;

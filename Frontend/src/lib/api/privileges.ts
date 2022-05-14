@@ -27,7 +27,7 @@ export async function getPrivilegeByName(name: string): Promise<Privilege> {
     const url: string = base + "get/name";
 
     let response = await fetch(url, {
-        method: "GET",
+        method: "POST",
         headers: {'Content-Type': 'text/plain'},
         body: name
     });

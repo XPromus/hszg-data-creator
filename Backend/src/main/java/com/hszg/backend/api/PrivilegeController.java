@@ -28,9 +28,10 @@ public class PrivilegeController {
     }
 
     /**
-     * * Method was tested (✔)
+     * Change in Frontend
+     *  Method was tested (✔)
      */
-    @GetMapping("/get/name")
+    @PostMapping("/get/name")
     public Privilege getPrivilegeByName(@RequestBody String name) {
         return privilegeService.getPivilegeByName(name);
     }

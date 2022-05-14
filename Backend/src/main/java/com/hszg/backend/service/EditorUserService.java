@@ -32,6 +32,7 @@ public class EditorUserService {
         var duplicateUser = editorUserRepository.findByEmail(email);
 
         if (duplicateUser.isPresent()) {
+            System.err.println("Double found");
             throw new UserAlreadyExistsException("The editorUser with the email " + email + " already exists");
         }
 

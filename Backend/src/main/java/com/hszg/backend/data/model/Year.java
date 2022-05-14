@@ -26,7 +26,6 @@ public class Year implements YearProperties {
     private String objectName;
     private Boolean exists = true;
 
-    //TODO: to String
     private String modelID;
     private String textureID;
     private String streetName;
