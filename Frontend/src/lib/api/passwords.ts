@@ -1,6 +1,6 @@
-import * as bcrypt from 'bcrypt';
-import { hash } from 'ol/tilecoord';
+import * as bcrypt from 'bcryptjs';
 
+export const minPasswordLength: number = 8;
 const saltRounds: number = 10;
 
 export async function hashPassword(password: string): Promise<string> {
@@ -12,4 +12,3 @@ export async function comparePassword(password: string, hash: string): Promise<b
     const check: boolean = bcrypt.compareSync(password, hash);
     return check;
 }
-

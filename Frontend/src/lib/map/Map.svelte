@@ -2,6 +2,7 @@
 
     import * as L from 'leaflet';
     import * as Object from '../api/objects';
+    import * as Icons from '../graphics/icons';
     import 'leaflet/dist/leaflet.css';
     import { onMount } from 'svelte';
     
@@ -12,16 +13,9 @@
         lati: 50.95308,
         long: 14.87294
     };
-    const customMarker = L.icon({
-        iconUrl: 'marker-icon.png',
-        iconSize: [14, 14],
-        iconAnchor: [7, 7]
-    });
-    const customMarkerActive = L.icon({
-        iconUrl: 'marker-icon-active.png',
-        iconSize: [14, 14],
-        iconAnchor: [7, 7]
-    });
+    
+    const customMarker = Icons.customMarkerNormal;
+    const customMarkerActive = Icons.customMarkerActive;
 
     let map;
     
@@ -126,12 +120,18 @@
         disableAllMarkers();
     }
 
-    function openYearEditor() {
+    async function openYearEditor() {
+
+        if (yearEditorState) {
+            closeYearEditor();
+        }
+
         yearEditorState = true;
+
     }
 
-    function closeYearEditor() {
-        if (objectEditorState) { objectEditor.reloadYearList(); }
+    async function closeYearEditor() {
+        await objectEditor.reloadYearList();
         yearEditorState = false;
     }
     
@@ -171,7 +171,7 @@
     <div class="modal-background"></div>
     <div class="modal-card">
         <header class="modal-card-head">
-            <p class="modal-card-title">Jahr Erstellen</p>
+            <p class="modal-card-title">Neues Objekt Erstellen</p>
             <button on:click="{closeCreateObjectModal}" class="delete" aria-label="close"></button>
         </header>
         <footer class="modal-card-foot">
@@ -193,7 +193,6 @@
         </div>
     </div>
 </div>
-
 
 <style>
 

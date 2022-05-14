@@ -77,9 +77,9 @@
         let yearIdArray = [];
         for (let i = 0; i < yearData.length; i++) {
             let year = yearData[i];
-            console.log(year);
             yearIdArray.push(year.id);
         }
+        years = Array(0);
         years = yearIdArray;
     }
 

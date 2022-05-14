@@ -1,6 +1,8 @@
 import { getServerData, getUrlBase } from "./server";
 import { hashPassword, comparePassword } from "./passwords";
 
+export const alreadyExistsCode: number = 226;
+
 export type User = {
     id: number,
     email: string,
@@ -29,7 +31,7 @@ export async function getAllUsers(): Promise<User[]> {
 
 }
 
-export async function createUser(email: string, password: string): Promise<number> {
+export async function createUser(email: string, password: string): Promise<Response> {
 
     const hash: string = await hashPassword(password);
     const data: object = {
@@ -38,7 +40,7 @@ export async function createUser(email: string, password: string): Promise<numbe
     };
 
     const base: string = await getUrlBase();
-    const url: string = base  + "create";
+    const url: string = base  + "user/create";
 
     let response = await fetch(url, {
         method: "POST",
@@ -46,17 +48,14 @@ export async function createUser(email: string, password: string): Promise<numbe
         body: JSON.stringify(data)
     });
 
-    if (response.ok) {
-        const userData: User = await response.json();
-        return userData.id;
-    }
+    return response;
 
 }
 
 export async function getUserById(id: number): Promise<User> {
 
     const base: string = await getUrlBase();
-    const url: string = base + "get/" + id;
+    const url: string = base + "user/get/" + id;
 
     let response = await fetch(url, {
         method: "GET"
@@ -69,28 +68,25 @@ export async function getUserById(id: number): Promise<User> {
 
 }
 
-export async function getUserByEmail(email: string): Promise<User> {
+export async function getUserByEmail(email: string): Promise<Response> {
 
     const base: string = await getUrlBase();
-    const url: string = base + "get/email";
+    const url: string = base + "user/get/email";
 
     let response = await fetch(url, {
-        method: "GET",
+        method: "POST",
         headers: {'Content-Type': 'text/plain'},
         body: email
     });
 
-    if (response.ok) {
-        const userData: User = await response.json();
-        return userData;
-    }
+    return response;
 
 }
 
 export async function checkUserPermission(id: number): Promise<boolean> {
 
     const base: string = await getUrlBase();
-    const url: string = base + "permission/" + id;
+    const url: string = base + "user/permission/" + id;
 
     let response = await fetch(url, {
         method: "GET",
@@ -106,7 +102,7 @@ export async function checkUserPermission(id: number): Promise<boolean> {
 export async function editUser(id: number, data: EditUser): Promise<User> {
 
     const base: string = await getUrlBase();
-    const url: string = base + "edit/" + id;
+    const url: string = base + "user/edit/" + id;
 
     let response = await fetch(url, {
         method: "POST",
@@ -124,7 +120,7 @@ export async function editUser(id: number, data: EditUser): Promise<User> {
 export async function addPrivilegeToUser(id: number, privilege: string): Promise<User> {
 
     const base: string = await getUrlBase();
-    const url: string = base + "add/privilege/" + id;
+    const url: string = base + "user/add/privilege/" + id;
 
     let response = await fetch(url, {
         method: "POST",

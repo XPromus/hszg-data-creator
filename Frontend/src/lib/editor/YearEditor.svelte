@@ -18,12 +18,17 @@
     let modelId: string;
     let textureId: string;
     
+    export async function reloadYearEditor() {
+        let yearData = await Year.getYearById(yearId);
+        applyData(yearData);
+    }
+
     export function callCloseEditor() {
         closeEditor();
     }
 
-    async function closeEditor() {
-
+    async function saveData() {
+        
         let data = {
             "newYear": year,
             "newObjectName": name,
@@ -35,8 +40,12 @@
         };
 
         await Year.editYear(yearId, data);
-        closeFunction();
 
+    }
+
+    async function closeEditor() {
+        await saveData();
+        closeFunction();
     }
 
     function openDeleteYearModal() {
@@ -180,9 +189,22 @@
             </nav>
         </div>
         <div class="panel-block">
-            <button on:click="{openDeleteYearModal}" class="button is-danger is-fullwidth">
-                Löschen
-            </button>
+            <div class="level" style="width: 100%;">
+                <div class="level-center" style="width: 100%;">
+                    <div class="columns">
+                        <div class="column is-half">
+                            <button on:click="{openDeleteYearModal}" class="button is-danger" style="width: 100%;">
+                                Löschen
+                            </button>
+                        </div>
+                        <div class="column is-half">
+                            <button on:click="{saveData}" class="button is-primary " style="width: 100%;">
+                                Speichern
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </article>        
 </div>
