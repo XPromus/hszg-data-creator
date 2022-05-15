@@ -30,6 +30,9 @@ public class Object implements ObjectProperties {
     @OneToMany(mappedBy = "object")
     private Set<Image> images;
 
+    @OneToMany(mappedBy = "object")
+    private Set<Media> media;
+
     //<editor-fold desc="Constructor">
     public Object() {
 
@@ -98,6 +101,14 @@ public class Object implements ObjectProperties {
 
     public void setLongitude(Float longitude) {
         this.longitude = longitude;
+    }
+
+    public Set<Media> getMedia() {
+        return media;
+    }
+
+    public void setMedia(Set<Media> media) {
+        this.media = media;
     }
 
     //</editor-fold>
