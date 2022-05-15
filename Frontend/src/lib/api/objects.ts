@@ -37,7 +37,7 @@ export async function editObject(id: number, data): Promise<number> {
     });
 
     if (response.ok) {
-        console.log("Edit Success");
+        //console.log("Edit Success");
     }
 
     return response.status;
@@ -92,7 +92,7 @@ export async function deleteObject(id: number) {
     });
 
     if (response.ok) {
-        console.log("Deleted Object");
+        //console.log("Deleted Object");
     }
 
 }

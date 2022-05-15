@@ -12,7 +12,7 @@ export async function createYear(objectId: number, year: number) {
     });
 
     if (response.ok) {
-        console.log("Created Year");
+        //console.log("Created Year");
         const yearData = await response.json();
         return yearData;
     }
@@ -31,7 +31,7 @@ export async function getAllYearsFromObject(objectId: number) {
     });
 
     if (response.ok) {
-        console.log("Got Years");
+        //console.log("Got Years");
         const yearData = await response.json();
         return yearData;
     }
@@ -50,7 +50,7 @@ export async function getYearById(yearId: number) {
     });
 
     if (response.ok) {
-        console.log("Got Year");
+        //console.log("Got Year");
         const yearData = await response.json();
         return yearData;
     }
@@ -70,7 +70,7 @@ export async function editYear(yearId: number, changes) {
     });
 
     if (response.ok) {
-        console.log("Edited Year");
+        //console.log("Edited Year");
         const yearData = await response.json();
         return yearData;
     }
@@ -88,7 +88,7 @@ export async function deleteYear(yearId: number) {
     });
 
     if (response.ok) {
-        console.log("Deleted Year");
+        //console.log("Deleted Year");
     }
 
 }

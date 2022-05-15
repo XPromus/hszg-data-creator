@@ -2,11 +2,13 @@
     
     import * as Object from '../api/objects';
     import * as Year from '../api/years';
+    import * as MediaAPI from '../api/media';
     import { onMount } from "svelte";
     import { fade } from 'svelte/transition';
     
     import SaveButton from './SaveButton.svelte';
     import YearPanelButton from './YearPanelButton.svelte';
+    import MediaPanelButton from './MediaPanelButton.svelte';
 
     export let objectId: number;
     export let closeFunction = () => {};
@@ -21,10 +23,18 @@
     let createYearModal;
     let createYearModalValue;
 
+    let medias = [];
+    let mediaObjects = [];
+
     let tabs = new Array(4);
     let menuState: number = 0;
 
     let saveButton;
+
+    async function addMedia(): Promise<void> {
+        await MediaAPI.createMedia(objectId, "");
+        await reloadMediaList();
+    }
 
     async function addYear(): Promise<void> {
         let year = createYearModalValue;
@@ -37,8 +47,14 @@
         }        
     }
 
-    async function saveEditorData() {
+    async function saveMediaData() {
+        for (let i = 0; i < mediaObjects.length; i++) {
+            mediaObjects[i].saveData();
+        }
+    }
 
+    async function saveEditorData() {
+        await saveMediaData();
         const data = { "newName": objectName }
         const responseStatus = await Object.editObject(objectId, data);
 
@@ -76,20 +92,36 @@
         deleteObjectModal.classList.remove("is-active");
     }
 
+    function deleteMedia() {
+        reloadMediaList();
+    }
+
     async function deleteObject(): Promise<void> {
         deleteObjectModal.classList.remove("is-active");
         await Object.deleteObject(objectId);
         deleteFunction();
     }
 
+    async function reloadMediaList(): Promise<void> {
+        medias = Array(0);
+        let mediaData = await (await MediaAPI.getMediaByObjectId(objectId)).json();
+        let mediaIdArray = [];
+        for (let i = 0; i < mediaData.length; i++) {
+            let media: MediaAPI.Media = mediaData[i];
+            mediaIdArray.push(media.id);
+        }
+        mediaObjects = Array(mediaIdArray.length);
+        medias = mediaIdArray;
+    }
+
     export async function reloadYearList(): Promise<void> {
+        years = Array(0);
         let yearData = await Year.getAllYearsFromObject(objectId);
         let yearIdArray = [];
         for (let i = 0; i < yearData.length; i++) {
             let year = yearData[i];
             yearIdArray.push(year.id);
         }
-        years = Array(0);
         years = yearIdArray;
     }
 
@@ -99,6 +131,7 @@
         objectData = await dataPromise;
         objectName = objectData.name;
         await reloadYearList();
+        await reloadMediaList();
         console.log(objectData);
     }
 
@@ -163,7 +196,7 @@
             <!-- svelte-ignore a11y-invalid-attribute -->
             <a bind:this="{tabs[1]}" href="#" on:click="{() => changeMenuState(1)}" >Jahre</a>
             <!-- svelte-ignore a11y-invalid-attribute -->
-            <a bind:this="{tabs[2]}" href="#" on:click="{() => changeMenuState(2)}" >Bilder</a>
+            <a bind:this="{tabs[2]}" href="#" on:click="{() => changeMenuState(2)}" >Medien</a>
             <!-- svelte-ignore a11y-invalid-attribute -->
             <a bind:this="{tabs[3]}" href="#" on:click="{() => changeMenuState(3)}" >Optionen</a>
         </p>
@@ -187,8 +220,23 @@
             {/each}
         {:else if menuState == 2}
             <div class="panel-block">
-                <span>In Entwicklung</span>
+                <div class="columns is-gapless" style="width: 100%;">
+                    <div class="column is-half">
+                        <button on:click="{addMedia}" class="button is-success is-fullwidth" style="margin-right: 2.5px;">
+                            Medium Erstellen
+                        </button>
+                    </div>
+                    <div class="column is-half">
+                        <button on:click="{saveMediaData}" class="button is-primary is-fullwidth" style="margin-left: 2.5px;">
+                            Speichern
+                        </button>
+                    </div>
+                </div>
+                
             </div>
+            {#each medias as media, i}
+                <MediaPanelButton bind:this="{mediaObjects[i]}" deleteFunction="{deleteMedia}" mediaId="{media}" />
+            {/each}
         {:else if menuState == 3}
             <div class="panel-block">
                 <button on:click="{openObjectDeleteModal}" class="button is-danger is-fullwidth">
