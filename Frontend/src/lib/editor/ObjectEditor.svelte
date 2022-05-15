@@ -4,7 +4,8 @@
     import * as Year from '../api/years';
     import { onMount } from "svelte";
     import { fade } from 'svelte/transition';
-
+    
+    import SaveButton from './SaveButton.svelte';
     import YearPanelButton from './YearPanelButton.svelte';
 
     export let objectId: number;
@@ -23,7 +24,9 @@
     let tabs = new Array(4);
     let menuState: number = 0;
 
-    async function addYear() {
+    let saveButton;
+
+    async function addYear(): Promise<void> {
         let year = createYearModalValue;
         if (isNaN(year)) {
             createYearModalValue = "Es muss eine Zahl eingegeben werden";
@@ -34,13 +37,20 @@
         }        
     }
 
-    async function closeEditor() {
-        
-        let data = {
-            "newName": objectName
-        }
-        await Object.editObject(objectId, data);
+    async function saveEditorData() {
 
+        const data = { "newName": objectName }
+        const responseStatus = await Object.editObject(objectId, data);
+
+        if (responseStatus == 200) {
+            saveButton.setSaveState(saveButton.saveStateEnum.success);
+        } else {
+            saveButton.setSaveState(saveButton.saveStateEnum.failure);
+        }
+
+    }
+
+    async function closeEditor(): Promise<void> {
         closeFunction();
     }
 
@@ -50,29 +60,29 @@
         tabs[menuState].classList.add("is-active");
     }
 
-    function openModal() {
+    function openModal(): void {
         createYearModal.classList.add("is-active");
     }
 
-    function closeModal() {
+    function closeModal(): void {
         createYearModal.classList.remove("is-active");
     }
 
-    function openObjectDeleteModal() {
+    function openObjectDeleteModal(): void {
         deleteObjectModal.classList.add("is-active");
     }
 
-    function closeObjectDeleteModal() {
+    function closeObjectDeleteModal(): void {
         deleteObjectModal.classList.remove("is-active");
     }
 
-    async function deleteObject() {
+    async function deleteObject(): Promise<void> {
         deleteObjectModal.classList.remove("is-active");
         await Object.deleteObject(objectId);
         deleteFunction();
     }
 
-    export async function reloadYearList() {
+    export async function reloadYearList(): Promise<void> {
         let yearData = await Year.getAllYearsFromObject(objectId);
         let yearIdArray = [];
         for (let i = 0; i < yearData.length; i++) {
@@ -83,7 +93,7 @@
         years = yearIdArray;
     }
 
-    export async function reloadEditor(id: number) {
+    export async function reloadEditor(id: number): Promise<void> {
         objectId = id;
         let dataPromise = Promise.resolve(Object.getObjectById(objectId));
         objectData = await dataPromise;
@@ -184,6 +194,9 @@
                 <button on:click="{openObjectDeleteModal}" class="button is-danger is-fullwidth">
                     Löschen
                 </button>
+            </div>
+            <div class="panel-block">
+                <SaveButton bind:this="{saveButton}" saveFuntion="{saveEditorData}"/>
             </div>
         {/if}
     </article>

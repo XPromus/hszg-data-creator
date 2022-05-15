@@ -44,7 +44,7 @@
     }
 
     async function closeEditor() {
-        await saveData();
+        //await saveData();
         closeFunction();
     }
 

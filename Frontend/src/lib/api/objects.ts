@@ -24,7 +24,7 @@ export async function createObject(loc): Promise<number> {
 
 }
 
-export async function editObject(id: number, data) {
+export async function editObject(id: number, data): Promise<number> {
 
     const serverData = await getServerData();
     //@ts-ignore
@@ -39,6 +39,8 @@ export async function editObject(id: number, data) {
     if (response.ok) {
         console.log("Edit Success");
     }
+
+    return response.status;
 
 }
 
