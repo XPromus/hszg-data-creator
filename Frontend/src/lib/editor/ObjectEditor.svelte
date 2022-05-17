@@ -5,7 +5,7 @@
     import * as MediaAPI from '../api/media';
     import { onMount } from "svelte";
     import { fade } from 'svelte/transition';
-    
+
     import SaveButton from './SaveButton.svelte';
     import YearPanelButton from './YearPanelButton.svelte';
     import MediaPanelButton from './MediaPanelButton.svelte';

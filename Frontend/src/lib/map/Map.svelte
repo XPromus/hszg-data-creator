@@ -59,8 +59,9 @@
 
     async function createMapMarker(loc) {
         let id = await Object.createObject(loc);
-        createMapMarkerFromSource(id, loc.lat, loc.lng);
+        let marker = createMapMarkerFromSource(id, loc.lat, loc.lng);
         closeCreateObjectModal();
+        markerClickAction(marker);
     }
 
     function createMapMarkerFromSource(id, lat, lng) {
@@ -75,21 +76,26 @@
         });
 
         marker.on('click', function(e) {
-
-            disableAllMarkers();
-            marker.setIcon(customMarkerActive);
-            currentObjectId = marker.options.objectId;
-
-            if (objectEditorState) { 
-                objectEditor.reloadEditor(marker.options.objectId); 
-                yearEditor.callCloseEditor();
-            }
-
-            openObjectEditor();
-
+            markerClickAction(marker);
         });
 
         marker.addTo(map);
+        return marker;
+
+    }
+
+    function markerClickAction(marker) {
+
+        disableAllMarkers();
+        marker.setIcon(customMarkerActive);
+        currentObjectId = marker.options.objectId;
+
+        if (objectEditorState) { 
+            objectEditor.reloadEditor(marker.options.objectId); 
+            yearEditor.callCloseEditor();
+        }
+
+        openObjectEditor();
 
     }
 
