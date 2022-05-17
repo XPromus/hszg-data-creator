@@ -18,7 +18,6 @@
     {:else}
         <AppLoginWindow openApp="{openApp}" />
     {/if}
-
 </main>
   
 <style>

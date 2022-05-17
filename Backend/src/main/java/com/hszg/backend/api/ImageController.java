@@ -1,11 +1,18 @@
 package com.hszg.backend.api;
 
+import com.hszg.backend.api.message.UploadResponseMessage;
 import com.hszg.backend.data.model.Image;
 import com.hszg.backend.service.ImageService;
-import com.hszg.backend.service.edit.ImagePropertiesEdit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin
@@ -20,52 +27,29 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    /**
-     * * Method was tested (✔)
-     */
-    @GetMapping("/get/all")
-    public List<Image> getAllImages() {
-        return imageService.getAllImages();
+    @PostMapping("upload/{objectId}")
+    public Image uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long objectId) {
+        return imageService.uploadFile(file, objectId);
     }
 
-    /**
-     * * Method was tested (✔)
-     */
-    @PostMapping("/create/{objectId}")
-    public Image createImage(@PathVariable Long objectId) {
-        return imageService.createImage(objectId);
+    @GetMapping("/get/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable Long id) throws IOException {
+        return new ResponseEntity<>(imageService.getFile(id), HttpHeaders.EMPTY, HttpStatus.OK);
     }
 
-    /**
-     * * Method was tested (✔)
-     */
-    @GetMapping("/get/{imageId}")
-    public Image getImageById(@PathVariable Long imageId) {
-        return imageService.getImageById(imageId);
-    }
-
-    /**
-     * * Method was tested (✔)
-     */
     @GetMapping("/get/object/{objectId}")
-    public List<Image> getImagesFromObjectById(@PathVariable Long objectId) {
-        return imageService.getImagesFromObjectsById(objectId);
+    public List<Image> getImagesFromObject(@PathVariable Long objectId) {
+        return imageService.getImagesFromObject(objectId);
     }
 
-    /**
-     * * Method was tested (✔)
-     */
-    @DeleteMapping("/delete/{imageId}")
-    public void deleteImageById(@PathVariable Long imageId) {
-        imageService.deleteImageById(imageId);
+    @DeleteMapping("/delete/object/{objectId}")
+    public void deleteAllImagesFromObject(@PathVariable Long objectId) {
+        imageService.deleteAllImagesFromObject(objectId);
     }
 
-    /**
-     * * Method was tested (✔)
-     */
-    @PostMapping("/edit/{imageId}")
-    public Image editImage(@PathVariable Long imageId, @RequestBody ImagePropertiesEdit changes) {
-        return imageService.editImage(imageId, changes);
+    @DeleteMapping("/delete/{id}")
+    public void deleteImage(@PathVariable Long id) {
+        imageService.deleteImage(id);
     }
 
 }

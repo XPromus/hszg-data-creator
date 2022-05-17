@@ -9,6 +9,7 @@
     import SaveButton from './SaveButton.svelte';
     import YearPanelButton from './YearPanelButton.svelte';
     import MediaPanelButton from './MediaPanelButton.svelte';
+    import ImageUploadField from './ImageUploadField.svelte';
 
     export let objectId: number;
     export let closeFunction = () => {};
@@ -198,59 +199,70 @@
             <!-- svelte-ignore a11y-invalid-attribute -->
             <a bind:this="{tabs[2]}" href="#" on:click="{() => changeMenuState(2)}" >Medien</a>
             <!-- svelte-ignore a11y-invalid-attribute -->
-            <a bind:this="{tabs[3]}" href="#" on:click="{() => changeMenuState(3)}" >Optionen</a>
+            <a bind:this="{tabs[3]}" href="#" on:click="{() => changeMenuState(3)}" >Cloud Medien</a>
+            <!-- svelte-ignore a11y-invalid-attribute -->
+            <a bind:this="{tabs[4]}" href="#" on:click="{() => changeMenuState(4)}" >Optionen</a>
         </p>
-        {#if menuState == 0}
-            <div class="panel-block">
-                <p class="control has-icons-left">
-                    <input bind:value="{objectName}" class="input" type="text" placeholder="Name des Objekts">
-                    <span class="icon is-left">
-                        <i class="fa-solid fa-house" aria-hidden="true"></i>
-                    </span>
-                </p>
-            </div>
-        {:else if menuState == 1}
-            <div class="panel-block">
-                <button on:click="{openModal}" class="button is-success is-fullwidth">
-                    Jahr Erstellen
-                </button>
-            </div>
-            {#each years as year}
-                <YearPanelButton openYearEditorFunction={openYearEditorFunction} yearId="{year}" />
-            {/each}
-        {:else if menuState == 2}
-            <div class="panel-block">
-                <div class="columns is-gapless" style="width: 100%;">
-                    <div class="column is-half">
-                        <button on:click="{addMedia}" class="button is-success is-fullwidth" style="margin-right: 2.5px;">
-                            Medium Erstellen
-                        </button>
-                    </div>
-                    <div class="column is-half">
-                        <button on:click="{saveMediaData}" class="button is-primary is-fullwidth" style="margin-left: 2.5px;">
-                            Speichern
-                        </button>
+        <div id="panelContent">
+            {#if menuState == 0}
+                <div class="panel-block">
+                    <p class="control has-icons-left">
+                        <input bind:value="{objectName}" class="input" type="text" placeholder="Name des Objekts">
+                        <span class="icon is-left">
+                            <i class="fa-solid fa-house" aria-hidden="true"></i>
+                        </span>
+                    </p>
+                </div>
+            {:else if menuState == 1}
+                <div class="panel-block">
+                    <button on:click="{openModal}" class="button is-success is-fullwidth">
+                        Jahr Erstellen
+                    </button>
+                </div>
+                {#each years as year}
+                    <YearPanelButton openYearEditorFunction={openYearEditorFunction} yearId="{year}" />
+                {/each}
+            {:else if menuState == 2}
+                <ImageUploadField objectId="{objectId}"/>
+            {:else if menuState == 3}
+                <div class="panel-block">
+                    <div class="columns is-gapless" style="width: 100%;">
+                        <div class="column is-half">
+                            <button on:click="{addMedia}" class="button is-success is-fullwidth" style="margin-right: 2.5px;">
+                                Cloud Medium Erstellen
+                            </button>
+                        </div>
+                        <div class="column is-half">
+                            <button on:click="{saveMediaData}" class="button is-primary is-fullwidth" style="margin-left: 2.5px;">
+                                Speichern
+                            </button>
+                        </div>
                     </div>
                 </div>
-                
-            </div>
-            {#each medias as media, i}
-                <MediaPanelButton bind:this="{mediaObjects[i]}" deleteFunction="{deleteMedia}" mediaId="{media}" />
-            {/each}
-        {:else if menuState == 3}
-            <div class="panel-block">
-                <button on:click="{openObjectDeleteModal}" class="button is-danger is-fullwidth">
-                    Löschen
-                </button>
-            </div>
-            <div class="panel-block">
-                <SaveButton bind:this="{saveButton}" saveFuntion="{saveEditorData}"/>
-            </div>
-        {/if}
+                {#each medias as media, i}
+                    <MediaPanelButton bind:this="{mediaObjects[i]}" deleteFunction="{deleteMedia}" mediaId="{media}" />
+                {/each}
+            {:else if menuState == 4}
+                <div class="panel-block">
+                    <button on:click="{openObjectDeleteModal}" class="button is-danger is-fullwidth">
+                        Löschen
+                    </button>
+                </div>
+                <div class="panel-block">
+                    <SaveButton bind:this="{saveButton}" saveFuntion="{saveEditorData}"/>
+                </div>
+            {/if}
+        </div>
+        
     </article>
 </div>
 
 <style>
+
+    #panelContent {
+        max-height: 700px;
+        overflow: auto;
+    }
 
     .level {
         width: 100%;

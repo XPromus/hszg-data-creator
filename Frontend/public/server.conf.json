@@ -1,5 +1,5 @@
 {
     "serverUrl": "http://localhost:",
     "apiUrl": "/api/v1/",
-    "port": 8080
+    "port": 8089
 }

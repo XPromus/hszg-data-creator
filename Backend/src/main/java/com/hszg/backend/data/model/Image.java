@@ -7,24 +7,18 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "image")
-public class Image implements ImageProperties {
+public class Image {
 
     @Id
-    @SequenceGenerator(
-            name = "image_service",
-            sequenceName = "image_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "image_sequence"
-    )
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String imagePath;
-    private String imageTitle;
-    private String imageDescription;
+    @Column(name = "name")
+    private String filename;
+
+    @Column(name = "url")
+    private String url;
 
     @ManyToOne
     @JoinColumn(name = "object_id", nullable = false)
@@ -39,20 +33,20 @@ public class Image implements ImageProperties {
         this.id = id;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public String getFilename() {
+        return filename;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 
-    public String getImageDescription() {
-        return imageDescription;
+    public String getUrl() {
+        return url;
     }
 
-    public void setImageDescription(String imageDescription) {
-        this.imageDescription = imageDescription;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public Object getObject() {
@@ -61,14 +55,6 @@ public class Image implements ImageProperties {
 
     public void setObject(Object object) {
         this.object = object;
-    }
-
-    public String getImageTitle() {
-        return imageTitle;
-    }
-
-    public void setImageTitle(String imageTitle) {
-        this.imageTitle = imageTitle;
     }
 
 }

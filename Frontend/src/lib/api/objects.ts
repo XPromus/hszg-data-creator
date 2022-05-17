@@ -1,4 +1,5 @@
 import { getServerData } from "./server";
+import { deleteAllImagesFromObject } from "./images";
 
 export async function createObject(loc): Promise<number> {
 
@@ -82,6 +83,8 @@ export async function getObjectById(id: number) {
 }
 
 export async function deleteObject(id: number) {
+
+    await deleteAllImagesFromObject(id);
 
     const serverData = await getServerData();
     //@ts-ignore
