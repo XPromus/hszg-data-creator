@@ -14,7 +14,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Base64;
+import java.nio.file.StandardCopyOption;
 
 @Service
 public class FileService {
@@ -40,16 +40,19 @@ public class FileService {
     }
 
     public String save(Long objectId, MultipartFile file) {
+
         try {
             Path root = Paths.get(uploadPath + "/" + objectId);
             if (!Files.exists(root)) {
                 initObjectFolder(objectId);
             }
-            Files.copy(file.getInputStream(), root.resolve(file.getOriginalFilename()));
+            Path targetLocation = root.resolve(file.getOriginalFilename());
+            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return root.toString();
         } catch (Exception e) {
             throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
         }
+
     }
 
     public Resource loadFromObject(Image image) {

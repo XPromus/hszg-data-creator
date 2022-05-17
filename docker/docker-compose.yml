@@ -10,6 +10,8 @@ services:
       - "4000:80"
 
   app:
+    volumes:
+      - C:/Users/hilgi/Desktop:/application
     build:
       context: ./backend
       dockerfile: dockerfile
@@ -20,7 +22,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
       - SPRING_DATASOURCE_USERNAME=compose-postgres
       - SPRING_DATASOURCE_PASSWORD=compose-postgres
-      - UPLOAD_PATH=/uploads
+      - UPLOAD_PATH=/application/uploads
     ports:
       - "8089:8080"  
   
