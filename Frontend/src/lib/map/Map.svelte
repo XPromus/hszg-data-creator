@@ -25,7 +25,7 @@
     let objectEditorState: boolean = false;
     let currentObjectId: number;
     
-    let yearEditor;
+    let yearEditor: YearEditor;
     let yearEditorState: boolean = false;
 
     function createMap(container) {
@@ -92,7 +92,7 @@
 
         if (objectEditorState) { 
             objectEditor.reloadEditor(marker.options.objectId); 
-            if (yearEditor !== undefined) {
+            if (yearEditor !== undefined && yearEditor != null && yearEditorState == true) {
                 yearEditor.callCloseEditor();
             }
         }

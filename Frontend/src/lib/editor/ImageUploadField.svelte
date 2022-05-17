@@ -8,6 +8,7 @@
     export let objectId: number;
 
     let objectImages: ImageAPI.Image[] = [];
+    let objectImageBase = [];
     let files: FileList;
 
     $: if (files) {
@@ -18,13 +19,28 @@
     }
 
     async function getAllImages() {
+
         objectImages = Array(0);
         objectImages = await ImageAPI.getImagesFromObject(objectId);
+        objectImageBase = Array(objectImages.length);
+
+        for (let i = 0; i < objectImages.length; i++) {
+            let imageId: number = objectImages[i].id;
+            let base64 = await getImageAsBase64(imageId);
+            objectImageBase[i] = base64;
+        }
+
     }
 
-    async function getImageById(id: number) {
-        let image = await ImageAPI.getImage(id);
-        return image;
+    async function getImageAsBase64(imageId: number) {
+        const data = await getImageBlob(imageId);
+        const base64 = await convertBlobToBase64(data);
+        return base64;
+    }
+
+    async function getImageBlob(imageId: number) {
+        const imageBlob = await ImageAPI.getImage(imageId);
+        return imageBlob;
     }
     
     async function deleteImage(imageId: number) {
@@ -32,21 +48,16 @@
         await getAllImages();
     }
 
-    function imageFromObject(image) {
-        const data = getImageById(image.id);
-        return binaryToBase64(data);
+    const convertBlobToBase64 = async (blob) => {
+        return await blobToBase64(blob);
     }
 
-    function binaryToBase64(str) {
-
-        let reader = new FileReader();
-        reader.readAsDataURL(str);
-        reader.onloadend = function() {
-            let base64Data = reader.result;
-            console.log(base64Data);
-        }
-
-    }
+    const blobToBase64 = blob => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
 
     async function uploadFiles(): Promise<void> {
         const id: number = await ImageAPI.uploadImage(objectId, files[0]);
@@ -110,9 +121,7 @@
         <div class="level" style="width: 100%;">
             <div class="level-left">
                 <div class="level-item">
-                    <span class="panel-icon">
-                        <i class="fa-solid fa-image" aria-hidden="true"></i>
-                    </span>
+                    <img style="margin-right: 5px;" width="25px" src="{objectImageBase[i]}" alt="">
                     {image.filename}
                 </div>
             </div>
