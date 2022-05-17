@@ -3,8 +3,10 @@ package com.hszg.backend.service;
 import com.hszg.backend.api.error.ErrorText;
 import com.hszg.backend.api.error.ObjectNotFoundException;
 import com.hszg.backend.api.error.YearNotFoundException;
+import com.hszg.backend.data.model.Media;
 import com.hszg.backend.data.model.Object;
 import com.hszg.backend.data.model.Year;
+import com.hszg.backend.repos.MediaRepository;
 import com.hszg.backend.repos.ObjectRepository;
 import com.hszg.backend.repos.YearRepository;
 import com.hszg.backend.service.edit.ObjectPropertiesEdit;
@@ -20,11 +22,13 @@ public class ObjectService {
 
     private final ObjectRepository objectRepository;
     private final YearRepository yearRepository;
+    private final MediaRepository mediaRepository;
 
     @Autowired
-    public ObjectService(ObjectRepository objectRepository, YearRepository yearRepository) {
+    public ObjectService(ObjectRepository objectRepository, YearRepository yearRepository, MediaRepository mediaRepository) {
         this.objectRepository = objectRepository;
         this.yearRepository = yearRepository;
+        this.mediaRepository = mediaRepository;
     }
 
     @Transactional
@@ -44,9 +48,14 @@ public class ObjectService {
 
         var object = checkObjectExistence(objectId);
         var years = yearRepository.findYearsByObjectId(objectId);
+        var medias = mediaRepository.findMediaByObjectId(objectId);
 
         for (Year year : years) {
             yearRepository.delete(checkYearExistence(year.getId()));
+        }
+
+        for (Media media : medias) {
+            mediaRepository.delete(media);
         }
 
         objectRepository.delete(object);
