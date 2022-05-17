@@ -92,7 +92,9 @@
 
         if (objectEditorState) { 
             objectEditor.reloadEditor(marker.options.objectId); 
-            yearEditor.callCloseEditor();
+            if (yearEditor !== undefined) {
+                yearEditor.callCloseEditor();
+            }
         }
 
         openObjectEditor();
@@ -117,7 +119,12 @@
     }
 
     function openObjectEditor() {
-        objectEditorState = true;
+        if (objectEditorState) {
+            objectEditor.reloadEditor(currentObjectId);
+            objectEditor.setDefaultEditorPage();
+        } else {
+            objectEditorState = true;
+        }
     }
 
     function closeObjectEditor() {

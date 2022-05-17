@@ -136,6 +136,10 @@
         console.log(objectData);
     }
 
+    export function setDefaultEditorPage() {
+        changeMenuState(0);
+    }
+
     onMount(async () => {
         await reloadEditor(objectId);
     });
