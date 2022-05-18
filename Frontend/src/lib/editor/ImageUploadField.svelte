@@ -1,7 +1,5 @@
 <script lang="ts">
     
-    import { get } from "svelte/store";
-    import { Base64 } from 'js-base64';
     import * as ImageAPI from "../api/images";
     import { onMount } from "svelte";
 
@@ -133,7 +131,6 @@
                 </div>
             </div>
         </div>
-        
     </div>
 {/each}
 

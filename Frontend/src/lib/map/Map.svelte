@@ -29,17 +29,32 @@
     let yearEditorState: boolean = false;
 
     function createMap(container) {
-        let m = L.map(container).setView([startCoords.lati, startCoords.long], 16);
-        L.tileLayer(
-            'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-            {
-                attribution: `&copy;<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>,&copy;<a href="https://carto.com/attributions" target="_blank">CARTO</a>`,
-                subdomains: 'abcd',
-                maxZoom: 25,
-            }
-        ).addTo(m);
-
+        const m = L.map(container).setView([startCoords.lati, startCoords.long], 16);
+        const osmLayer = getOSMLayer();
+        m.addLayer(osmLayer);
         return m;
+    }
+
+    function changeMapLayer(oldLayer, newLayer) {
+        map.removeLayer(oldLayer);
+        map.addLayer(newLayer);
+    }
+
+    function getOSMLayer() {
+        const osm = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: `&copy;<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>,&copy;<a href="https://carto.com/attributions" target="_blank">CARTO</a>`,
+            subdomains: 'abcd',
+            maxZoom: 25
+        });
+        return osm;
+    }
+
+    function getGoogleSatelliteLayer() {
+        const googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            maxZoom: 25,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        });
+        return googleSat;
     }
 
     function mapAction(container) {
@@ -207,6 +222,15 @@
     </div>
 </div>
 
+<div id="map-layer-selector">
+    <button on:click="{() => changeMapLayer(getGoogleSatelliteLayer(), getOSMLayer())}" class="button is-success">
+        <i class="fa-solid fa-map" />
+    </button>
+    <button on:click="{() => changeMapLayer(getOSMLayer(), getGoogleSatelliteLayer())}" class="button is-success">
+        <i class="fa-solid fa-satellite"></i>
+    </button>
+</div>
+
 <style>
 
     #map {
@@ -222,6 +246,15 @@
     }
 
     .modal {
+        z-index: 500;
+    }
+
+    #map-layer-selector {
+        left: 0;
+        bottom: 0;
+        margin-bottom: 10px;
+        margin-left: 10px;
+        position: absolute;
         z-index: 500;
     }
 
