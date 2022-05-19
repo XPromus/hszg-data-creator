@@ -15,10 +15,13 @@
     export let closeFunction = () => {};
     export let deleteFunction = () => {};
     export let openYearEditorFunction = () => {};
+    export let changeMarkerPosition = () => {};
 
     let objectData;
     let deleteObjectModal;
     let objectName: string;
+    let objectLat: number;
+    let objectLong: number;
 
     let years = [];
     let createYearModal;
@@ -56,11 +59,12 @@
 
     async function saveEditorData() {
         await saveMediaData();
-        const data = { "newName": objectName }
+        const data = { "newName": objectName, "newLatitude": objectLat, "newLongitude": objectLong };
         const responseStatus = await Object.editObject(objectId, data);
 
         if (responseStatus == 200) {
             saveButton.setSaveState(saveButton.saveStateEnum.success);
+            changeMarkerPosition();
         } else {
             saveButton.setSaveState(saveButton.saveStateEnum.failure);
         }
@@ -69,6 +73,11 @@
 
     async function closeEditor(): Promise<void> {
         closeFunction();
+    }
+
+    export function changeSavedPosition(lat, lng) {
+        objectLat = lat;
+        objectLong = lng;
     }
 
     function changeMenuState(state: number) {
@@ -131,6 +140,8 @@
         let dataPromise = Promise.resolve(Object.getObjectById(objectId));
         objectData = await dataPromise;
         objectName = objectData.name;
+        objectLat = objectData.latitude;
+        objectLong = objectData.longitude;
         await reloadYearList();
         await reloadMediaList();
         console.log(objectData);
@@ -210,12 +221,43 @@
         <div id="panelContent">
             {#if menuState == 0}
                 <div class="panel-block">
-                    <p class="control has-icons-left">
-                        <input bind:value="{objectName}" class="input" type="text" placeholder="Name des Objekts">
-                        <span class="icon is-left">
-                            <i class="fa-solid fa-house" aria-hidden="true"></i>
-                        </span>
-                    </p>
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <p>Objektname</p>
+                            </div>
+                        </div>
+                        <div class="level-right" style="width: 80%;">
+                            <input bind:value="{objectName}" class="input" type="text" placeholder="Name des Objekts">
+                        </div>
+                    </nav>
+                </div>
+                <div class="panel-block">
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <p>Breitengrad</p>
+                            </div>
+                        </div>
+                        <div class="level-right" style="width: 80%;">
+                            <input bind:value="{objectLat}" class="input" type="text">
+                        </div>
+                    </nav>
+                </div>
+                <div class="panel-block">
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <p>Längengrad</p>
+                            </div>
+                        </div>
+                        <div class="level-right" style="width: 80%;">
+                            <input bind:value="{objectLong}" class="input" type="text">
+                        </div>
+                    </nav>
+                </div>
+                <div class="panel-block">
+                    <SaveButton bind:this="{saveButton}" saveFuntion="{saveEditorData}"/>
                 </div>
             {:else if menuState == 1}
                 <div class="panel-block">
@@ -251,9 +293,6 @@
                     <button on:click="{openObjectDeleteModal}" class="button is-danger is-fullwidth">
                         Löschen
                     </button>
-                </div>
-                <div class="panel-block">
-                    <SaveButton bind:this="{saveButton}" saveFuntion="{saveEditorData}"/>
                 </div>
             {/if}
         </div>

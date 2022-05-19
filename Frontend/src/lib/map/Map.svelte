@@ -88,6 +88,9 @@
             const newPos = marker.getLatLng();
             const data = { "newLatitude": newPos.lat, "newLongitude": newPos.lng };
             Object.editObject(marker.options.objectId, data);
+            if (objectEditorState) {
+                objectEditor.changeSavedPosition(newPos.lat, newPos.lng);
+            }
         });
 
         marker.on('click', function(e) {
@@ -114,6 +117,16 @@
 
         openObjectEditor();
 
+    }
+
+    async function changeMarkerPosition() {
+        map.eachLayer(async function(layer) {
+            if (layer.options.objectId == currentObjectId) {
+                let object = await Object.getObjectById(currentObjectId);
+                let pos = L.latLng(object.latitude, object.longitude);
+                layer.setLatLng(pos);
+            }
+        });
     }
 
     function disableAllMarkers() {
@@ -213,7 +226,7 @@
     <div class="hero-body">
         <div class="columns">
             {#if objectEditorState}
-                <ObjectEditor bind:this="{objectEditor}" objectId={currentObjectId} deleteFunction="{deleteObject}" closeFunction="{closeObjectEditor}" openYearEditorFunction="{openYearEditor}"/>
+                <ObjectEditor bind:this="{objectEditor}" changeMarkerPosition="{changeMarkerPosition}" objectId={currentObjectId} deleteFunction="{deleteObject}" closeFunction="{closeObjectEditor}" openYearEditorFunction="{openYearEditor}"/>
             {/if}
             {#if yearEditorState}
                 <YearEditor bind:this="{yearEditor}" closeFunction="{closeYearEditor}"/>
