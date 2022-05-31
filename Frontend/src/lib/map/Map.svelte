@@ -28,6 +28,8 @@
     let yearEditor: YearEditor;
     let yearEditorState: boolean = false;
 
+    let markerDraggable: boolean = true;
+
     function createMap(container) {
         const m = L.map(container).setView([startCoords.lati, startCoords.long], 16);
         const osmLayer = getOSMLayer();
@@ -127,6 +129,19 @@
                 layer.setLatLng(pos);
             }
         });
+    }
+
+    function makeMarkersDraggable(draggable: boolean): void {
+        map.eachLayer(function(layer) {
+            if (layer.options.objectType == "marker") {
+                if (draggable) {
+                    layer.dragging.enable();
+                } else {
+                    layer.dragging.disable();
+                }
+            }
+        });
+        markerDraggable = draggable;
     }
 
     function disableAllMarkers() {
@@ -244,6 +259,16 @@
     </button>
 </div>
 
+<div id="marker-drag-toggle">
+    <button class="button is-success" on:click="{() => makeMarkersDraggable(!markerDraggable)}">
+        {#if markerDraggable == true}
+            <span>Marker Bewegung Deaktivieren</span>
+        {:else}
+            <span>Marker Bewegung Aktivieren</span>
+        {/if}
+    </button>
+</div>
+
 <style>
 
     #map {
@@ -267,6 +292,15 @@
         bottom: 0;
         margin-bottom: 10px;
         margin-left: 10px;
+        position: absolute;
+        z-index: 500;
+    }
+
+    #marker-drag-toggle {
+        top: 0;
+        right: 0;
+        margin-right: 10px;
+        margin-top: 10px;
         position: absolute;
         z-index: 500;
     }
