@@ -5,7 +5,6 @@
 
     import IdentifierConnectionModal from './IdentifierConnectionModal.svelte';
     import IdentifierOptionConnectionModal from './IdentifierOptionConnectionModal.svelte';
-import { onMount } from 'svelte';
 
     export let nodeIndex: number;
     export let closeEditor;
@@ -42,10 +41,6 @@ import { onMount } from 'svelte';
         $nodes[nodeIndex].options = newArray;
     }
 
-    function debug() {
-        alert(nodeType);
-    }
-
     function onTypeChange(event) {
         nodeType = event.currentTarget.value;
         $nodes[nodeIndex].type = event.currentTarget.value;
@@ -70,62 +65,74 @@ import { onMount } from 'svelte';
     <div class="card-header">
         <p class="card-header-title">
             Node
+            {#if $nodes[nodeIndex].oneGoal && $nodes[nodeIndex].type !== "end"}
+                {#if $nodes[nodeIndex].goal != undefined && $nodes[nodeIndex].oneGoal}
+                    <span class="tag is-success" style="margin-left: 10px;">Link ist vorhanden</span>
+                {:else}
+                    <span class="tag is-warning" style="margin-left: 10px;">Kein Link vorhanden</span>
+                {/if}
+            {/if}
         </p>
     </div>
     <div class="card-content">
         <div class="content">
-            <div class="field is-horizontal">
-                <div class="field-label is-normal">
-                     <!-- svelte-ignore a11y-label-has-associated-control -->
-                     <label class="label">Titel</label>
+            <div class="box">
+                <nav class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <p>Titel</p>
+                        </div>
+                    </div>
+                    <div class="level-right" style="width: 75%">
+                        <input bind:value="{$nodes[nodeIndex].title}" class="input" type="text">
+                    </div>
+                </nav>
+            </div>
+            {#if $nodes[nodeIndex].type !== "end"}
+                <div class="box">
+                    <div class="columns">
+                        <div class="column is-one-quarter">
+                            <p>Soll jede Option zum gleichen nächsten Knoten führen?</p>
+                        </div>
+                        <div class="column">
+                            <div class="control">
+                                <label class="radio">
+                                    <input checked="{goalType==="true"}" on:change="{onGoalChange}" type="radio" name="choiceButtonGroup" value="true">
+                                    Ja
+                                </label>
+                                <label class="radio">
+                                    <input checked="{goalType==="false"}" on:change="{onGoalChange}" type="radio" name="choiceButtonGroup" value="false">
+                                    Nein
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="field-body">
-                    <div class="field">
-                        <p class="control">
-                            <input bind:value="{$nodes[nodeIndex].title}" class="input" type="text">
-                        </p>
+            {/if}
+            <div class="box">
+                <div class="columns">
+                    <div class="column is-one-quarter">
+                        <p>Knotenart</p>
+                    </div>
+                    <div class="column">
+                        <div class="control">
+                            <label class="radio">
+                                <input checked="{nodeType==="normal"}" on:change="{onTypeChange}" type="radio" name="nodeType" value="normal">
+                                Knoten
+                            </label>
+                            <label class="radio">
+                                <input checked="{nodeType==="start"}" on:change="{onTypeChange}" type="radio" name="nodeType" value="start">
+                                Anfangsknoten
+                            </label>
+                            <label class="radio">
+                                <input checked="{nodeType==="end"}" on:change="{onTypeChange}" type="radio" name="nodeType" value="end">
+                                Endknoten
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="columns">
-                <div class="column is-one-quarter">
-                    <p>Soll jede Option zum gleichen nächsten Knoten führen?</p>
-                </div>
-                <div class="column">
-                    <div class="control">
-                        <label class="radio">
-                            <input checked="{goalType==="true"}" on:change="{onGoalChange}" type="radio" name="choiceButtonGroup" value="true">
-                            Ja
-                        </label>
-                        <label class="radio">
-                            <input checked="{goalType==="false"}" on:change="{onGoalChange}" type="radio" name="choiceButtonGroup" value="false">
-                            Nein
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column is-one-quarter">
-                    <p>Knotenart</p>
-                </div>
-                <div class="column">
-                    <div class="control">
-                        <label class="radio">
-                            <input checked="{nodeType==="normal"}" on:change="{onTypeChange}" type="radio" name="nodeType" value="normal">
-                            Knoten
-                        </label>
-                        <label class="radio">
-                            <input checked="{nodeType==="start"}" on:change="{onTypeChange}" type="radio" name="nodeType" value="start">
-                            Anfangsknoten
-                        </label>
-                        <label class="radio">
-                            <input checked="{nodeType==="end"}" on:change="{onTypeChange}" type="radio" name="nodeType" value="end">
-                            Endknoten
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div>
+            <div class="box">
                 <div class="columns">
                     <div class="column is-full">
                         <button on:click="{createNewOption}" class="button is-primary" style="width: 100%;">
@@ -142,7 +149,7 @@ import { onMount } from 'svelte';
                             <button on:click="{() => removeOption(i)}" class="button is-danger">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
-                            {#if $nodes[nodeIndex].oneGoal}
+                            {#if !$nodes[nodeIndex].oneGoal}
                                 <button on:click="{() => openOptionConnectionModal(i)}" class="button is-info">
                                     <i class="fa-solid fa-link"></i>
                                 </button>
@@ -156,20 +163,21 @@ import { onMount } from 'svelte';
                                     <i class="fa-solid fa-link"></i>
                                 </button>
                             {/if}
+                            {#if $nodes[nodeIndex].options[i].name === "" || $nodes[nodeIndex].options[i].name == undefined}
+                                <span class="tag is-warning">Kein Name eingetragen</span>
+                            {/if}
                         </div>
                     </div>
                 {/each}
+            </div>
+            <div class="box">
                 <div class="columns">
                     <div class="column is-full" style="text-align: center;">
-                        {#if $nodes[nodeIndex].oneGoal}
+                        {#if $nodes[nodeIndex].oneGoal && $nodes[nodeIndex].type !== "end"}
                             <button on:click="{openConnectionModal}" class="button is-info">
                                 <i class="fa-solid fa-link"></i>
                             </button>
-                            {#if $nodes[nodeIndex].goal != undefined && $nodes[nodeIndex].oneGoal}
-                                <span class="tag is-success">Link ist vorhanden</span>
-                            {:else}
-                                <span class="tag is-warning">Kein Link vorhanden</span>
-                            {/if}
+                            
                         {:else}
                             <button class="button is-info" disabled>
                                 <i class="fa-solid fa-link"></i>

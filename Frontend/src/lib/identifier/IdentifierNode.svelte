@@ -72,23 +72,26 @@
                 <span>{node.title}</span>
             </div>
             <p>
-                {#if node.oneGoal}
-                    {#if linkedNode != undefined}
-                        <span class="tag is-success">Link vorhanden</span>
-                        <span class="tag is-info">
-                            <i class="fa-solid fa-link" style="margin-right: 5px;"></i>
-                            {linkedNode.title}
-                        </span>
+                {#if node.type !== "end"}
+                    {#if node.oneGoal}
+                        {#if linkedNode != undefined}
+                            <span class="tag is-success">Link vorhanden</span>
+                            <span class="tag is-info">
+                                <i class="fa-solid fa-link" style="margin-right: 5px;"></i>
+                                {linkedNode.title}
+                            </span>
+                        {:else}
+                            <span class="tag is-warning">Kein Link vorhanden</span>
+                        {/if}
                     {:else}
-                        <span class="tag is-warning">Kein Link vorhanden</span>
-                    {/if}
-                {:else}
-                    {#if checkOptionConnections()}
-                        <span class="tag is-success">Link vorhanden</span>
-                    {:else}
-                        <span class="tag is-warning">Manche Optionen haben noch keinen Link</span>
+                        {#if checkOptionConnections()}
+                            <span class="tag is-success">Link vorhanden</span>
+                        {:else}
+                            <span class="tag is-warning">Manche Optionen haben noch keinen Link</span>
+                        {/if}
                     {/if}
                 {/if}
+                
             </p>
             {#if node.options.length > 0}
                 <table class="table is-bordered is-striped is-narrow" style="width: auto;">

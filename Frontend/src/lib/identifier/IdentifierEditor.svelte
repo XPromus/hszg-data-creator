@@ -1,5 +1,7 @@
 <script lang="ts">
     
+    import { onMount } from 'svelte';
+import { each } from 'svelte/internal';
     import IdentifierNode from './IdentifierNode.svelte';
     import IdentifierNodeEditor from './IdentifierNodeEditor.svelte';
     import type { Node, Option } from './identifierStore';
@@ -8,6 +10,10 @@
     let showEditor: boolean = false;
     let currentNode: Node;
     let currentNodeIndex: number;
+
+    let numberOfStartNodes: number;
+    let numberOfEndNodes: number;
+    let numberOfNormalNodes: number;
 
     function addNodeToStore(): void {
 
@@ -54,9 +60,13 @@
         }
 
         if (index != undefined) {
+
             $nodes = Array(0);
             nodeArray.splice(index, 1);
             $nodes = nodeArray;
+
+            updateNodeCount();
+
         }
 
     }
@@ -75,7 +85,29 @@
     function closeEditor() {
         showEditor = false;
         currentNode = undefined;
+        updateNodeCount();
     }
+
+    function countNodeTypes(type: string): number {
+        let count = 0;
+        for (let i = 0; i < $nodes.length; i++) {
+            if ($nodes[i].type === type) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    function updateNodeCount() {
+        numberOfStartNodes = countNodeTypes("start");
+        numberOfEndNodes = countNodeTypes("end");
+        numberOfNormalNodes = countNodeTypes("normal");
+    }
+
+    onMount(async () => {
+        updateNodeCount();
+    });
 
 </script>
 
@@ -84,6 +116,23 @@
         <IdentifierNodeEditor nodeIndex="{currentNodeIndex}" closeEditor="{closeEditor}" />
     {:else}
         <div>
+            <div class="box">
+                {#if $nodes.length == 0}
+                    <span class="tag is-danger">Keine Knoten</span>
+                {/if}
+                {#key numberOfStartNodes}
+                    {#if numberOfStartNodes == 0}
+                        <span class="tag is-danger">Kein Startknoten</span>
+                    {:else if numberOfStartNodes > 1}
+                        <span class="tag is-danger">Mehr als ein Startknoten</span>
+                    {/if}
+                {/key}
+                {#key numberOfEndNodes}
+                    {#if numberOfEndNodes == 0}
+                        <span class="tag is-warning">Keine Endknoten</span>
+                    {/if}
+                {/key}
+            </div>
             <button id="createNodeButton" on:click="{addNodeToStore}" class="button is-primary">
                 Add Node
             </button>
@@ -98,12 +147,17 @@
 
 <style>
 
+    .box {
+        margin-top: 10px;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
     #createNodeButton {
         width: 100%;
-        margin-top: 5px;
-        margin-bottom: 5px;
-        margin-right: 5px;
-        margin-left: 5px;
+        margin-bottom: 10px;
+        margin-right: 10px;
+        margin-left: 10px;
     }
 
 </style>
