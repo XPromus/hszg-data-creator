@@ -20,7 +20,8 @@
         let element: Node = {
             id: id,
             title: nodeTitle,
-            oneGoal: false,
+            type: "normal",
+            oneGoal: true,
             goal: undefined,
             options: []
         }
@@ -37,7 +38,18 @@
         for (let i = 0; i < nodeArray.length; i++) {
             if (node.id == nodeArray[i].id) {
                 index = i;
-                break;
+            } else {
+                if (!nodeArray[i].oneGoal) {
+                    if (nodeArray[i].goal == node.id) {
+                        nodeArray[i].goal = undefined;
+                    }
+                } else {
+                    for (let u = 0; u < nodeArray[i].options.length; u++) {
+                        if (nodeArray[i].options[u].goal == node.id) {
+                            nodeArray[i].options[u].goal = undefined;
+                        }
+                    }
+                }
             }
         }
 
@@ -75,9 +87,11 @@
             <button id="createNodeButton" on:click="{addNodeToStore}" class="button is-primary">
                 Add Node
             </button>
-            {#each $nodes as node }
-                <IdentifierNode node="{node}" openEditor="{() => openEditor(node)}" deleteNode="{() => deleteNode(node)}" />
-            {/each}
+            {#key $nodes}
+                {#each $nodes as node }
+                    <IdentifierNode node="{node}" openEditor="{() => openEditor(node)}" deleteNode="{() => deleteNode(node)}" />
+                {/each}
+            {/key}
         </div>
     {/if}
 </div>

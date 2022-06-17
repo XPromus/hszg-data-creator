@@ -8,6 +8,7 @@ export type Option = {
 export type Node = {
     id: number,
     title: string,
+    type: string,
     oneGoal: boolean,
     goal: number,
     options: Option[]
