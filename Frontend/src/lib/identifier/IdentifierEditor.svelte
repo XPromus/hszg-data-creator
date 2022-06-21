@@ -134,7 +134,7 @@ import { each } from 'svelte/internal';
                 {/key}
             </div>
             <button id="createNodeButton" on:click="{addNodeToStore}" class="button is-primary">
-                Add Node
+                Knoten hinzufügen
             </button>
             {#key $nodes}
                 {#each $nodes as node }
@@ -154,7 +154,7 @@ import { each } from 'svelte/internal';
     }
 
     #createNodeButton {
-        width: 100%;
+        width: 25%;
         margin-bottom: 10px;
         margin-right: 10px;
         margin-left: 10px;

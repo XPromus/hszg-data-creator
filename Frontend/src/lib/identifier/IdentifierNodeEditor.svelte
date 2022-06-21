@@ -88,27 +88,6 @@
                     </div>
                 </nav>
             </div>
-            {#if $nodes[nodeIndex].type !== "end"}
-                <div class="box">
-                    <div class="columns">
-                        <div class="column is-one-quarter">
-                            <p>Soll jede Option zum gleichen nächsten Knoten führen?</p>
-                        </div>
-                        <div class="column">
-                            <div class="control">
-                                <label class="radio">
-                                    <input checked="{goalType==="true"}" on:change="{onGoalChange}" type="radio" name="choiceButtonGroup" value="true">
-                                    Ja
-                                </label>
-                                <label class="radio">
-                                    <input checked="{goalType==="false"}" on:change="{onGoalChange}" type="radio" name="choiceButtonGroup" value="false">
-                                    Nein
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {/if}
             <div class="box">
                 <div class="columns">
                     <div class="column is-one-quarter">
@@ -117,12 +96,12 @@
                     <div class="column">
                         <div class="control">
                             <label class="radio">
-                                <input checked="{nodeType==="normal"}" on:change="{onTypeChange}" type="radio" name="nodeType" value="normal">
-                                Knoten
-                            </label>
-                            <label class="radio">
                                 <input checked="{nodeType==="start"}" on:change="{onTypeChange}" type="radio" name="nodeType" value="start">
                                 Anfangsknoten
+                            </label>
+                            <label class="radio">
+                                <input checked="{nodeType==="normal"}" on:change="{onTypeChange}" type="radio" name="nodeType" value="normal">
+                                Normal
                             </label>
                             <label class="radio">
                                 <input checked="{nodeType==="end"}" on:change="{onTypeChange}" type="radio" name="nodeType" value="end">
@@ -133,6 +112,25 @@
                 </div>
             </div>
             <div class="box">
+                {#if $nodes[nodeIndex].type !== "end"}
+                <div class="columns">
+                    <div class="column is-one-quarter">
+                        <p>Soll jede Option zum gleichen nächsten Knoten führen?</p>
+                    </div>
+                    <div class="column">
+                        <div class="control">
+                            <label class="radio">
+                                <input checked="{goalType==="true"}" on:change="{onGoalChange}" type="radio" name="choiceButtonGroup" value="true">
+                                Ja
+                            </label>
+                            <label class="radio">
+                                <input checked="{goalType==="false"}" on:change="{onGoalChange}" type="radio" name="choiceButtonGroup" value="false">
+                                Nein
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                {/if}
                 <div class="columns">
                     <div class="column is-full">
                         <button on:click="{createNewOption}" class="button is-primary" style="width: 100%;">

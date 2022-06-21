@@ -30,9 +30,12 @@
     }
 
     function getOptionNodes() {
+        let newArray: string[] = [];
+        optionsNodes = Array(0);
         for (let i = 0; i < node.options.length; i++) {
-            optionsNodes.push(getNodeTitle(node.options[i].goal));
+            newArray.push(getNodeTitle(node.options[i].goal));
         }
+        optionsNodes = newArray;        
     }
 
     function getNodeTitle(id: number): string {
@@ -49,6 +52,10 @@
             linkedNode = getGoalNode();
         }
     });
+
+    function debug() {
+        alert(optionsNodes);
+    }
 
 </script>
 
@@ -91,7 +98,6 @@
                         {/if}
                     {/if}
                 {/if}
-                
             </p>
             {#if node.options.length > 0}
                 <table class="table is-bordered is-striped is-narrow" style="width: auto;">
@@ -106,8 +112,8 @@
                         {#each node.options as option, i}
                             <tr>
                                 <td>{i + 1}</td>
-                                <td>{option.name} </td>
-                                {#if node.oneGoal}
+                                <td>{option.name}</td>
+                                {#if !node.oneGoal}
                                     <td>{optionsNodes[i]}</td>
                                 {:else}
                                     <td>-</td>
@@ -132,6 +138,7 @@
 <style>
 
     .card {
+        width: 25%;
         margin-bottom: 10px;
         margin-left: 10px;
         margin-right: 10px;
