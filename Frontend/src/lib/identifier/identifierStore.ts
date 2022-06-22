@@ -8,10 +8,12 @@ export type Option = {
 export type Node = {
     id: number,
     title: string,
-    type: string,
+    description: string,
+    type: string, //start, end, normal
     oneGoal: boolean,
     goal: number,
     options: Option[]
 };
 
 export const nodes = writable([]);
+export const nodeResults = writable([]);

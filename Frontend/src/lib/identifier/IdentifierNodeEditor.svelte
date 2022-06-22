@@ -5,6 +5,7 @@
 
     import IdentifierConnectionModal from './IdentifierConnectionModal.svelte';
     import IdentifierOptionConnectionModal from './IdentifierOptionConnectionModal.svelte';
+    import { onMount } from 'svelte';
 
     export let nodeIndex: number;
     export let closeEditor;
@@ -59,6 +60,39 @@
         }
     }
 
+    function closeNodeEditor() {
+
+        if (!$nodes[nodeIndex].oneGoal) {
+            if ($nodes[nodeIndex].goal == undefined) {
+                $nodes[nodeIndex].goal = 0;
+            }
+        } else {
+            for (let i = 0; i < $nodes[nodeIndex].options.length; i++) {
+                if ($nodes[nodeIndex].options[i].goal == undefined) {
+                    $nodes[nodeIndex].options[i].goal = 0;
+                }
+            }
+        }
+
+        if ($nodes[nodeIndex].type == "end") {
+            $nodes[nodeIndex].goal = 0;
+            for (let i = 0; i < $nodes[nodeIndex].options.length; i++) {
+                if ($nodes[nodeIndex].options[i].goal == undefined) {
+                    $nodes[nodeIndex].options[i].goal = 0;
+                }
+            }
+        }
+
+        closeEditor();
+    
+    }
+
+    onMount(async () => {
+        if ($nodes[nodeIndex].goal == undefined) {
+            
+        }
+    });
+
 </script>
 
 <div id="editor" class="card">
@@ -87,6 +121,9 @@
                         <input bind:value="{$nodes[nodeIndex].title}" class="input" type="text">
                     </div>
                 </nav>
+            </div>
+            <div class="box">
+                <textarea bind:value="{$nodes[nodeIndex].description}" class="textarea" placeholder="Beschreibung" name="description"></textarea>
             </div>
             <div class="box">
                 <div class="columns">
@@ -181,7 +218,7 @@
                                 <i class="fa-solid fa-link"></i>
                             </button>
                         {/if}
-                        <button on:click="{closeEditor}" class="button is-danger">
+                        <button on:click="{closeNodeEditor}" class="button is-danger">
                             Schließen
                         </button>
                     </div>

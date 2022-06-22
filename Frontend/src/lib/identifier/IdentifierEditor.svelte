@@ -109,6 +109,10 @@ import { each } from 'svelte/internal';
         updateNodeCount();
     });
 
+    function debug() {
+        console.log($nodes);
+    }
+
 </script>
 
 <div>
@@ -116,7 +120,7 @@ import { each } from 'svelte/internal';
         <IdentifierNodeEditor nodeIndex="{currentNodeIndex}" closeEditor="{closeEditor}" />
     {:else}
         <div>
-            <div class="box">
+            <div class="box" on:click="{debug}">
                 {#if $nodes.length == 0}
                     <span class="tag is-danger">Keine Knoten</span>
                 {/if}
