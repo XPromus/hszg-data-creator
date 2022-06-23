@@ -1,5 +1,6 @@
 package com.hszg.backend.service;
 
+import com.hszg.backend.data.model.Identifier;
 import com.hszg.backend.data.model.Image;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -9,6 +10,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -39,12 +41,36 @@ public class FileService {
         }
     }
 
+    public void initIdentifierFolder() {
+        try {
+            Files.createDirectories(Paths.get(uploadPath + "/identifier"));
+        } catch (IOException e) {
+            throw new RuntimeException("Could not create upload folder!");
+        }
+    }
+
     public String save(Long objectId, MultipartFile file) {
 
         try {
             Path root = Paths.get(uploadPath + "/" + objectId);
             if (!Files.exists(root)) {
                 initObjectFolder(objectId);
+            }
+            Path targetLocation = root.resolve(file.getOriginalFilename());
+            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            return root.toString();
+        } catch (Exception e) {
+            throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
+        }
+
+    }
+
+    public String save(MultipartFile file) {
+
+        try {
+            Path root = Paths.get(uploadPath + "/identifier");
+            if (!Files.exists(root)) {
+                initIdentifierFolder();
             }
             Path targetLocation = root.resolve(file.getOriginalFilename());
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
@@ -67,6 +93,22 @@ public class FileService {
                 throw new RuntimeException("Could not read the file!");
             }
         } catch (MalformedURLException e) {
+            throw new RuntimeException("Error: " + e.getMessage());
+        }
+    }
+
+    public Resource loadFromObject(Identifier identifier) {
+        try {
+            var path = identifier.getUrl();
+            var filename = identifier.getFilename();
+            Path file = Paths.get(path).resolve(filename);
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            } else {
+                throw new RuntimeException("Could not read the file!");
+            }
+         } catch (MalformedURLException e) {
             throw new RuntimeException("Error: " + e.getMessage());
         }
     }
