@@ -150,23 +150,23 @@
             </div>
             <div class="box">
                 {#if $nodes[nodeIndex].type !== "end"}
-                <div class="columns">
-                    <div class="column is-one-quarter">
-                        <p>Soll jede Option zum gleichen nächsten Knoten führen?</p>
-                    </div>
-                    <div class="column">
-                        <div class="control">
-                            <label class="radio">
-                                <input checked="{goalType==="true"}" on:change="{onGoalChange}" type="radio" name="choiceButtonGroup" value="true">
-                                Ja
-                            </label>
-                            <label class="radio">
-                                <input checked="{goalType==="false"}" on:change="{onGoalChange}" type="radio" name="choiceButtonGroup" value="false">
-                                Nein
-                            </label>
+                    <div class="columns">
+                        <div class="column is-one-quarter">
+                            <p>Soll jede Option zum gleichen nächsten Knoten führen?</p>
+                        </div>
+                        <div class="column">
+                            <div class="control">
+                                <label class="radio">
+                                    <input checked="{goalType==="true"}" on:change="{onGoalChange}" type="radio" name="choiceButtonGroup" value="true">
+                                    Ja
+                                </label>
+                                <label class="radio">
+                                    <input checked="{goalType==="false"}" on:change="{onGoalChange}" type="radio" name="choiceButtonGroup" value="false">
+                                    Nein
+                                </label>
+                            </div>
                         </div>
                     </div>
-                </div>
                 {/if}
                 <div class="columns">
                     <div class="column is-full">

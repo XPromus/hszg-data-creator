@@ -168,6 +168,37 @@
             <nav class="level">
                 <div class="level-left">
                     <div class="level-item">
+                        <p>Modell Upload</p>
+                    </div>
+                </div>
+                <div class="level-right">
+                    <div class="level-item">
+                        <div class="file has-name" style="margin-right: 15px;">
+                            <label class="file-label">
+                                <input class="file-input" type="file" multiple>
+                                <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                </span>
+                                <span class="file-label">
+                                    Modell wählen
+                                </span>
+                            </label>
+                        </div>
+                        <button class="button is-warning" title="Dateien aus der Auswahl entfernen" style="margin-right: 5px;">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <button class="button is-success" title="Dateien hochladen">
+                            <i class="fa-solid fa-upload"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!--
+        <div class="panel-block">
+            <nav class="level">
+                <div class="level-left">
+                    <div class="level-item">
                         <p>Modell-ID</p> 
                     </div>
                 </div>
@@ -188,6 +219,7 @@
                 </div>
             </nav>
         </div>
+        -->
         <div class="panel-block">
             <div class="level" style="width: 100%;">
                 <div class="level-center" style="width: 100%;">

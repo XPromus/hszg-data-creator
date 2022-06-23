@@ -4,101 +4,48 @@
     import type { Node, Option } from "../identifierStore";
     import { nodes, nodeResults } from "../identifierStore";
 
+    import * as identifierAPI from "../../api/identifier";
+
     import FinishedNode from "./FinishedNode.svelte";
 
-    const testObject: Node[] = [
-        {
-            "id": 0,
-            "title": "Start",
-            "description": "Beschreibung 1",
-            "type": "start",
-            "oneGoal": false,
-            "goal": 0,
-            "options": [
-            {
-                "name": "Ja",
-                "goal": 1
-            },
-            {
-                "name": "Nein",
-                "goal": 2
-            }
-            ]
-        },
-        {
-            "id": 1,
-            "title": "Ja Node",
-            "description": "Beschreibung 2",
-            "type": "normal",
-            "oneGoal": true,
-            "goal": 3,
-            "options": [
-            {
-                "name": "Option 1",
-                "goal": 0
-            },
-            {
-                "name": "Option 2",
-                "goal": 0
-            },
-            {
-                "name": "Option 3",
-                "goal": 0
-            }
-            ]
-        },
-        {
-            "id": 2,
-            "title": "Nein Node",
-            "description": "Beschreibung 3",
-            "type": "normal",
-            "oneGoal": true,
-            "goal": 3,
-            "options": [
-            {
-                "name": "Option 1",
-                "goal": 0
-            },
-            {
-                "name": "Option 2",
-                "goal": 0
-            },
-            {
-                "name": "Option 3",
-                "goal": 0
-            }
-            ]
-        },
-        {
-            "id": 3,
-            "title": "Ende",
-            "description": "Beschreibung 4",
-            "type": "end",
-            "oneGoal": true,
-            "goal": 0,
-            "options": [
-            {
-                "name": "Option 1",
-                "goal": 0
-            },
-            {
-                "name": "Option 2",
-                "goal": 0
-            }
-            ]
-        }
-    ];
+    export let closeFunction;
 
+    let dropdown;
     let dropdownActive: boolean = false;
+    let dropdownContent: string[] = [];
     
     type FinishedNode = {
         node: Node,
         selectedOptionIndex: number
     };
 
+    let nodes: Node[];
     let finishedNodes: FinishedNode[] = [];
-    let activeNode: Node = testObject[0];
+    let activeNode: Node;
     let activeNodeSelectedOptionIndex: number;
+
+    function changeDropdown() {
+        if (dropdownActive) {
+            closeDropdown();
+        } else {
+            openDropdown();
+        }
+    }
+
+    async function openDropdown() {
+        dropdownContent = Array(0);
+        const allIdentifiers: identifierAPI.Identifier[] = await identifierAPI.getAllIdentifiers();
+        for (let i = 0; i < allIdentifiers.length; i++) {
+            dropdownContent.push(allIdentifiers[i].identifierName);
+        }
+        dropdownActive = true;
+        dropdown.classList.add("is-active");
+    }
+
+    function closeDropdown() {
+        dropdownActive = false;
+        dropdown.classList.remove("is-active");
+    }
 
     function goBackOneNode() {
 
@@ -150,15 +97,15 @@
     }
 
     function findNode(id: number): Node {
-        for (let i = 0; i < testObject.length; i++) {
-            if (testObject[i].id == id) {
-                return testObject[i];
+        for (let i = 0; i < nodes.length; i++) {
+            if (nodes[i].id == id) {
+                return nodes[i];
             }
         }
     }
 
     function getStartNode(): Node {
-        const nodeArray: Node[] = testObject;
+        const nodeArray: Node[] = nodes;
         for (let i = 0; i < nodeArray.length; i++) {
             if (nodeArray[i].type == "start") {
                 return nodeArray[i];
@@ -186,9 +133,9 @@
                 </p>
             </div>
             <div class="level-item">
-                <div class="dropdown">
+                <div bind:this="{dropdown}" class="dropdown">
                     <div class="dropdown-trigger">
-                        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                        <button on:click="{changeDropdown}" class="button" aria-haspopup="true" aria-controls="dropdown-menu">
                             <span>Auswahl</span>
                             <span class="icon is-small">
                                 {#if dropdownActive}
@@ -201,7 +148,16 @@
                     </div>
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                         <div class="dropdown-content">
-                            <!--Content-->
+                            {#if dropdownContent.length == 0}
+                                <div class="dropdown-item">
+                                    <span>Noch keine Einträge vorhanden</span>
+                                </div>
+                            {:else}
+                                {#each dropdownContent as content, i}
+                                    <a href="#" class="dropdown-item">{content}</a>
+                                {/each}
+                            {/if}
+                            
                         </div>
                     </div>
                 </div>
@@ -217,6 +173,9 @@
                 <button on:click="{saveProgress}" class="button is-success">
                     <i class="fa-solid fa-floppy-disk"></i>
                 </button>
+            </div>
+            <div class="level-item">
+                <button on:click="{closeFunction}" class="delete is-large" />
             </div>
         </div>
     </nav>

@@ -17,6 +17,8 @@
     const customMarker = Icons.customMarkerNormal;
     const customMarkerActive = Icons.customMarkerActive;
 
+    export let closeFunction;
+
     let map;
     
     let newObjectPosition;
@@ -267,6 +269,7 @@
             <span>Marker Bewegung Aktivieren</span>
         {/if}
     </button>
+    <button on:click="{closeFunction}" class="delete" />
 </div>
 
 <style>

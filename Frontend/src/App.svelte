@@ -1,8 +1,7 @@
 <script lang="ts">
-    
-    import Map from './lib/map/Map.svelte';
+
+    import AppMenu from './lib/AppMenu.svelte';   
     import AppLoginWindow from './lib/users/AppLoginWindow.svelte';
-    //import CommitOptions from './lib/editor/CommitOptions.svelte';
 
     let loginState: boolean = false;
 
@@ -14,8 +13,7 @@
   
 <main>
     {#if loginState}
-        <Map />
-        <!--<CommitOptions />-->
+        <AppMenu />
     {:else}
         <AppLoginWindow openApp="{openApp}" />
     {/if}

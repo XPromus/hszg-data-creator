@@ -10,6 +10,7 @@
     import YearPanelButton from './YearPanelButton.svelte';
     import MediaPanelButton from './MediaPanelButton.svelte';
     import ImageUploadField from './ImageUploadField.svelte';
+    import IconSelector from './IconSelector.svelte';
 
     export let objectId: number;
     export let closeFunction = () => {};
@@ -198,7 +199,10 @@
             </div>
             <div class="panel-right">
                 <div class="columns">
-                    <div class="column is-full">
+                    <div class="column">
+                        <!--<IconSelector />-->
+                    </div>
+                    <div class="column">
                         <button on:click="{closeEditor}" class="button is-success">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
@@ -296,7 +300,6 @@
                 </div>
             {/if}
         </div>
-        
     </article>
 </div>
 

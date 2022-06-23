@@ -1,19 +1,47 @@
 <script lang="ts">
     
     import { onMount } from 'svelte';
-import { each } from 'svelte/internal';
     import IdentifierNode from './IdentifierNode.svelte';
     import IdentifierNodeEditor from './IdentifierNodeEditor.svelte';
+    import * as identifierAPI from '../api/identifier';
     import type { Node, Option } from './identifierStore';
     import { nodes } from './identifierStore';
 
+    export let closeFunction;
+
     let showEditor: boolean = false;
+
+    let currentIdentifierId: number;
     let currentNode: Node;
     let currentNodeIndex: number;
+    let identifierName: string;
 
     let numberOfStartNodes: number;
     let numberOfEndNodes: number;
     let numberOfNormalNodes: number;
+
+    async function saveData(): Promise<void> {
+        const nodeArray: Node[] = $nodes;
+        const data = JSON.stringify(nodeArray);
+        const responseData = await identifierAPI.uploadJSON(identifierName, data);
+        currentIdentifierId = responseData.id;
+        /*
+        console.log(responseData.id + ": " + responseData.filename);
+        const testData = await identifierAPI.getJSON(responseData.id);
+        console.log(testData);
+        */
+    }
+
+    async function deleteData() {
+
+        if (currentIdentifierId != undefined) {
+            identifierAPI.deleteIdentifier(currentIdentifierId);
+        }
+
+        $nodes = Array(0);
+        identifierName = undefined;
+
+    }
 
     function addNodeToStore(): void {
 
@@ -26,6 +54,7 @@ import { each } from 'svelte/internal';
         let element: Node = {
             id: id,
             title: nodeTitle,
+            description: undefined,
             type: "normal",
             oneGoal: true,
             goal: undefined,
@@ -120,22 +149,52 @@ import { each } from 'svelte/internal';
         <IdentifierNodeEditor nodeIndex="{currentNodeIndex}" closeEditor="{closeEditor}" />
     {:else}
         <div>
-            <div class="box" on:click="{debug}">
-                {#if $nodes.length == 0}
-                    <span class="tag is-danger">Keine Knoten</span>
-                {/if}
-                {#key numberOfStartNodes}
-                    {#if numberOfStartNodes == 0}
-                        <span class="tag is-danger">Kein Startknoten</span>
-                    {:else if numberOfStartNodes > 1}
-                        <span class="tag is-danger">Mehr als ein Startknoten</span>
-                    {/if}
-                {/key}
-                {#key numberOfEndNodes}
-                    {#if numberOfEndNodes == 0}
-                        <span class="tag is-warning">Keine Endknoten</span>
-                    {/if}
-                {/key}
+            <div class="box">
+                <div class="level">
+                    <div class="level-left">
+                        {#if $nodes.length == 0}
+                            <div class="level-item">
+                                <span class="tag is-danger">Keine Knoten</span>
+                            </div>
+                        {/if}
+                        {#key numberOfStartNodes}
+                            {#if numberOfStartNodes == 0}
+                                <div class="level-item">
+                                    <span class="tag is-danger">Kein Startknoten</span>
+                                </div>
+                            {:else if numberOfStartNodes > 1}
+                                <div class="level-item">
+                                    <span class="tag is-danger">Mehr als ein Startknoten</span>
+                                </div>
+                            {/if}
+                        {/key}
+                        {#key numberOfEndNodes}
+                            {#if numberOfEndNodes == 0}
+                                <div class="level-item">
+                                    <span class="tag is-warning">Keine Endknoten</span>
+                                </div>
+                            {/if}
+                        {/key}
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <button on:click="{saveData}" class="button is-success">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                            </button>
+                        </div>
+                        <div class="level-item">
+                            <button on:click="{deleteData}" class="button is-danger">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                        <div class="level-item">
+                            <button on:click="{closeFunction}" class="delete is-large" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box">
+                <input bind:value="{identifierName}" class="input" type="text" placeholder="Name">
             </div>
             <button id="createNodeButton" on:click="{addNodeToStore}" class="button is-primary">
                 Knoten hinzufügen
