@@ -12,7 +12,7 @@
 
     let dropdown;
     let dropdownActive: boolean = false;
-    let dropdownContent: string[] = [];
+    let dropdownContent: identifierAPI.Identifier[] = [];
     
     type FinishedNode = {
         node: Node,
@@ -36,7 +36,7 @@
         dropdownContent = Array(0);
         const allIdentifiers: identifierAPI.Identifier[] = await identifierAPI.getAllIdentifiers();
         for (let i = 0; i < allIdentifiers.length; i++) {
-            dropdownContent.push(allIdentifiers[i].identifierName);
+            dropdownContent.push(allIdentifiers[i]);
         }
         dropdownActive = true;
         dropdown.classList.add("is-active");
@@ -45,6 +45,14 @@
     function closeDropdown() {
         dropdownActive = false;
         dropdown.classList.remove("is-active");
+    }
+
+    async function openIdentifier(id: number) {
+        const json: string = await identifierAPI.getJSON(id);
+        nodes = JSON.parse(json);
+        $nodeResults = Array(0);
+        activeNode = getStartNode();
+        closeDropdown();
     }
 
     function goBackOneNode() {
@@ -154,7 +162,7 @@
                                 </div>
                             {:else}
                                 {#each dropdownContent as content, i}
-                                    <a href="#" class="dropdown-item">{content}</a>
+                                    <a on:click="{() => openIdentifier(content.id)}" href="#" class="dropdown-item">{content.filename}</a>
                                 {/each}
                             {/if}
                             

@@ -269,7 +269,7 @@
             <span>Marker Bewegung Aktivieren</span>
         {/if}
     </button>
-    <button on:click="{closeFunction}" class="delete" />
+    <button on:click="{closeFunction}" class="delete is-large" />
 </div>
 
 <style>

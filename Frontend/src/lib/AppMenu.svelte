@@ -49,12 +49,12 @@
                 </button>
             </div>
             <div class="column is-one-third">
-                <button on:click="{openIdentifierEditor}" class="button is-success" style="width: 100%;">
+                <button on:click="{openIdentifierUser}" class="button is-success" style="width: 100%;">
                     Fragebogen
                 </button>
             </div>
             <div class="column is-one-third">
-                <button on:click="{openIdentifierUser}" class="button is-success" style="width: 100%;">
+                <button on:click="{openIdentifierEditor}" class="button is-success" style="width: 100%;">
                     Fragebogen Editor
                 </button>
             </div>

@@ -1,11 +1,13 @@
 <script lang="ts">
     
     import { onMount } from 'svelte';
+    import type { Node } from './identifierStore';
+    import { nodes } from './identifierStore';
+
+    import * as identifierAPI from '../api/identifier';
+
     import IdentifierNode from './IdentifierNode.svelte';
     import IdentifierNodeEditor from './IdentifierNodeEditor.svelte';
-    import * as identifierAPI from '../api/identifier';
-    import type { Node, Option } from './identifierStore';
-    import { nodes } from './identifierStore';
 
     export let closeFunction;
 
@@ -20,16 +22,38 @@
     let numberOfEndNodes: number;
     let numberOfNormalNodes: number;
 
+    let dropdown;
+    let dropdownActive: boolean = false;
+    let dropdownContent: string[] = [];
+
+    function changeDropdown() {
+        if (dropdownActive) {
+            closeDropdown();
+        } else {
+            openDropdown();
+        }
+    }
+
+    async function openDropdown() {
+        dropdownContent = Array(0);
+        const allIdentifiers: identifierAPI.Identifier[] = await identifierAPI.getAllIdentifiers();
+        for (let i = 0; i < allIdentifiers.length; i++) {
+            dropdownContent.push(allIdentifiers[i].identifierName);
+        }
+        dropdownActive = true;
+        dropdown.classList.add("is-active");
+    }
+
+    function closeDropdown() {
+        dropdownActive = false;
+        dropdown.classList.remove("is-active");
+    }
+
     async function saveData(): Promise<void> {
         const nodeArray: Node[] = $nodes;
         const data = JSON.stringify(nodeArray);
         const responseData = await identifierAPI.uploadJSON(identifierName, data);
         currentIdentifierId = responseData.id;
-        /*
-        console.log(responseData.id + ": " + responseData.filename);
-        const testData = await identifierAPI.getJSON(responseData.id);
-        console.log(testData);
-        */
     }
 
     async function deleteData() {
@@ -177,6 +201,36 @@
                         {/key}
                     </div>
                     <div class="level-right">
+                        <div class="level-item">
+                            <div bind:this="{dropdown}" class="dropdown">
+                                <div class="dropdown-trigger">
+                                    <button on:click="{changeDropdown}" class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                                        <span>Auswahl</span>
+                                        <span class="icon is-small">
+                                            {#if dropdownActive}
+                                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                            {:else}
+                                                <i class="fas fa-angle-up" aria-hidden="true"></i>
+                                            {/if}
+                                        </span>
+                                    </button>
+                                </div>
+                                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                                    <div class="dropdown-content">
+                                        {#if dropdownContent.length == 0}
+                                            <div class="dropdown-item">
+                                                <span>Noch keine Einträge vorhanden</span>
+                                            </div>
+                                        {:else}
+                                            {#each dropdownContent as content, i}
+                                                <a href="#" class="dropdown-item">{content}</a>
+                                            {/each}
+                                        {/if}
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="level-item">
                             <button on:click="{saveData}" class="button is-success">
                                 <i class="fa-solid fa-floppy-disk"></i>
