@@ -10,13 +10,13 @@
     import YearPanelButton from './YearPanelButton.svelte';
     import MediaPanelButton from './MediaPanelButton.svelte';
     import ImageUploadField from './ImageUploadField.svelte';
-    import IconSelector from './IconSelector.svelte';
-
+    
     export let objectId: number;
     export let closeFunction = () => {};
     export let deleteFunction = () => {};
     export let openYearEditorFunction = () => {};
     export let changeMarkerPosition = () => {};
+    export let openIdentifierEditor = () => {};
 
     let objectData;
     let deleteObjectModal;
@@ -260,6 +260,28 @@
                         </div>
                     </nav>
                 </div>
+                <div class="panel-block">
+                    <button on:click="{openIdentifierEditor}" class="button is-info" style="width: 100%;">
+                        <span>Fragebogen</span>
+                    </button>
+                </div>
+                <!--
+                <div class="panel-block">
+                    <nav class="level">
+                        <div class="level-left">
+                            <span>Fragebogen</span>
+                        </div>
+                        <div class="level-center">
+                            <span>Keine Auswahl</span>
+                        </div>
+                        <div class="level-right">
+                            <button on:click="{openIdentifierEditor}" class="button is-info">
+                                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </nav>
+                </div>
+                -->
                 <div class="panel-block">
                     <SaveButton bind:this="{saveButton}" saveFuntion="{saveEditorData}"/>
                 </div>

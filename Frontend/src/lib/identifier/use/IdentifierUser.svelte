@@ -8,7 +8,10 @@
 
     import FinishedNode from "./FinishedNode.svelte";
 
+    let identifierId: number;
+
     export let closeFunction;
+    export let objectId;
 
     let dropdown;
     let dropdownActive: boolean = false;
@@ -49,6 +52,7 @@
 
     async function openIdentifier(id: number) {
         const json: string = await identifierAPI.getJSON(id);
+        identifierId = id;
         nodes = JSON.parse(json);
         $nodeResults = Array(0);
         activeNode = getStartNode();
@@ -123,104 +127,122 @@
 
     function saveProgress(): void {
         alert($nodeResults);
+        const results: number[] = $nodeResults;
+        identifierAPI.setObjectIdentifierData(objectId, identifierId, results);
+    }
+
+    async function loadProgress() {
+        const savedResults = await identifierAPI.getIdentifierResultsFromObject(objectId);
+        if (savedResults.id != undefined) {
+            console.log("Load");
+            await openIdentifier(savedResults.id);
+            for (let i = 0; i < savedResults.result.length; i++) {
+                finishNode(savedResults.result[i]);
+            }
+        }
     }
 
     onMount(async () => {
+        /*
         $nodeResults = Array(0);
         activeNode = getStartNode();
+        */
+        await loadProgress();
     });
 
 </script>
 
-<div id="use">
-    <nav class="level">
-        <div class="level-left">
-            <div class="level-item">
-                <p class="subtitle is-5">
-                    Fragebogen
-                </p>
-            </div>
-            <div class="level-item">
-                <div bind:this="{dropdown}" class="dropdown">
-                    <div class="dropdown-trigger">
-                        <button on:click="{changeDropdown}" class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                            <span>Auswahl</span>
-                            <span class="icon is-small">
-                                {#if dropdownActive}
-                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+<div class="box" id="use">
+    <div id="content">
+        <nav class="level">
+            <div class="level-left">
+                <div class="level-item">
+                    <p class="subtitle is-5">
+                        Fragebogen
+                    </p>
+                </div>
+                <div class="level-item">
+                    <div bind:this="{dropdown}" class="dropdown">
+                        <div class="dropdown-trigger">
+                            <button on:click="{changeDropdown}" class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                                <span>Auswahl</span>
+                                <span class="icon is-small">
+                                    {#if dropdownActive}
+                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                    {:else}
+                                        <i class="fas fa-angle-up" aria-hidden="true"></i>
+                                    {/if}
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                                {#if dropdownContent.length == 0}
+                                    <div class="dropdown-item">
+                                        <span>Noch keine Einträge vorhanden</span>
+                                    </div>
                                 {:else}
-                                    <i class="fas fa-angle-up" aria-hidden="true"></i>
+                                    {#each dropdownContent as content, i}
+                                        <a on:click="{() => openIdentifier(content.id)}" href="#" class="dropdown-item">{content.filename}</a>
+                                    {/each}
                                 {/if}
-                            </span>
-                        </button>
-                    </div>
-                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                        <div class="dropdown-content">
-                            {#if dropdownContent.length == 0}
-                                <div class="dropdown-item">
-                                    <span>Noch keine Einträge vorhanden</span>
-                                </div>
-                            {:else}
-                                {#each dropdownContent as content, i}
-                                    <a on:click="{() => openIdentifier(content.id)}" href="#" class="dropdown-item">{content.filename}</a>
-                                {/each}
-                            {/if}
-                            
+                                
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="level-right">
-            <div class="level-item">
-                <button on:click="{goBackOneNode}" class="button">
-                    <i class="fa-solid fa-left-long"></i>
-                </button>
-            </div>
-            <div class="level-item">
-                <button on:click="{saveProgress}" class="button is-success">
-                    <i class="fa-solid fa-floppy-disk"></i>
-                </button>
-            </div>
-            <div class="level-item">
-                <button on:click="{closeFunction}" class="delete is-large" />
-            </div>
-        </div>
-    </nav>
-    {#if activeNode != undefined}
-        <div id="node" style="margin-bottom: 5px;">
-            <div class="card">
-                <div class="card-header">
-                    <p class="card-header-title">
-                        {activeNode.title}
-                    </p>
+            <div class="level-right">
+                <div class="level-item">
+                    <button on:click="{goBackOneNode}" class="button">
+                        <i class="fa-solid fa-left-long"></i>
+                    </button>
                 </div>
-                <div class="card-content">
-                    <div class="content">
-                        {activeNode.description}
+                <div class="level-item">
+                    <button on:click="{saveProgress}" class="button is-success">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                    </button>
+                </div>
+                <div class="level-item">
+                    <button on:click="{closeFunction}" class="delete is-large" />
+                </div>
+            </div>
+        </nav>
+        {#if activeNode != undefined}
+            <div id="node" style="margin-bottom: 5px;">
+                <div class="card">
+                    <div class="card-header">
+                        <p class="card-header-title">
+                            {activeNode.title}
+                        </p>
                     </div>
+                    <div class="card-content">
+                        <div class="content">
+                            {activeNode.description}
+                        </div>
+                    </div>
+                    <footer class="card-footer">
+                        {#each activeNode.options as option, i }
+                            <a on:click="{() => finishNode(i)}" href="#" class="is-info card-footer-item">{option.name}</a>
+                        {/each}
+                    </footer>
                 </div>
-                <footer class="card-footer">
-                    {#each activeNode.options as option, i }
-                        <a on:click="{() => finishNode(i)}" href="#" class="is-info card-footer-item">{option.name}</a>
-                    {/each}
-                </footer>
             </div>
+        {:else}
+            <div class="box" />
+        {/if}
+        <div id="finishedNodes" class="box">
+            <h6 class="title is-6">Fertige Knoten</h6>
+            {#each finishedNodes as node, i }
+                {#if node.node.type == "start"}
+                    <FinishedNode classType="is-info"    title="{node.node.title}" optionName="{node.node.options[node.selectedOptionIndex].name}" />
+                {:else if node.node.type == "normal"}
+                    <FinishedNode classType="is-success" title="{node.node.title}" optionName="{node.node.options[node.selectedOptionIndex].name}" />
+                {:else if node.node.type == "end"}
+                    <FinishedNode classType="is-danger"  title="{node.node.title}" optionName="{node.node.options[node.selectedOptionIndex].name}" />
+                {/if}
+            {/each}
         </div>
-    {:else}
-        <div class="box" />
-    {/if}
-    <div id="finishedNodes" class="box">
-        <h6 class="title is-6">Fertige Knoten</h6>
-        {#each finishedNodes as node, i }
-            {#if node.node.type == "start"}
-                <FinishedNode classType="is-info"    title="{node.node.title}" optionName="{node.node.options[node.selectedOptionIndex].name}" />
-            {:else if node.node.type == "normal"}
-                <FinishedNode classType="is-success" title="{node.node.title}" optionName="{node.node.options[node.selectedOptionIndex].name}" />
-            {:else if node.node.type == "end"}
-                <FinishedNode classType="is-danger"  title="{node.node.title}" optionName="{node.node.options[node.selectedOptionIndex].name}" />
-            {/if}
-        {/each}
     </div>
 </div>
 
@@ -228,6 +250,9 @@
 
     #use {
         margin: 10px 10px 10px 10px;
+        z-index: 400;
+        background-color: white;
+        width: 33%;
     }
 
     .level {

@@ -1,5 +1,6 @@
 import { getServerData } from "./server";
-
+import { getObjectById } from "./objects";
+ 
 export type Identifier = {
     id: number,
     identifierName: string,
@@ -72,4 +73,40 @@ export async function deleteIdentifier(id: number): Promise<void> {
         method: "DELETE"
     });
 
+}
+
+export async function setObjectIdentifierData(objectId: number, identifierId: number, identifierResult: number[]) {
+
+    const serverData = await getServerData();
+    const url = serverData.serverUrl + serverData.port + "/api/v1/object/edit/" + objectId;
+
+    const resultAsString = identifierResult.toString();
+    const postData = {
+        newIdentifierId: identifierId,
+        newIdentifierResult: resultAsString
+    };
+
+    let response: Response = await fetch(url, {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(postData)
+    });
+
+    let data = await response.json();
+    return data;
+
+}
+
+export async function getIdentifierResultsFromObject(objectId: number) {
+    const object = await getObjectById(objectId);
+    const results: string = object.identifierResult;
+    if (results == undefined) { return undefined; }
+    const resultsAsNumber: number[] = results.split(",").map(Number);
+
+    const returnValue = {
+        id: object.identifierId,
+        result: resultsAsNumber
+    }
+
+    return returnValue;
 }

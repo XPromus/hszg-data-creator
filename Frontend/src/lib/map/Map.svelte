@@ -8,6 +8,7 @@
     
     import ObjectEditor from '../editor/ObjectEditor.svelte';
     import YearEditor from '../editor/YearEditor.svelte';
+    import IdentifierUser from '../identifier/use/IdentifierUser.svelte';
 
     const startCoords = {
         lati: 50.95308,
@@ -29,6 +30,9 @@
     
     let yearEditor: YearEditor;
     let yearEditorState: boolean = false;
+
+    let identifierUser;
+    let identifierUserState: boolean = false;
 
     let markerDraggable: boolean = true;
 
@@ -117,6 +121,9 @@
             if (yearEditor !== undefined && yearEditor != null && yearEditorState == true) {
                 yearEditor.callCloseEditor();
             }
+            if (identifierUser !== undefined && identifierUser != null && identifierUserState == true) {
+                closeIdentifierEditor();
+            }
         }
 
         openObjectEditor();
@@ -174,6 +181,7 @@
 
     function closeObjectEditor() {
         if (yearEditorState) { yearEditor.callCloseEditor(); }
+        if (identifierUserState) { closeIdentifierEditor(); }
         objectEditorState = false;
         disableAllMarkers();
     }
@@ -191,6 +199,14 @@
     async function closeYearEditor() {
         await objectEditor.reloadYearList();
         yearEditorState = false;
+    }
+
+    function openIdentifierEditor() {
+        identifierUserState = true;
+    }
+
+    function closeIdentifierEditor() {
+        identifierUserState = false;
     }
     
     function openCreateObjectModal() {
@@ -243,10 +259,13 @@
     <div class="hero-body">
         <div class="columns">
             {#if objectEditorState}
-                <ObjectEditor bind:this="{objectEditor}" changeMarkerPosition="{changeMarkerPosition}" objectId={currentObjectId} deleteFunction="{deleteObject}" closeFunction="{closeObjectEditor}" openYearEditorFunction="{openYearEditor}"/>
+                <ObjectEditor bind:this="{objectEditor}" changeMarkerPosition="{changeMarkerPosition}" objectId={currentObjectId} deleteFunction="{deleteObject}" closeFunction="{closeObjectEditor}" openYearEditorFunction="{openYearEditor}" openIdentifierEditor="{openIdentifierEditor}"/>
             {/if}
             {#if yearEditorState}
                 <YearEditor bind:this="{yearEditor}" closeFunction="{closeYearEditor}"/>
+            {/if}
+            {#if identifierUserState}
+                <IdentifierUser bind:this="{identifierUser}" objectId="{currentObjectId}" closeFunction="{closeIdentifierEditor}"/>
             {/if}
         </div>
     </div>
@@ -273,6 +292,10 @@
 </div>
 
 <style>
+
+    .floating-window {
+        position: absolute;
+    }
 
     #map {
         position: absolute;
