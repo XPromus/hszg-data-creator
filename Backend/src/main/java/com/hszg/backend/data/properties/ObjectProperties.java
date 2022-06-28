@@ -16,4 +16,12 @@ public interface ObjectProperties {
     Float getLongitude();
     void setLongitude(@NotNull Float longitude);
 
+    @NotNull
+    Long getIdentifierId();
+    void setIdentifierId(@NotNull Long identifierId);
+
+    @NotNull
+    String getIdentifierResult();
+    void setIdentifierResult(@NotNull String identifierResult);
+
 }

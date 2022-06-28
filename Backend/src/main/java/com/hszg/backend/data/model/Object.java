@@ -24,6 +24,10 @@ public class Object implements ObjectProperties {
     private Float latitude;
     private Float longitude;
 
+    private Long identifierId;
+
+    private String identifierResult;
+
     @OneToMany(mappedBy = "object")
     private Set<Year> years;
 
@@ -109,6 +113,22 @@ public class Object implements ObjectProperties {
 
     public void setMedia(Set<Media> media) {
         this.media = media;
+    }
+
+    public Long getIdentifierId() {
+        return identifierId;
+    }
+
+    public void setIdentifierId(Long identifierId) {
+        this.identifierId = identifierId;
+    }
+
+    public String getIdentifierResult() {
+        return identifierResult;
+    }
+
+    public void setIdentifierResult(String identifierResult) {
+        this.identifierResult = identifierResult;
     }
 
     //</editor-fold>
