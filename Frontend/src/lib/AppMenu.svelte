@@ -37,23 +37,16 @@
 <div>
     {#if identifierEditorState}
         <IdentifierEditor closeFunction="{closeWindow}" />
-    {:else if identifierUserState}
-        <IdentifierUser closeFunction="{closeWindow}" />
     {:else if mapState}
         <Map closeFunction="{closeWindow}" />
     {:else}
         <div id="menuButtons" class="columns" style="width: 100%;">
-            <div class="column is-one-third">
+            <div class="column is-half">
                 <button on:click="{openMap}" class="button is-success" style="width: 100%;">
                     Karte
                 </button>
             </div>
-            <div class="column is-one-third">
-                <button on:click="{openIdentifierUser}" class="button is-success" style="width: 100%;">
-                    Fragebogen
-                </button>
-            </div>
-            <div class="column is-one-third">
+            <div class="column is-half">
                 <button on:click="{openIdentifierEditor}" class="button is-success" style="width: 100%;">
                     Fragebogen Editor
                 </button>
