@@ -39,6 +39,19 @@ export async function getJSON(id: number): Promise<string> {
 
 }
 
+export async function getIdentifierById(id: number): Promise<Identifier> {
+
+    const serverData = await getServerData();
+    const url = serverData.serverUrl + serverData.port + "/api/v1/identifier/id/" + id;
+    let response: Response = await fetch(url, {
+        method: "GET"
+    });
+
+    let data: Identifier = await response.json();
+    return data;
+
+}
+
 export async function getAllIdentifiers(): Promise<Identifier[]> {
 
     const serverData = await getServerData();
@@ -52,17 +65,17 @@ export async function getAllIdentifiers(): Promise<Identifier[]> {
 
 }
 
-export async function getIdentifierById(id: number): Promise<Identifier> {
+export async function getIdentifierByName(name: string): Promise<Identifier> {
 
     const serverData = await getServerData();
-    const url = serverData.serverUrl + serverData.port + "/api/v1/identifier/id/" + id;
+    const url = serverData.serverUrl + serverData.port + "/api/v1/identifier/name/" + name;
     let response: Response = await fetch(url, {
         method: "GET"
     });
 
     let data: Identifier = await response.json();
     return data;
-
+    
 }
 
 export async function deleteIdentifier(id: number): Promise<void> {
@@ -109,4 +122,23 @@ export async function getIdentifierResultsFromObject(objectId: number) {
     }
 
     return returnValue;
+}
+
+export async function editIdentifier(id: number, newName: string): Promise<Identifier> {
+
+    const serverData = await getServerData();
+    const url = serverData.serverUrl + serverData.port + "/api/v1/identifier/edit/" + id;
+    const data = {
+        "newIdentifierName": newName
+    };
+
+    let response: Response = await fetch(url, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    });
+
+    let responseData: Identifier = await response.json();
+    return responseData
+
 }

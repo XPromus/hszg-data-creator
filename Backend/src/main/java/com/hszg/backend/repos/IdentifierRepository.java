@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface IdentifierRepository extends JpaRepository<Identifier, Long> {
 
-    @Query("SELECT i FROM Identifier i WHERE i.filename = ?1")
+    @Query("SELECT i FROM Identifier i WHERE i.identifierName = ?1")
     Optional<Identifier> findByIdentifierName(String name);
 
 }

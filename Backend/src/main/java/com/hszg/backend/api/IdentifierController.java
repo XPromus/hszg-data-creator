@@ -32,6 +32,11 @@ public class IdentifierController {
         return identifierService.getIdentifierById(id);
     }
 
+    @GetMapping("/name/{name}")
+    public Identifier getIdentifierByName(@PathVariable String name) {
+        return identifierService.getIdentifierByName(name);
+    }
+
     @PostMapping("/create")
     public Identifier createIdentifier(@RequestBody Identifier identifier) {
         return identifierService.createIdentifier(identifier);
@@ -47,7 +52,7 @@ public class IdentifierController {
         return identifierService.editIdentifier(id, changes);
     }
 
-    @PostMapping("upload/{name}")
+    @PostMapping("/upload/{name}")
     public Identifier uploadFile(@RequestParam("file") MultipartFile file, @PathVariable String name) {
         return identifierService.uploadIdentifier(file, name);
     }

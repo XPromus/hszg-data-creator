@@ -24,7 +24,8 @@
 
     let dropdown;
     let dropdownActive: boolean = false;
-    let dropdownContent: string[] = [];
+    let dropdownContent: identifierAPI.Identifier[] = [];
+    let dropdownContentId: number[] = [];
 
     function changeDropdown() {
         if (dropdownActive) {
@@ -36,10 +37,8 @@
 
     async function openDropdown() {
         dropdownContent = Array(0);
-        const allIdentifiers: identifierAPI.Identifier[] = await identifierAPI.getAllIdentifiers();
-        for (let i = 0; i < allIdentifiers.length; i++) {
-            dropdownContent.push(allIdentifiers[i].identifierName);
-        }
+        dropdownContentId = Array(0);
+        dropdownContent = await identifierAPI.getAllIdentifiers();
         dropdownActive = true;
         dropdown.classList.add("is-active");
     }
@@ -49,11 +48,27 @@
         dropdown.classList.remove("is-active");
     }
 
+    function dropdownClickedOnLink(identifier: identifierAPI.Identifier) {
+        closeDropdown();
+        loadExistingIdentifier(identifier);
+    }
+
     async function saveData(): Promise<void> {
-        const nodeArray: Node[] = $nodes;
-        const data = JSON.stringify(nodeArray);
-        const responseData = await identifierAPI.uploadJSON(identifierName, data);
-        currentIdentifierId = responseData.id;
+
+        const oldIdentifier = await identifierAPI.getIdentifierByName(identifierName);
+        //@ts-ignore
+        if (oldIdentifier.status == 404) {
+            const nodeArray: Node[] = $nodes;
+            const data = JSON.stringify(nodeArray);
+            const responseData = await identifierAPI.uploadJSON(identifierName, data);
+            currentIdentifierId = responseData.id;
+        } else {
+            const newName: string = oldIdentifier.identifierName + "(alt)";
+            const oldJSON = await identifierAPI.getJSON(oldIdentifier.id);
+            await identifierAPI.editIdentifier(oldIdentifier.id, newName);
+            await identifierAPI.uploadJSON(newName, oldJSON);
+        }
+        
     }
 
     async function deleteData() {
@@ -158,6 +173,21 @@
         numberOfNormalNodes = countNodeTypes("normal");
     }
 
+    function clearNodes() {
+        $nodes = Array(0);
+        identifierName = undefined;
+        updateNodeCount();
+    }
+
+    async function loadExistingIdentifier(identifier: identifierAPI.Identifier) {
+        clearNodes();
+        const identifierData: string = await identifierAPI.getJSON(identifier.id);
+        const parsedNodes: Node[] = JSON.parse(identifierData);
+        identifierName = identifier.identifierName;
+        $nodes = parsedNodes;
+        updateNodeCount();
+    }
+
     onMount(async () => {
         updateNodeCount();
     });
@@ -223,7 +253,7 @@
                                             </div>
                                         {:else}
                                             {#each dropdownContent as content, i}
-                                                <a href="#" class="dropdown-item">{content}</a>
+                                                <a on:click="{() => dropdownClickedOnLink(content)}" href="#" class="dropdown-item">{content.identifierName}</a>
                                             {/each}
                                         {/if}
                                         
@@ -232,12 +262,17 @@
                             </div>
                         </div>
                         <div class="level-item">
-                            <button on:click="{saveData}" class="button is-success">
+                            <button on:click="{saveData}" class="button is-success" title="Fragebogen Speichern">
                                 <i class="fa-solid fa-floppy-disk"></i>
                             </button>
                         </div>
                         <div class="level-item">
-                            <button on:click="{deleteData}" class="button is-danger">
+                            <button on:click="{clearNodes}" class="button is-warning" title="Clear Editor">
+                                <i class="fa-solid fa-arrow-rotate-left"></i>
+                            </button>
+                        </div>
+                        <div class="level-item">
+                            <button on:click="{deleteData}" class="button is-danger" title="Fragebogen löschen">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </div>

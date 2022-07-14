@@ -9,6 +9,7 @@
     import FinishedNode from "./FinishedNode.svelte";
 
     let identifierId: number;
+    let identifierName: string;
 
     export let closeFunction;
     export let objectId;
@@ -126,13 +127,16 @@
     }
 
     function saveProgress(): void {
-        alert($nodeResults);
         const results: number[] = $nodeResults;
         identifierAPI.setObjectIdentifierData(objectId, identifierId, results);
     }
 
     async function loadProgress() {
         const savedResults = await identifierAPI.getIdentifierResultsFromObject(objectId);
+        const identifierData = await identifierAPI.getIdentifierById(savedResults.id);
+        console.log(await identifierAPI.getAllIdentifiers());
+        console.log(identifierData);
+        identifierName = identifierData.identifierName;
         if (savedResults.id != undefined) {
             console.log("Load");
             await openIdentifier(savedResults.id);
@@ -158,7 +162,7 @@
             <div class="level-left">
                 <div class="level-item">
                     <p class="subtitle is-5">
-                        Fragebogen
+                        Fragebogen: {identifierName}
                     </p>
                 </div>
                 <div class="level-item">

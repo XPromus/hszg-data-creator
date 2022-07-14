@@ -1,5 +1,6 @@
 package com.hszg.backend.service;
 
+import com.hszg.backend.api.error.IdentifierNotFoundException;
 import com.hszg.backend.data.model.Identifier;
 import com.hszg.backend.repos.IdentifierRepository;
 import com.hszg.backend.service.edit.IdentifierPropertiesEdit;
@@ -31,7 +32,7 @@ public class IdentifierService {
     }
 
     public Identifier getIdentifierById(Long id) {
-        return identifierRepository.getById(id);
+        return checkIdentifierExistence(id);
     }
 
     @Transactional
@@ -96,6 +97,28 @@ public class IdentifierService {
 
         return sb.toString();
 
+    }
+
+    public Identifier getIdentifierByName(String name) {
+        return checkIdentifierExistence(name);
+    }
+
+    public Identifier checkIdentifierExistence(Long id) {
+        Optional<Identifier> optionalIdentifier = identifierRepository.findById(id);
+        if (optionalIdentifier.isEmpty()) {
+            throw new IdentifierNotFoundException("Identifier with Name: " + id + " not found.");
+        }
+
+        return optionalIdentifier.get();
+    }
+
+    public Identifier checkIdentifierExistence(String name) {
+        Optional<Identifier> optionalIdentifier = identifierRepository.findByIdentifierName(name);
+        if (optionalIdentifier.isEmpty()) {
+            throw new IdentifierNotFoundException("Identifier with Name: " + name + " not found.");
+        }
+
+        return optionalIdentifier.get();
     }
 
 }
