@@ -58,17 +58,54 @@
         const oldIdentifier = await identifierAPI.getIdentifierByName(identifierName);
         //@ts-ignore
         if (oldIdentifier.status == 404) {
-            const nodeArray: Node[] = $nodes;
-            const data = JSON.stringify(nodeArray);
-            const responseData = await identifierAPI.uploadJSON(identifierName, data);
-            currentIdentifierId = responseData.id;
+            currentIdentifierId = await newJsonUpload();
         } else {
-            const newName: string = oldIdentifier.identifierName + "(alt)";
-            const oldJSON = await identifierAPI.getJSON(oldIdentifier.id);
-            await identifierAPI.editIdentifier(oldIdentifier.id, newName);
-            await identifierAPI.uploadJSON(newName, oldJSON);
+            await oldJsonUpload(oldIdentifier);
+            currentIdentifierId = await newJsonUpload();
         }
         
+    }
+
+    async function newJsonUpload(): Promise<number> {
+        const nodeArray: Node[] = $nodes;
+        const data = JSON.stringify(nodeArray);
+        const responseData = await identifierAPI.uploadJSON(identifierName, data);
+        return responseData.id;
+    }
+
+    async function oldJsonUpload(oldIdentifier): Promise<void> {
+        const newName: string = renameComponent(oldIdentifier.identifierName);
+        const oldJSON = await identifierAPI.getJSON(oldIdentifier.id);
+        await identifierAPI.editIdentifier(oldIdentifier.id, newName);
+        await identifierAPI.uploadJSON(newName, oldJSON);
+    }
+
+    function renameComponent(name: string): string {
+
+        const words: string[] = name.split(" ");
+        const lastWord: string = words.pop();
+        let newName: string = "";
+
+        if (isNumeric(lastWord)) {
+            const num: string = (parseInt(lastWord) + 1).toString();
+            words.forEach(element => {
+                newName += element + " ";
+            });
+
+            newName += num;
+
+        } else {
+            console.log("Not Numeric");
+            newName = name + " 1";
+        }
+
+        console.log(newName);
+        return newName;
+
+    }
+
+    function isNumeric(num): boolean {
+        return !isNaN(num);
     }
 
     async function deleteData() {
