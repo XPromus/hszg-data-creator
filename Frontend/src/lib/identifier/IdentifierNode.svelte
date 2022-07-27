@@ -1,8 +1,8 @@
 <script lang="ts">
     
     import { onMount } from 'svelte';
-    import type { Node, Option } from './identifierStore';
-    import { nodes } from './identifierStore';
+    import type { Node, Option } from './data/identifierStore';
+    import { nodes } from './data/identifierStore';
 
     export let node: Node;
     export let openEditor;

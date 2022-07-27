@@ -1,7 +1,7 @@
 <script lang="ts">
     
-    import type { Node, Option } from './identifierStore';
-    import { nodes } from './identifierStore';
+    import type { Node, Option } from './data/identifierStore';
+    import { nodes } from './data/identifierStore';
 
     export let currentNodeId;
     let connectionModal;

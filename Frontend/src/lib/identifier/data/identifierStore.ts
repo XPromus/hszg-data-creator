@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { writable, get } from "svelte/store";
 
 export type Option = {
     name: string,
@@ -17,3 +17,7 @@ export type Node = {
 
 export const nodes = writable([]);
 export const nodeResults = writable([]);
+
+export function getIdentifierStore() {
+    return get(nodes);
+}

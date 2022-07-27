@@ -1,10 +1,11 @@
 <script lang="ts">
     
     import { onMount } from 'svelte';
-    import type { Node } from './identifierStore';
-    import { nodes } from './identifierStore';
+    import type { Node } from './data/identifierStore';
+    import { nodes } from './data/identifierStore';
 
     import * as identifierAPI from '../api/identifier';
+    import * as nodeOperations from './data/nodeOperations';
 
     import IdentifierNode from './IdentifierNode.svelte';
     import IdentifierNodeEditor from './IdentifierNodeEditor.svelte';
@@ -27,6 +28,10 @@
     let dropdownContent: identifierAPI.Identifier[] = [];
     let dropdownContentId: number[] = [];
 
+    const onlyNumbersLettersWhiteSpace: RegExp = /^[A-Za-z0-9 \s]*$/;
+
+    //--Svelte Component Functions
+
     function changeDropdown() {
         if (dropdownActive) {
             closeDropdown();
@@ -36,8 +41,7 @@
     }
 
     async function openDropdown() {
-        dropdownContent = Array(0);
-        dropdownContentId = Array(0);
+        clearDropdown();
         dropdownContent = await identifierAPI.getAllIdentifiers();
         dropdownActive = true;
         dropdown.classList.add("is-active");
@@ -48,11 +52,35 @@
         dropdown.classList.remove("is-active");
     }
 
+    function clearDropdown() {
+        dropdownContent = Array(0);
+        dropdownContentId = Array(0);
+    }
+
     function dropdownClickedOnLink(identifier: identifierAPI.Identifier) {
         closeDropdown();
         loadExistingIdentifier(identifier);
     }
 
+    function openEditor(node: Node) {
+        for (let i = 0; i < $nodes.length; i++) {
+            if (node.id == $nodes[i].id) {
+                currentNodeIndex = i;
+                break;
+            }
+        }
+        currentNode = node;
+        showEditor = true;
+    }
+
+    function closeEditor() {
+        showEditor = false;
+        currentNode = undefined;
+        updateNodeCount();
+    }
+
+    //--Data/API Function
+    
     async function saveData(): Promise<void> {
 
         const oldIdentifier = await identifierAPI.getIdentifierByName(identifierName);
@@ -74,38 +102,27 @@
     }
 
     async function oldJsonUpload(oldIdentifier): Promise<void> {
-        const newName: string = renameComponent(oldIdentifier.identifierName);
+        const newName: string = renameIdentifier(oldIdentifier.identifierName);
         const oldJSON = await identifierAPI.getJSON(oldIdentifier.id);
         await identifierAPI.editIdentifier(oldIdentifier.id, newName);
         await identifierAPI.uploadJSON(newName, oldJSON);
     }
 
-    function renameComponent(name: string): string {
+    function renameIdentifier(name: string): string {
+
+        const numberRegEx: RegExp = /\([0-9]+\)/i;
 
         const words: string[] = name.split(" ");
         const lastWord: string = words.pop();
-        let newName: string = "";
 
-        if (isNumeric(lastWord)) {
-            const num: string = (parseInt(lastWord) + 1).toString();
-            words.forEach(element => {
-                newName += element + " ";
-            });
-
-            newName += num;
-
-        } else {
-            console.log("Not Numeric");
-            newName = name + " 1";
+        if (numberRegEx.test(lastWord)) {
+            const newNumber: number = parseInt(lastWord.split("(")[1].split(")")[0]) + 1;
+            words.push("(" + newNumber + ")");
+            return words.join(" ");
         }
 
-        console.log(newName);
-        return newName;
+        return name + " (1)";
 
-    }
-
-    function isNumeric(num): boolean {
-        return !isNaN(num);
     }
 
     async function deleteData() {
@@ -118,6 +135,17 @@
         identifierName = undefined;
 
     }
+
+    async function loadExistingIdentifier(identifier: identifierAPI.Identifier) {
+        clearNodes();
+        const identifierData: string = await identifierAPI.getJSON(identifier.id);
+        const parsedNodes: Node[] = JSON.parse(identifierData);
+        identifierName = identifier.identifierName;
+        $nodes = parsedNodes;
+        updateNodeCount();
+    }
+
+    //--Node Function
 
     function addNodeToStore(): void {
 
@@ -142,72 +170,15 @@
     }
 
     function deleteNode(node: Node) {
-
-        let nodeArray = $nodes;
-        let index;
-        
-        for (let i = 0; i < nodeArray.length; i++) {
-            if (node.id == nodeArray[i].id) {
-                index = i;
-            } else {
-                if (!nodeArray[i].oneGoal) {
-                    if (nodeArray[i].goal == node.id) {
-                        nodeArray[i].goal = undefined;
-                    }
-                } else {
-                    for (let u = 0; u < nodeArray[i].options.length; u++) {
-                        if (nodeArray[i].options[u].goal == node.id) {
-                            nodeArray[i].options[u].goal = undefined;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (index != undefined) {
-
-            $nodes = Array(0);
-            nodeArray.splice(index, 1);
-            $nodes = nodeArray;
-
-            updateNodeCount();
-
-        }
-
-    }
-
-    function openEditor(node: Node) {
-        for (let i = 0; i < $nodes.length; i++) {
-            if (node.id == $nodes[i].id) {
-                currentNodeIndex = i;
-                break;
-            }
-        }
-        currentNode = node;
-        showEditor = true;
-    }
-
-    function closeEditor() {
-        showEditor = false;
-        currentNode = undefined;
+        nodeOperations.deleteNode(node);
         updateNodeCount();
     }
 
-    function countNodeTypes(type: string): number {
-        let count = 0;
-        for (let i = 0; i < $nodes.length; i++) {
-            if ($nodes[i].type === type) {
-                count++;
-            }
-        }
-
-        return count;
-    }
-
     function updateNodeCount() {
-        numberOfStartNodes = countNodeTypes("start");
-        numberOfEndNodes = countNodeTypes("end");
-        numberOfNormalNodes = countNodeTypes("normal");
+        const nodeCountData: nodeOperations.NodeCount = nodeOperations.countNodeTypes();
+        numberOfStartNodes = nodeCountData.startNodeCount;
+        numberOfEndNodes = nodeCountData.endNodeCount;
+        numberOfNormalNodes = nodeCountData.normalNodeCount;
     }
 
     function clearNodes() {
@@ -216,22 +187,9 @@
         updateNodeCount();
     }
 
-    async function loadExistingIdentifier(identifier: identifierAPI.Identifier) {
-        clearNodes();
-        const identifierData: string = await identifierAPI.getJSON(identifier.id);
-        const parsedNodes: Node[] = JSON.parse(identifierData);
-        identifierName = identifier.identifierName;
-        $nodes = parsedNodes;
-        updateNodeCount();
-    }
-
     onMount(async () => {
         updateNodeCount();
     });
-
-    function debug() {
-        console.log($nodes);
-    }
 
 </script>
 

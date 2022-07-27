@@ -1,8 +1,8 @@
 <script lang="ts">
 
     import { onMount } from "svelte";
-    import type { Node, Option } from "../identifierStore";
-    import { nodes, nodeResults } from "../identifierStore";
+    import type { Node, Option } from "../data/identifierStore";
+    import { nodes, nodeResults } from "../data/identifierStore";
 
     import * as identifierAPI from "../../api/identifier";
 
