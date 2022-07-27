@@ -93,7 +93,7 @@ export async function setObjectIdentifierData(objectId: number, identifierId: nu
     const serverData = await getServerData();
     const url = serverData.serverUrl + serverData.port + "/api/v1/object/edit/" + objectId;
 
-    const resultAsString = identifierResult.toString();
+    let resultAsString = identifierResult.toString();
     const postData = {
         newIdentifierId: identifierId,
         newIdentifierResult: resultAsString
@@ -111,10 +111,16 @@ export async function setObjectIdentifierData(objectId: number, identifierId: nu
 }
 
 export async function getIdentifierResultsFromObject(objectId: number) {
+    
     const object = await getObjectById(objectId);
     const results: string = object.identifierResult;
-    if (results == undefined) { return undefined; }
-    const resultsAsNumber: number[] = results.split(",").map(Number);
+    let resultsAsNumber: number[];
+
+    if (results) {
+        resultsAsNumber = results.split(",").map(Number);
+    } else {
+        resultsAsNumber = Array(0);
+    }
 
     const returnValue = {
         id: object.identifierId,

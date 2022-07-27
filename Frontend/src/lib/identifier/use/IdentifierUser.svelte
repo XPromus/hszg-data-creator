@@ -5,6 +5,7 @@
     import { nodes, nodeResults } from "../data/identifierStore";
 
     import * as identifierAPI from "../../api/identifier";
+    import * as objectAPI from "../../api/objects";
 
     import FinishedNode from "./FinishedNode.svelte";
 
@@ -127,30 +128,26 @@
     }
 
     function saveProgress(): void {
-        const results: number[] = $nodeResults;
+        let results: number[] = $nodeResults;
+        console.log("Results: " + results.length);
         identifierAPI.setObjectIdentifierData(objectId, identifierId, results);
     }
 
     async function loadProgress() {
-        const savedResults = await identifierAPI.getIdentifierResultsFromObject(objectId);
-        const identifierData = await identifierAPI.getIdentifierById(savedResults.id);
-        console.log(await identifierAPI.getAllIdentifiers());
-        console.log(identifierData);
-        identifierName = identifierData.identifierName;
-        if (savedResults.id != undefined) {
-            console.log("Load");
-            await openIdentifier(savedResults.id);
-            for (let i = 0; i < savedResults.result.length; i++) {
-                finishNode(savedResults.result[i]);
-            }
+        //TODO: Implement better loading
+        const object = await objectAPI.getObjectById(objectId);
+        const identifier: identifierAPI.Identifier = await identifierAPI.getIdentifierById(object.identifierId);
+        if (identifier.id != undefined) {
+            identifierName = identifier.identifierName;
+            await openIdentifier(identifier.id);
+            const savedProgress: number[] = (await identifierAPI.getIdentifierResultsFromObject(objectId)).result;
+            savedProgress.forEach(result => {
+                finishNode(result)
+            });
         }
     }
 
     onMount(async () => {
-        /*
-        $nodeResults = Array(0);
-        activeNode = getStartNode();
-        */
         await loadProgress();
     });
 

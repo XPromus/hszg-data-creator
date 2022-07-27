@@ -190,7 +190,7 @@
     }
 
     onMount(async () => {
-        updateNodeCount();
+        clearNodes();
     });
 
 </script>
