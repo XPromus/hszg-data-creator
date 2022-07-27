@@ -128,6 +128,7 @@
     async function deleteData() {
 
         if (currentIdentifierId != undefined) {
+            alert("Delete");
             identifierAPI.deleteIdentifier(currentIdentifierId);
         }
 
@@ -141,6 +142,7 @@
         const identifierData: string = await identifierAPI.getJSON(identifier.id);
         const parsedNodes: Node[] = JSON.parse(identifierData);
         identifierName = identifier.identifierName;
+        currentIdentifierId = identifier.id;
         $nodes = parsedNodes;
         updateNodeCount();
     }
