@@ -87,4 +87,8 @@ public class ObjectService {
         return optionalYear.get();
     }
 
+    public List<Object> findObjectsByIdentifierId(Long identifierId) {
+        return objectRepository.findObjectsByIdentifierId(identifierId);
+    }
+
 }

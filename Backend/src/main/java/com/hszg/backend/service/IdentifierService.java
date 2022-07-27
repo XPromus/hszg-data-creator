@@ -3,6 +3,7 @@ package com.hszg.backend.service;
 import com.hszg.backend.api.error.IdentifierNotFoundException;
 import com.hszg.backend.data.model.Identifier;
 import com.hszg.backend.repos.IdentifierRepository;
+import com.hszg.backend.repos.ObjectRepository;
 import com.hszg.backend.service.edit.IdentifierPropertiesEdit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,12 +20,16 @@ import java.util.Optional;
 public class IdentifierService {
 
     private final IdentifierRepository identifierRepository;
+    private final ObjectRepository objectRepository;
     private final FileService fileService;
+    private final ObjectService objectService;
 
     @Autowired
-    public IdentifierService(IdentifierRepository identifierRepository, FileService fileService) {
+    public IdentifierService(IdentifierRepository identifierRepository, ObjectRepository objectRepository, FileService fileService, ObjectService objectService) {
         this.identifierRepository = identifierRepository;
+        this.objectRepository = objectRepository;
         this.fileService = fileService;
+        this.objectService = objectService;
     }
 
     public List<Identifier> getIdentifiers() {
@@ -40,11 +45,18 @@ public class IdentifierService {
         return identifierRepository.save(identifier);
     }
 
+    @Transactional
     public void deleteIdentifier(Long id) {
         Optional<Identifier> optionalIdentifier = identifierRepository.findById(id);
         if (optionalIdentifier.isPresent()) {
             var path = optionalIdentifier.get().getUrl() + "/" + optionalIdentifier.get().getFilename();
             fileService.deleteFile(path);
+            var objects = objectService.findObjectsByIdentifierId(id);
+            for (com.hszg.backend.data.model.Object object : objects) {
+                object.setIdentifierId(null);
+                object.setIdentifierResult(null);
+                objectRepository.save(object);
+            }
             identifierRepository.deleteById(id);
         }
     }
