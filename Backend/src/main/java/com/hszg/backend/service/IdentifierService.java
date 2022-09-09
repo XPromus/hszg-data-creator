@@ -4,6 +4,7 @@ import com.hszg.backend.api.error.IdentifierNotFoundException;
 import com.hszg.backend.data.model.Identifier;
 import com.hszg.backend.repos.IdentifierRepository;
 import com.hszg.backend.repos.ObjectRepository;
+import com.hszg.backend.repos.YearRepository;
 import com.hszg.backend.service.edit.IdentifierPropertiesEdit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,15 +22,19 @@ public class IdentifierService {
 
     private final IdentifierRepository identifierRepository;
     private final ObjectRepository objectRepository;
+    private final YearRepository yearRepository;
     private final FileService fileService;
     private final ObjectService objectService;
+    private final YearService yearService;
 
     @Autowired
-    public IdentifierService(IdentifierRepository identifierRepository, ObjectRepository objectRepository, FileService fileService, ObjectService objectService) {
+    public IdentifierService(IdentifierRepository identifierRepository, ObjectRepository objectRepository, YearRepository yearRepository, FileService fileService, ObjectService objectService, YearService yearService) {
         this.identifierRepository = identifierRepository;
         this.objectRepository = objectRepository;
+        this.yearRepository = yearRepository;
         this.fileService = fileService;
         this.objectService = objectService;
+        this.yearService = yearService;
     }
 
     public List<Identifier> getIdentifiers() {
@@ -51,12 +56,21 @@ public class IdentifierService {
         if (optionalIdentifier.isPresent()) {
             var path = optionalIdentifier.get().getUrl() + "/" + optionalIdentifier.get().getFilename();
             fileService.deleteFile(path);
+
             var objects = objectService.findObjectsByIdentifierId(id);
             for (com.hszg.backend.data.model.Object object : objects) {
                 object.setIdentifierId(null);
                 object.setIdentifierResult(null);
                 objectRepository.save(object);
             }
+
+            var years = yearService.findYearsByIdentifierId(id);
+            for (com.hszg.backend.data.model.Year year : years) {
+                year.setIdentifierId(null);
+                year.setIdentifierResult(null);
+                yearRepository.save(year);
+            }
+
             identifierRepository.deleteById(id);
         }
     }

@@ -82,4 +82,8 @@ public class YearService {
         return optionalYear.get();
     }
 
+    public List<Year> findYearsByIdentifierId(Long identifierId) {
+        return yearRepository.findYearsByIdentifierId(identifierId);
+    }
+
 }

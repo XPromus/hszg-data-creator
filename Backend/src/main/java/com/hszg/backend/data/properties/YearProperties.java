@@ -33,4 +33,12 @@ public interface YearProperties {
     String getStreetNumber();
     void setStreetNumber(@NotNull String streetNumber);
 
+    @NotNull
+    Long getIdentifierId();
+    void setIdentifierId(@NotNull Long identifierId);
+
+    @NotNull
+    String getIdentifierResult();
+    void setIdentifierResult(@NotNull String identifierResult);
+
 }

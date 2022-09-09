@@ -30,6 +30,9 @@ public class Year implements YearProperties {
     private String textureID;
     private String streetName;
     private String streetNumber;
+    
+    private Long identifierId;
+    private String identifierResult;
 
     @ManyToOne
     @JoinColumn(name = "object_id", nullable = false)
@@ -112,6 +115,23 @@ public class Year implements YearProperties {
     public void setExists(Boolean exists) {
         this.exists = exists;
     }
+
+    public Long getIdentifierId() {
+        return identifierId;
+    }
+
+    public void setIdentifierId(Long identifierId) {
+        this.identifierId = identifierId;
+    }
+
+    public String getIdentifierResult() {
+        return identifierResult;
+    }
+
+    public void setIdentifierResult(String identifierResult) {
+        this.identifierResult = identifierResult;
+    }
+
     //</editor-fold>
 
 }

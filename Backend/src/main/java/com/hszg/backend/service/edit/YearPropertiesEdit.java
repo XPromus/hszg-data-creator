@@ -15,6 +15,8 @@ public class YearPropertiesEdit {
     private String newTextureID = null;
     private String newStreetName = null;
     private String newStreetNumber = null;
+    private Long newIdentifierId = null;
+    private String newIdentifierResult = null;
 
     public void applyChanges(@NotNull final YearProperties target) {
 
@@ -51,6 +53,16 @@ public class YearPropertiesEdit {
         var streetNumber = this.getNewStreetNumber();
         if (streetNumber != null) {
             target.setStreetNumber(streetNumber);
+        }
+
+        var identifierId = this.getNewIdentifierId();
+        if (identifierId != null) {
+            target.setIdentifierId(identifierId);
+        }
+
+        var identifierResult = this.getNewIdentifierResult();
+        if (identifierResult != null) {
+            target.setIdentifierResult(identifierResult);
         }
 
     }
@@ -117,4 +129,23 @@ public class YearPropertiesEdit {
     public void setNewStreetNumber(@Nullable String newStreetNumber) {
         this.newStreetNumber = newStreetNumber;
     }
+
+    public void setNewIdentifierId(@Nullable Long newIdentifierId) {
+        this.newIdentifierId = newIdentifierId;
+    }
+
+    @Nullable
+    public Long getNewIdentifierId() {
+        return newIdentifierId;
+    }
+
+    public void setNewIdentifierResult(@Nullable String newIdentifierResult) {
+        this.newIdentifierResult = newIdentifierResult;
+    }
+
+    @Nullable
+    public String getNewIdentifierResult() {
+        return newIdentifierResult;
+    }
+
 }
