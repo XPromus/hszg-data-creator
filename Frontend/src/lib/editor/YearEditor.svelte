@@ -7,7 +7,8 @@
 
     const yearId: number = currentYearId;
     export let closeFunction = () => {};
-
+    export let openIdentifierEditor = () => {};
+    
     let deleteYearModal;
 
     let year: number;
@@ -192,6 +193,11 @@
                         </button>
                     </div>
                 </div>
+            </nav>
+        </div>
+        <div class="panel-block">
+            <nav class="level">
+                <button on:click="{openIdentifierEditor}" class="button is-info" style="width: 100%;">Fragebogen</button>
             </nav>
         </div>
         <!--

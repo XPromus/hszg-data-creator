@@ -1,5 +1,6 @@
 import { getServerData } from "./server";
 import { getObjectById } from "./objects";
+import { getYearById } from "./years";
  
 export type Identifier = {
     id: number,
@@ -110,6 +111,28 @@ export async function setObjectIdentifierData(objectId: number, identifierId: nu
 
 }
 
+export async function setYearIdentifierData(yearId: number, identifierId: number, identifierResult: number[]) {
+
+    const serverData = await getServerData();
+    const url = serverData.serverUrl + serverData.port + "/api/v1/year/edit/" + yearId;
+
+    let resultAsString =  identifierResult.toString();
+    const postData = {
+        newIdentifierId: identifierId,
+        newIdentifierResult: resultAsString
+    };
+
+    let response: Response = await fetch(url, {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(postData)
+    });
+
+    let data = await response.json();
+    return data;
+
+}
+
 export async function getIdentifierResultsFromObject(objectId: number) {
     
     const object = await getObjectById(objectId);
@@ -128,6 +151,27 @@ export async function getIdentifierResultsFromObject(objectId: number) {
     }
 
     return returnValue;
+}
+
+export async function getIdentifierResultsFromYear(yearId: number) {
+
+    const year = await getYearById(yearId);
+    const results: string = year.identifierResult;
+    let resultsAsNumber: number[];
+
+    if (results) {
+        resultsAsNumber = results.split(",").map(Number);
+    } else {
+        resultsAsNumber = Array(0);
+    }
+
+    const returnValue = {
+        id: year.identifierId,
+        result: resultsAsNumber
+    }
+
+    return returnValue;
+
 }
 
 export async function editIdentifier(id: number, newName: string): Promise<Identifier> {

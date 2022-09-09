@@ -138,7 +138,7 @@
 <style>
 
     .card {
-        width: 25%;
+        /*width: 25%;*/
         margin-bottom: 10px;
         margin-left: 10px;
         margin-right: 10px;

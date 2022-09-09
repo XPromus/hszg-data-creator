@@ -261,7 +261,7 @@
                     </nav>
                 </div>
                 <div class="panel-block">
-                    <button on:click="{openIdentifierEditor}" class="button is-info" style="width: 100%;">
+                    <button on:click="{openIdentifierEditor}" class="button is-info" style="width: 100%;" disabled>
                         <span>Fragebogen</span>
                     </button>
                 </div>

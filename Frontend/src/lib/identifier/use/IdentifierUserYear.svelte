@@ -5,7 +5,7 @@
     import { nodes, nodeResults } from "../data/identifierStore";
 
     import * as identifierAPI from "../../api/identifier";
-    import * as objectAPI from "../../api/objects";
+    import * as yearAPI from "../../api/years";
 
     import FinishedNode from "./FinishedNode.svelte";
 
@@ -13,7 +13,7 @@
     let identifierName: string;
 
     export let closeFunction;
-    export let objectId;
+    export let yearId;
 
     let dropdown;
     let dropdownActive: boolean = false;
@@ -130,16 +130,17 @@
     function saveProgress(): void {
         let results: number[] = $nodeResults;
         console.log("Results: " + results.length);
-        identifierAPI.setObjectIdentifierData(objectId, identifierId, results);
+        identifierAPI.setYearIdentifierData(yearId, identifierId, results);
     }
 
     async function loadProgress() {
-        const object = await objectAPI.getObjectById(objectId);
-        const identifier: identifierAPI.Identifier = await identifierAPI.getIdentifierById(object.identifierId);
+        const year = await yearAPI.getYearById(yearId);
+        const identifier: identifierAPI.Identifier = await identifierAPI.getIdentifierById(year.identifierId);
+        console.log("Year: " + year.id, " Identifier: " + year.identifierId);
         if (identifier.id != undefined) {
             identifierName = identifier.identifierName;
             await openIdentifier(identifier.id);
-            const savedProgress: number[] = (await identifierAPI.getIdentifierResultsFromObject(objectId)).result;
+            const savedProgress: number[] = (await identifierAPI.getIdentifierResultsFromYear(yearId)).result;
             savedProgress.forEach(result => {
                 finishNode(result)
             });

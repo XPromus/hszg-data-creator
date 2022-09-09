@@ -9,6 +9,8 @@
     import ObjectEditor from '../editor/ObjectEditor.svelte';
     import YearEditor from '../editor/YearEditor.svelte';
     import IdentifierUser from '../identifier/use/IdentifierUser.svelte';
+    import IdentifierUserYear from '../identifier/use/IdentifierUserYear.svelte';
+    import { currentYearId } from '../data/selectedData';
 
     const startCoords = {
         lati: 50.95308,
@@ -33,6 +35,9 @@
 
     let identifierUser;
     let identifierUserState: boolean = false;
+
+    let identifierUserYear;
+    let identifierUserYearState: boolean = false;
 
     let markerDraggable: boolean = true;
 
@@ -208,6 +213,14 @@
     function closeIdentifierEditor() {
         identifierUserState = false;
     }
+
+    function openYearIdentifier() {
+        identifierUserYearState = true;
+    }
+
+    function closeYearIdentifier() {
+        identifierUserYearState = false;
+    }
     
     function openCreateObjectModal() {
         createObjectModal.classList.add("is-active");
@@ -262,10 +275,13 @@
                 <ObjectEditor bind:this="{objectEditor}" changeMarkerPosition="{changeMarkerPosition}" objectId={currentObjectId} deleteFunction="{deleteObject}" closeFunction="{closeObjectEditor}" openYearEditorFunction="{openYearEditor}" openIdentifierEditor="{openIdentifierEditor}"/>
             {/if}
             {#if yearEditorState}
-                <YearEditor bind:this="{yearEditor}" closeFunction="{closeYearEditor}"/>
+                <YearEditor bind:this="{yearEditor}" closeFunction="{closeYearEditor}" openIdentifierEditor="{openYearIdentifier}"/>
             {/if}
             {#if identifierUserState}
                 <IdentifierUser bind:this="{identifierUser}" objectId="{currentObjectId}" closeFunction="{closeIdentifierEditor}"/>
+            {/if}
+            {#if identifierUserYearState}
+                <IdentifierUserYear bind:this="{identifierUserYear}" yearId="{currentYearId}" closeFunction="{closeYearIdentifier}"/>
             {/if}
         </div>
     </div>

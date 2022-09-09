@@ -9,6 +9,8 @@
 
     import IdentifierNode from './IdentifierNode.svelte';
     import IdentifierNodeEditor from './IdentifierNodeEditor.svelte';
+    import SvelvetTest from './SvelvetTest.svelte';
+    import IdentifierGraph from './graph/IdentifierGraph.svelte';
 
     export let closeFunction;
 
@@ -282,14 +284,24 @@
             <div class="box">
                 <input bind:value="{identifierName}" class="input" type="text" placeholder="Name">
             </div>
-            <button id="createNodeButton" on:click="{addNodeToStore}" class="button is-primary">
-                Knoten hinzufügen
-            </button>
-            {#key $nodes}
-                {#each $nodes as node }
-                    <IdentifierNode node="{node}" openEditor="{() => openEditor(node)}" deleteNode="{() => deleteNode(node)}" />
-                {/each}
-            {/key}
+            <div class="columns" id="editorMainArea">
+                <div class="column is-half" id="nodeCreationArea">
+                    <button id="createNodeButton" on:click="{addNodeToStore}" class="button is-primary">
+                        Knoten hinzufügen
+                    </button>
+                    {#key $nodes}
+                        {#each $nodes as node }
+                            <IdentifierNode node="{node}" openEditor="{() => openEditor(node)}" deleteNode="{() => deleteNode(node)}" />
+                        {/each}
+                    {/key}
+                </div>
+                <div class="column is-half" id="nodeGraph">
+                    <!--
+                    <IdentifierGraph />
+                    -->
+                    <!--<SvelvetTest />-->
+                </div>
+            </div>
         </div>
     {/if}
 </div>
@@ -303,7 +315,6 @@
     }
 
     #createNodeButton {
-        width: 25%;
         margin-bottom: 10px;
         margin-right: 10px;
         margin-left: 10px;
