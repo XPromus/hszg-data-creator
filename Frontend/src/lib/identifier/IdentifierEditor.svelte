@@ -201,123 +201,125 @@
     {#if showEditor}
         <IdentifierNodeEditor nodeIndex="{currentNodeIndex}" closeEditor="{closeEditor}" />
     {:else}
-        <div>
-            <div class="box">
-                <div class="level">
-                    <div class="level-left">
-                        {#if $nodes.length == 0}
-                            <div class="level-item">
-                                <span class="tag is-danger">Keine Knoten</span>
-                            </div>
-                        {/if}
-                        {#key numberOfStartNodes}
-                            {#if numberOfStartNodes == 0}
-                                <div class="level-item">
-                                    <span class="tag is-danger">Kein Startknoten</span>
-                                </div>
-                            {:else if numberOfStartNodes > 1}
-                                <div class="level-item">
-                                    <span class="tag is-danger">Mehr als ein Startknoten</span>
-                                </div>
-                            {/if}
-                        {/key}
-                        {#key numberOfEndNodes}
-                            {#if numberOfEndNodes == 0}
-                                <div class="level-item">
-                                    <span class="tag is-warning">Keine Endknoten</span>
-                                </div>
-                            {/if}
-                        {/key}
+        <nav id="top-bar" class="level box">
+            <div class="level-left">
+                <div class="level-item">
+                    <div style="margin-right: 10px;">
+                        <button id="createNodeButton" on:click="{addNodeToStore}" class="button is-primary">
+                            Knoten hinzufügen
+                        </button>
                     </div>
-                    <div class="level-right">
+                    <div style="margin-right: 15px;">
+                        <input bind:value="{identifierName}" class="input" type="text" placeholder="Name">
+                    </div>
+                </div>
+                {#if $nodes.length == 0}
+                    <div class="level-item">
+                        <span class="tag is-danger">Keine Knoten</span>
+                    </div>
+                {/if}
+                {#key numberOfStartNodes}
+                    {#if numberOfStartNodes == 0}
                         <div class="level-item">
-                            <div bind:this="{dropdown}" class="dropdown">
-                                <div class="dropdown-trigger">
-                                    <button on:click="{changeDropdown}" class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                                        <span>Auswahl</span>
-                                        <span class="icon is-small">
-                                            {#if dropdownActive}
-                                                <i class="fas fa-angle-down" aria-hidden="true"></i>
-                                            {:else}
-                                                <i class="fas fa-angle-up" aria-hidden="true"></i>
-                                            {/if}
-                                        </span>
-                                    </button>
-                                </div>
-                                <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                                    <div class="dropdown-content">
-                                        {#if dropdownContent.length == 0}
-                                            <div class="dropdown-item">
-                                                <span>Noch keine Einträge vorhanden</span>
-                                            </div>
-                                        {:else}
-                                            {#each dropdownContent as content, i}
-                                                <a on:click="{() => dropdownClickedOnLink(content)}" href="#" class="dropdown-item">{content.identifierName}</a>
-                                            {/each}
-                                        {/if}
-                                        
+                            <span class="tag is-danger">Kein Startknoten</span>
+                        </div>
+                    {:else if numberOfStartNodes > 1}
+                        <div class="level-item">
+                            <span class="tag is-danger">Mehr als ein Startknoten</span>
+                        </div>
+                    {/if}
+                {/key}
+                {#key numberOfEndNodes}
+                    {#if numberOfEndNodes == 0}
+                        <div class="level-item">
+                            <span class="tag is-warning">Keine Endknoten</span>
+                        </div>
+                    {/if}
+                {/key}
+            </div>
+            <div class="level-right">
+                <div class="level-item">
+                    <div bind:this="{dropdown}" class="dropdown">
+                        <div class="dropdown-trigger">
+                            <button on:click="{changeDropdown}" class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                                <span>Fragebogen Auswählen</span>
+                                <span class="icon is-small">
+                                    {#if dropdownActive}
+                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                    {:else}
+                                        <i class="fas fa-angle-up" aria-hidden="true"></i>
+                                    {/if}
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                                {#if dropdownContent.length == 0}
+                                    <div class="dropdown-item">
+                                        <span>Noch keine Einträge vorhanden</span>
                                     </div>
-                                </div>
+                                {:else}
+                                    {#each dropdownContent as content, i}
+                                        <a on:click="{() => dropdownClickedOnLink(content)}" href="#" class="dropdown-item">{content.identifierName}</a>
+                                    {/each}
+                                {/if}
+                                
                             </div>
-                        </div>
-                        <div class="level-item">
-                            <button on:click="{saveData}" class="button is-success" title="Fragebogen Speichern">
-                                <i class="fa-solid fa-floppy-disk"></i>
-                            </button>
-                        </div>
-                        <div class="level-item">
-                            <button on:click="{clearNodes}" class="button is-warning" title="Clear Editor">
-                                <i class="fa-solid fa-arrow-rotate-left"></i>
-                            </button>
-                        </div>
-                        <div class="level-item">
-                            <button on:click="{deleteData}" class="button is-danger" title="Fragebogen löschen">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </div>
-                        <div class="level-item">
-                            <button on:click="{closeFunction}" class="delete is-large" />
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="box">
-                <input bind:value="{identifierName}" class="input" type="text" placeholder="Name">
-            </div>
-            <div class="columns" id="editorMainArea">
-                <div class="column is-half" id="nodeCreationArea">
-                    <button id="createNodeButton" on:click="{addNodeToStore}" class="button is-primary">
-                        Knoten hinzufügen
+                <div class="level-item">
+                    <button on:click="{saveData}" class="button is-success" title="Fragebogen Speichern">
+                        <i class="fa-solid fa-floppy-disk"></i>
                     </button>
-                    {#key $nodes}
-                        {#each $nodes as node }
-                            <IdentifierNode node="{node}" openEditor="{() => openEditor(node)}" deleteNode="{() => deleteNode(node)}" />
-                        {/each}
-                    {/key}
                 </div>
-                <div class="column is-half" id="nodeGraph">
-                    <!--
-                    <IdentifierGraph />
-                    -->
-                    <!--<SvelvetTest />-->
+                <div class="level-item">
+                    <button on:click="{clearNodes}" class="button is-warning" title="Clear Editor">
+                        <i class="fa-solid fa-arrow-rotate-left"></i>
+                    </button>
+                </div>
+                <div class="level-item">
+                    <button on:click="{deleteData}" class="button is-danger" title="Fragebogen löschen">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+                <div class="level-item">
+                    <button on:click="{closeFunction}" class="delete is-large" />
                 </div>
             </div>
-        </div>
+        </nav>
     {/if}
+    <div id="editorMainArea" class="columns">
+        <div class="column is-half" id="nodeCreationArea">
+            {#key $nodes}
+                {#each $nodes as node }
+                    <IdentifierNode node="{node}" openEditor="{() => openEditor(node)}" deleteNode="{() => deleteNode(node)}" />
+                {/each}
+            {/key}
+        </div>
+        <div class="column is-half" id="nodeGraph">
+            <!--
+            <IdentifierGraph />
+            -->
+            <!--<SvelvetTest />-->
+        </div>
+    </div>
 </div>
 
 <style>
 
+    #top-bar {
+        margin-left: 10px;
+        margin-top: 10px;
+        margin-right: 10px;
+    }
+
+    /*
     .box {
         margin-top: 10px;
         margin-right: 10px;
         margin-left: 10px;
     }
-
-    #createNodeButton {
-        margin-bottom: 10px;
-        margin-right: 10px;
-        margin-left: 10px;
-    }
+    */
 
 </style>
