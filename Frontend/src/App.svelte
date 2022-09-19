@@ -1,6 +1,6 @@
 <script lang="ts">
 
-    import AppMenu from './lib/AppMenu.svelte';   
+    import AppMenu from './lib/AppMenu.svelte';
     import AppLoginWindow from './lib/users/AppLoginWindow.svelte';
 
     let loginState: boolean = false;

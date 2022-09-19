@@ -41,6 +41,8 @@
 
     let markerDraggable: boolean = true;
 
+    let toolbarState: boolean = false;
+
     function createMap(container) {
         const m = L.map(container).setView([startCoords.lati, startCoords.long], 16);
         const osmLayer = getOSMLayer();
@@ -230,6 +232,10 @@
         createObjectModal.classList.remove("is-active");
     }
 
+    function changeToolbarState(state: boolean): void {
+        toolbarState = state;
+    }
+
     onMount(async () => {
 
         let objects = await Object.getAllObjects();
@@ -287,31 +293,34 @@
     </div>
 </div>
 
-<div id="map-layer-selector">
-    <button on:click="{() => changeMapLayer(getGoogleSatelliteLayer(), getOSMLayer())}" class="button is-success">
-        <i class="fa-solid fa-map" />
-    </button>
-    <button on:click="{() => changeMapLayer(getOSMLayer(), getGoogleSatelliteLayer())}" class="button is-success">
-        <i class="fa-solid fa-satellite"></i>
-    </button>
-</div>
-
-<div id="marker-drag-toggle">
-    <button class="button is-success" on:click="{() => makeMarkersDraggable(!markerDraggable)}">
-        {#if markerDraggable == true}
-            <span>Marker Bewegung Deaktivieren</span>
-        {:else}
-            <span>Marker Bewegung Aktivieren</span>
-        {/if}
-    </button>
-    <button on:click="{closeFunction}" class="delete is-large" />
-</div>
+{#if toolbarState}
+    <div id="toolbar" class="box">
+        <button on:click="{() => changeToolbarState(false)}" class="button is-dark">
+            <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <button on:click="{() => changeMapLayer(getGoogleSatelliteLayer(), getOSMLayer())}" class="button is-success" style="margin-left: 25px;">
+            <i class="fa-solid fa-map" />
+        </button>
+        <button on:click="{() => changeMapLayer(getOSMLayer(), getGoogleSatelliteLayer())}" class="button is-success" style="margin-left: 5px;">
+            <i class="fa-solid fa-satellite"></i>   
+        </button>
+        <button on:click="{() => makeMarkersDraggable(!markerDraggable)}" class="button is-success" style="margin-left: 25px;">
+            {#if markerDraggable == true}
+                <span>Marker Bewegung Deaktivieren</span>
+            {:else}
+                <span>Marker Bewegung Aktivieren</span>
+            {/if}
+        </button>
+    </div>
+{:else}
+    <div id="openToolbarButton" class="box">
+        <button on:click="{() => changeToolbarState(true)}" class="button is-dark">
+            <i class="fa-solid fa-chevron-up"></i>
+        </button>
+    </div>
+{/if}
 
 <style>
-
-    .floating-window {
-        position: absolute;
-    }
 
     #map {
         position: absolute;
@@ -329,22 +338,25 @@
         z-index: 500;
     }
 
-    #map-layer-selector {
-        left: 0;
+    #openToolbarButton {
         bottom: 0;
-        margin-bottom: 10px;
-        margin-left: 10px;
-        position: absolute;
+        left: 0;
+        position: fixed;
         z-index: 500;
+        margin-bottom: 5px;
+        margin-left: 5px;
     }
 
-    #marker-drag-toggle {
-        top: 0;
-        right: 0;
-        margin-right: 10px;
-        margin-top: 10px;
-        position: absolute;
+    #toolbar {
+        bottom: 0;
+        left: 0;
+        position: fixed;
         z-index: 500;
+        width: 100vw;
+        height: 5rem;
+        margin-bottom: 5px;
+        margin-left: 5px;
+        margin-right: 5px;
     }
 
 </style>
