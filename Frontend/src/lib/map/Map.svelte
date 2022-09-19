@@ -320,6 +320,8 @@
     </div>
 {/if}
 
+<button id="closeButton" on:click="{closeFunction}" class="delete is-large" />
+
 <style>
 
     #map {
@@ -336,6 +338,15 @@
 
     .modal {
         z-index: 500;
+    }
+
+    #closeButton {
+        top: 0;
+        right: 0;
+        position: fixed;
+        z-index: 500;
+        margin-top: 10px;
+        margin-right: 10px;
     }
 
     #openToolbarButton {
