@@ -288,22 +288,23 @@
                 </div>
             </div>
         </nav>
+        <div id="editorMainArea" class="columns">
+            <div class="column is-half" id="nodeCreationArea">
+                {#key $nodes}
+                    {#each $nodes as node }
+                        <IdentifierNode node="{node}" openEditor="{() => openEditor(node)}" deleteNode="{() => deleteNode(node)}" />
+                    {/each}
+                {/key}
+            </div>
+            <div class="column is-half" id="nodeGraph">
+                <!--
+                <IdentifierGraph />
+                -->
+                <!--<SvelvetTest />-->
+            </div>
+        </div>
     {/if}
-    <div id="editorMainArea" class="columns">
-        <div class="column is-half" id="nodeCreationArea">
-            {#key $nodes}
-                {#each $nodes as node }
-                    <IdentifierNode node="{node}" openEditor="{() => openEditor(node)}" deleteNode="{() => deleteNode(node)}" />
-                {/each}
-            {/key}
-        </div>
-        <div class="column is-half" id="nodeGraph">
-            <!--
-            <IdentifierGraph />
-            -->
-            <!--<SvelvetTest />-->
-        </div>
-    </div>
+    
 </div>
 
 <style>
