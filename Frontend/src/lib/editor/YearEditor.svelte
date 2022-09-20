@@ -5,6 +5,9 @@
     import { onMount } from 'svelte';
     import * as Year from '../api/years';
 
+    import CustomInput from '../data/validation/CustomInput.svelte';
+    import { bind } from 'svelte/internal';
+
     const yearId: number = currentYearId;
     export let closeFunction = () => {};
     export let openIdentifierEditor = () => {};
@@ -125,7 +128,8 @@
                     </div>
                 </div>
                 <div class="level-right" style="width: 80%">
-                    <input bind:value="{year}" class="input" type="text" placeholder="Jahr Format: yyyy">
+                    <CustomInput bind:value="{year}" placeholder="{"Jahr Format: yyyy"}" regex="{/^\d+$/}" emptyAllowed />
+                    <!--<input bind:value="{year}" class="input" type="text" placeholder="Jahr Format: yyyy">-->
                 </div>
             </nav>
         </div>
@@ -137,7 +141,8 @@
                     </div>
                 </div>
                 <div class="level-right" style="width: 80%">
-                    <input bind:value="{name}" class="input" type="text">
+                    <CustomInput bind:value="{name}" placeholder="" regex="{new RegExp("^[a-zA-Z0-9 ]*$")}" emptyAllowed />
+                    <!--<input bind:value="{name}" class="input" type="text">-->
                 </div>
             </nav>
         </div>
@@ -149,7 +154,8 @@
                     </div>
                 </div>
                 <div class="level-right" style="width: 80%">
-                    <input bind:value="{street}" class="input" type="text">
+                    <CustomInput bind:value="{street}" placeholder="" regex="{new RegExp("^[a-zA-Z0-9 ]*$")}" emptyAllowed />
+                    <!--<input bind:value="{street}" class="input" type="text">-->
                 </div>
             </nav>  
         </div>
@@ -161,7 +167,8 @@
                     </div>
                 </div>
                 <div class="level-right" style="width: 80%">
-                    <input bind:value="{streetNumber}" class="input" type="text">
+                    <CustomInput bind:value="{streetNumber}" placeholder="" regex="{new RegExp("^[a-zA-Z0-9 ]*$")}" emptyAllowed />
+                    <!--<input bind:value="{streetNumber}" class="input" type="text">-->
                 </div>
             </nav>
         </div>
