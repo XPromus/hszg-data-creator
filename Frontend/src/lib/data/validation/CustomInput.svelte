@@ -1,25 +1,29 @@
 <script lang="ts">
 
-    import { textValidator, requiredValidator } from './validators';
-    import { createFieldValidator } from './validation';
+    export let value: string;
+    export let placeholder: string;
+    export let regex: RegExp;
 
-    const [ validity, validate ] = createFieldValidator(requiredValidator(), textValidator());
-    
-    let value;
+    export let emptyAllowed: boolean;
 
-    export let placeholder;
+    let inputClass: string = "input";
 
-    export function getValue(): string {
-        return value;
-    }
+    function asessInput(): void {
 
-    export function setValue(text: string) {
-        value = text;
+        let result: boolean = regex.test(value);
+        if (emptyAllowed) {
+            if (value == "" || value == null) {
+                result = true;
+            }
+        }
+        
+        inputClass = (result) ? "input" : "input is-danger";
+
     }
 
 </script>
 
-<input bind:value="{value}" class:is-danger={!$validity.valid} class:is-success={$validity.valid} use:validate={value} class="input" type="text" placeholder="{placeholder}">
+<input on:keyup="{asessInput}" bind:value="{value}" class="{inputClass}" type="text" placeholder="{placeholder}">
 
 <style>
 
