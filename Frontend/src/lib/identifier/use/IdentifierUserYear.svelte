@@ -8,6 +8,7 @@
     import * as yearAPI from "../../api/years";
 
     import FinishedNode from "./FinishedNode.svelte";
+    import SaveButton from "../../components/SaveButton.svelte";
 
     let identifierId: number;
     let identifierName: string;
@@ -129,10 +130,11 @@
         }
     }
 
-    function saveProgress(): void {
+    async function saveProgress(): Promise<number> {
         let results: number[] = $nodeResults;
         console.log("Results: " + results.length);
-        identifierAPI.setYearIdentifierData(yearId, identifierId, results);
+        let data: number = await identifierAPI.setYearIdentifierData(yearId, identifierId, results);
+        return data;
     }
 
     function removeIdentifier() {
@@ -161,34 +163,59 @@
 
 </script>
 
+<!--TODO: Method to remove a identifier from a year-->
 <div class="box" id="use">
     <div id="content">
         <nav class="level">
             <div class="level-left">
                 <div class="level-item">
                     <p class="subtitle is-5">
-                        Fragebogen: {identifierName}
+                        {#if identifierName != undefined}
+                            Fragebogen: {identifierName}
+                        {:else}
+                            Kein Fragebogen gewählt
+                        {/if}
                     </p>
+                </div>
+            </div>
+            <div class="level-right">
+                <div class="level-item">
+                    <button on:click="{goBackOneNode}" class="button" title="Schritt zurück">
+                        <i class="fa-solid fa-left-long"></i>
+                    </button>
                 </div>
                 <div class="level-item">
                     <div bind:this="{dropdown}" class="dropdown">
                         <div class="dropdown-trigger">
-                            <button on:click="{changeDropdown}" class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                                <span>Auswahl</span>
-                                <span class="icon is-small">
-                                    {#if dropdownActive}
-                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
-                                    {:else}
-                                        <i class="fas fa-angle-up" aria-hidden="true"></i>
-                                    {/if}
-                                </span>
-                            </button>
+                            {#if identifierId != undefined}
+                                <button on:click="{changeDropdown}" class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                                    <span>Auswahl</span>
+                                    <span class="icon is-small">
+                                        {#if dropdownActive}
+                                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                        {:else}
+                                            <i class="fas fa-angle-up" aria-hidden="true"></i>
+                                        {/if}
+                                    </span>
+                                </button>
+                            {:else}
+                                <button on:click="{changeDropdown}" class="button is-primary" aria-haspopup="true" aria-controls="dropdown-menu">
+                                    <span>Auswahl</span>
+                                    <span class="icon is-small">
+                                        {#if dropdownActive}
+                                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                        {:else}
+                                            <i class="fas fa-angle-up" aria-hidden="true"></i>
+                                        {/if}
+                                    </span>
+                                </button>
+                            {/if}
                         </div>
                         <div class="dropdown-menu" id="dropdown-menu" role="menu">
                             <div class="dropdown-content">
                                 {#if dropdownContent.length == 0}
                                     <div class="dropdown-item">
-                                        <span>Noch keine Einträge vorhanden</span>
+                                        <span>Keine Fragebögen zur Auswahl</span>
                                     </div>
                                 {:else}
                                     {#if identifierId != undefined}
@@ -203,64 +230,57 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="level-right">
                 <div class="level-item">
-                    <button on:click="{goBackOneNode}" class="button">
-                        <i class="fa-solid fa-left-long"></i>
-                    </button>
-                </div>
-                <div class="level-item">
+                    <!--
                     <button on:click="{saveProgress}" class="button is-success">
                         <i class="fa-solid fa-floppy-disk"></i>
                     </button>
+                    -->
+                    <SaveButton saveFunction="{saveProgress}" iconChangeTime="{2000}"/>
                 </div>
                 <div class="level-item">
                     <button on:click="{closeFunction}" class="delete is-large" />
                 </div>
             </div>
         </nav>
-        {#if activeNode != undefined}
-            <div id="node" style="margin-bottom: 5px;">
-                <div class="card">
-                    <div class="card-header">
-                        <p class="card-header-title">
-                            <span>Aktueller Knoten: "{activeNode.title}"</span>
-                        </p>
-                    </div>
-                    <div class="card-content">
-                        <div class="content">
-                            {activeNode.description}
+        {#if identifierId != undefined}
+            {#if activeNode != undefined}
+                <div id="node" style="margin-bottom: 5px;">
+                    <div class="card">
+                        <div class="card-header">
+                            <p class="card-header-title">
+                                <span>Aktueller Knoten: "{activeNode.title}"</span>
+                            </p>
                         </div>
+                        <div class="card-content">
+                            <div class="content">
+                                {activeNode.description}
+                            </div>
+                        </div>
+                        <footer class="card-footer">
+                            {#each activeNode.options as option, i }
+                                <a on:click="{() => finishNode(i)}" href="#" class="is-info card-footer-item">{option.name}</a>
+                            {/each}
+                        </footer>
                     </div>
-                    <footer class="card-footer">
-                        {#each activeNode.options as option, i }
-                            <a on:click="{() => finishNode(i)}" href="#" class="is-info card-footer-item">{option.name}</a>
-                        {/each}
-                    </footer>
                 </div>
+            {:else}
+                <div class="box" />
+            {/if}
+            <div id="finishedNodes" class="box">
+                <h6 class="title is-6">Fertige Knoten</h6>
+                {#each finishedNodes as node, i }
+                    {#if node.node.type == "start"}
+                        <FinishedNode classType="is-info"    title="{node.node.title}" optionName="{node.node.options[node.selectedOptionIndex].name}" />
+                    {:else if node.node.type == "normal"}
+                        <FinishedNode classType="is-success" title="{node.node.title}" optionName="{node.node.options[node.selectedOptionIndex].name}" />
+                    {:else if node.node.type == "end"}
+                        <FinishedNode classType="is-danger"  title="{node.node.title}" optionName="{node.node.options[node.selectedOptionIndex].name}" />
+                    {/if}
+                {/each}
             </div>
-        {:else}
-            <div class="box" />
         {/if}
-        <div id="finishedNodes" class="box">
-            <h6 class="title is-6">Fertige Knoten
-                <!-- TODO: Method to remove a identifier from a year
-                {#if identifierId == undefined}
-                    Test
-                {/if}
-                -->
-            </h6>
-            {#each finishedNodes as node, i }
-                {#if node.node.type == "start"}
-                    <FinishedNode classType="is-info"    title="{node.node.title}" optionName="{node.node.options[node.selectedOptionIndex].name}" />
-                {:else if node.node.type == "normal"}
-                    <FinishedNode classType="is-success" title="{node.node.title}" optionName="{node.node.options[node.selectedOptionIndex].name}" />
-                {:else if node.node.type == "end"}
-                    <FinishedNode classType="is-danger"  title="{node.node.title}" optionName="{node.node.options[node.selectedOptionIndex].name}" />
-                {/if}
-            {/each}
-        </div>
+        
     </div>
 </div>
 
