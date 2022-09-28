@@ -129,7 +129,7 @@
                 yearEditor.callCloseEditor();
             }
             if (identifierUser !== undefined && identifierUser != null && identifierUserState == true) {
-                closeIdentifierEditor();
+                closeIdentifierUserWindow();
             }
         }
 
@@ -188,7 +188,7 @@
 
     function closeObjectEditor() {
         if (yearEditorState) { yearEditor.callCloseEditor(); }
-        if (identifierUserState) { closeIdentifierEditor(); }
+        if (identifierUserYearState) { closeYearIdentifier(); }
         objectEditorState = false;
         disableAllMarkers();
     }
@@ -205,14 +205,15 @@
 
     async function closeYearEditor() {
         await objectEditor.reloadYearList();
+        if (identifierUserYearState) { closeYearIdentifier(); }
         yearEditorState = false;
     }
 
-    function openIdentifierEditor() {
+    function openIdentifierUserWindow() {
         identifierUserState = true;
     }
 
-    function closeIdentifierEditor() {
+    function closeIdentifierUserWindow() {
         identifierUserState = false;
     }
 
@@ -278,13 +279,13 @@
     <div class="hero-body">
         <div class="columns">
             {#if objectEditorState}
-                <ObjectEditor bind:this="{objectEditor}" changeMarkerPosition="{changeMarkerPosition}" objectId={currentObjectId} deleteFunction="{deleteObject}" closeFunction="{closeObjectEditor}" openYearEditorFunction="{openYearEditor}" openIdentifierEditor="{openIdentifierEditor}"/>
+                <ObjectEditor bind:this="{objectEditor}" changeMarkerPosition="{changeMarkerPosition}" objectId={currentObjectId} deleteFunction="{deleteObject}" closeFunction="{closeObjectEditor}" openYearEditorFunction="{openYearEditor}" openIdentifierEditor="{openIdentifierUserWindow}"/>
             {/if}
             {#if yearEditorState}
                 <YearEditor bind:this="{yearEditor}" closeFunction="{closeYearEditor}" openIdentifierEditor="{openYearIdentifier}"/>
             {/if}
             {#if identifierUserState}
-                <IdentifierUser bind:this="{identifierUser}" objectId="{currentObjectId}" closeFunction="{closeIdentifierEditor}"/>
+                <IdentifierUser bind:this="{identifierUser}" objectId="{currentObjectId}" closeFunction="{closeIdentifierUserWindow}"/>
             {/if}
             {#if identifierUserYearState}
                 <IdentifierUserYear bind:this="{identifierUserYear}" yearId="{currentYearId}" closeFunction="{closeYearIdentifier}"/>
