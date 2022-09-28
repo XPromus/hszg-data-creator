@@ -129,7 +129,7 @@ export async function setYearIdentifierData(yearId: number, identifierId: number
     });
 
     let data = await response.json();
-    return data;
+    return response.status;
 
 }
 

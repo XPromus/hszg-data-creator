@@ -77,6 +77,22 @@ export async function editYear(yearId: number, changes) {
 
 }
 
+export async function editYearStateReturn(yearId: number, changes): Promise<number> {
+    
+    const serverData = await getServerData();
+    //@ts-ignore
+    const url = serverData.serverUrl + serverData.port + "/api/v1/year/edit/" + yearId;
+
+    let response = await fetch(url, {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(changes)
+    });
+
+    return response.status;
+
+}
+
 export async function deleteYear(yearId: number) {
 
     const serverData = await getServerData();
