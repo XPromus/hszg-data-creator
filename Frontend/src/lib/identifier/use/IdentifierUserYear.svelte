@@ -52,11 +52,13 @@
         dropdown.classList.remove("is-active");
     }
 
-    async function openIdentifier(id: number) {
+    async function openIdentifier(id: number, name: string) {
         const json: string = await identifierAPI.getJSON(id);
         identifierId = id;
-        nodes = JSON.parse(json);
+        identifierName = name;
+        finishedNodes = Array(0);
         $nodeResults = Array(0);
+        nodes = JSON.parse(json);
         activeNode = getStartNode();
         closeDropdown();
     }
@@ -133,13 +135,19 @@
         identifierAPI.setYearIdentifierData(yearId, identifierId, results);
     }
 
+    function removeIdentifier() {
+        identifierId = undefined;
+        identifierName = undefined;
+        identifierAPI.setYearIdentifierData(yearId, identifierId, []);
+        closeDropdown();
+    }
+
     async function loadProgress() {
         const year = await yearAPI.getYearById(yearId);
         const identifier: identifierAPI.Identifier = await identifierAPI.getIdentifierById(year.identifierId);
         console.log("Year: " + year.id, " Identifier: " + year.identifierId);
         if (identifier.id != undefined) {
-            identifierName = identifier.identifierName;
-            await openIdentifier(identifier.id);
+            await openIdentifier(identifier.id, identifier.identifierName);
             const savedProgress: number[] = (await identifierAPI.getIdentifierResultsFromYear(yearId)).result;
             savedProgress.forEach(result => {
                 finishNode(result)
@@ -183,8 +191,11 @@
                                         <span>Noch keine Einträge vorhanden</span>
                                     </div>
                                 {:else}
-                                    {#each dropdownContent as content, i}
-                                        <a on:click="{() => openIdentifier(content.id)}" href="#" class="dropdown-item">{content.filename}</a>
+                                    {#if identifierId != undefined}
+                                        <a on:click="{() => removeIdentifier()}" href="#" class="dropdown-item">Auswahl aufheben</a>
+                                    {/if}
+                                    {#each dropdownContent as content}
+                                        <a on:click="{() => openIdentifier(content.id, content.identifierName)}" href="#" class="dropdown-item">{content.filename}</a>
                                     {/each}
                                 {/if}
                                 
@@ -214,7 +225,7 @@
                 <div class="card">
                     <div class="card-header">
                         <p class="card-header-title">
-                            {activeNode.title}
+                            <span>Aktueller Knoten: "{activeNode.title}"</span>
                         </p>
                     </div>
                     <div class="card-content">
@@ -233,7 +244,13 @@
             <div class="box" />
         {/if}
         <div id="finishedNodes" class="box">
-            <h6 class="title is-6">Fertige Knoten</h6>
+            <h6 class="title is-6">Fertige Knoten
+                <!-- TODO: Method to remove a identifier from a year
+                {#if identifierId == undefined}
+                    Test
+                {/if}
+                -->
+            </h6>
             {#each finishedNodes as node, i }
                 {#if node.node.type == "start"}
                     <FinishedNode classType="is-info"    title="{node.node.title}" optionName="{node.node.options[node.selectedOptionIndex].name}" />
