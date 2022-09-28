@@ -262,7 +262,7 @@
                 </div>
                 <div class="panel-block">
                     <button on:click="{openIdentifierEditor}" class="button is-info" style="width: 100%;" disabled>
-                        <span>Fragebogen</span>
+                        <span>Fragebogen - befindet sich jetzt in den Jahren</span>
                     </button>
                 </div>
                 <!--
