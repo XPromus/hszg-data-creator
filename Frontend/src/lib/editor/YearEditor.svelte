@@ -7,6 +7,7 @@
 
     import CustomInput from '../data/validation/CustomInput.svelte';
     import { bind } from 'svelte/internal';
+    import SaveButton from '../components/SaveButton.svelte';
 
     const yearId: number = currentYearId;
     export let closeFunction = () => {};
@@ -31,7 +32,7 @@
         closeEditor();
     }
 
-    async function saveData() {
+    async function saveData(): Promise<number> {
         
         let data = {
             "newYear": year,
@@ -43,7 +44,8 @@
             "newStreetNumber": streetNumber
         };
 
-        await Year.editYear(yearId, data);
+        let state: number = await Year.editYearStateReturn(yearId, data);
+        return state;
 
     }
 
@@ -243,9 +245,20 @@
                             </button>
                         </div>
                         <div class="column is-half">
+                            <nav class="level" style="width: 100%;">
+                                <div class="level-left" />
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <SaveButton saveFunction="{saveData}" iconChangeTime="{1500}"/>
+                                    </div>
+                                </div>
+                            </nav>
+                            <!--
                             <button on:click="{saveData}" class="button is-primary " style="width: 100%;">
                                 Speichern
                             </button>
+                            -->
+                            
                         </div>
                     </div>
                 </div>
